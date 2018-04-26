@@ -1,3 +1,4 @@
+//废弃
 <template>
   <div class="box">
     <mt-swipe :auto="4000" class="swipe__box">
@@ -10,7 +11,7 @@
           <h3>推荐书籍</h3>
           <div class="li__box">
             <ul>
-              <li v-for="(item, index) in result"><router-link to="/"><img :src="item" :alt="index"><span>{{ index }}</span></router-link></li>
+              <li v-for="(item, index) in result" :key="index"><router-link to="/"><img :src="item" :alt="index"><span>{{ index }}</span></router-link></li>
             </ul>
           </div>
       </div>

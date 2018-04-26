@@ -1,13 +1,5 @@
 <template>
   <div class="box">
-      <nav id="nav2">
-        <router-link to="/" tag="div"><span>强推</span></router-link>
-        <router-link to="cate" tag="div"><span>分类</span></router-link>
-        <router-link to="" tag="div"><span>排行</span></router-link>
-        <router-link to="" tag="div"><span>男频</span></router-link>
-        <router-link to="" tag="div"><span>女频</span></router-link>
-        <router-link to="" tag="div"><span>完本</span></router-link>
-      </nav>
       <transition>
         <keep-alive>
           <router-view></router-view>
@@ -137,90 +129,6 @@ export default {
         img {
           width: 100%;
           height: 100%;
-        }
-      }
-      #nav2 {
-        width: 100vw;
-        height: 68px;
-        margin-top: 0px;
-        padding-top: 15px;
-        // margin-bottom: 20px;
-        background-color: white;
-        // background-color: rgb(153, 161, 158);
-        // background-color: paleturquoise;
-        // position: fixed;
-        // bottom: 0;
-        // left: 0;
-        display: grid;
-        grid-template-columns: repeat(6, 40px);
-        grid-template-rows: repeat(1, 40px);
-        // justify-items: end;
-        // grid-gap: 10px 20px;
-        grid-column-gap: 10px;
-        grid-row-gap: 10px;
-        justify-content: center;
-        div{
-          width: 100%;
-          height: 100%;
-          justify-items: center;
-          // background-color: red;
-          display: inline-block;
-          border-radius: 16px;
-          span{
-            position: relative;
-            top: 46px;
-            left: 8px;
-            font-size: 0.4rem;
-            color: rgb(175, 172, 172);
-          }
-        }
-        div:nth-child(1) {
-          // background-color: palegreen;
-          background-image: url('../assets/推荐位.png');
-          // background-size: 35px 35px;
-          background-repeat: no-repeat;
-          background-position: center center;
-          background-color: rgb(238, 134, 93);
-        }
-        div:nth-child(2) {
-          // background-color: palegreen;
-          background-image: url('../assets/分类.png');
-          // background-size: 35px 35px;
-          background-repeat: no-repeat;
-          background-position: center center;
-          background-color: rgb(152, 88, 235);
-        }
-        div:nth-child(3) {
-          // background-color: palegreen;
-          background-image: url('../assets/排行榜.png');
-          // background-size: 35px 35px;
-          background-repeat: no-repeat;
-          background-position: center center;
-          background-color: rgb(245, 179, 57);
-        }
-        div:nth-child(4) {
-          // background-color: palegreen;
-          background-image: url('../assets/男.png');
-          // background-size: 35px 35px;
-          background-repeat: no-repeat;
-          background-position: center center;
-          background-color: rgb(60, 180, 250);
-        }
-        div:nth-child(5) {
-          // background-color: palegreen;
-          background-image: url('../assets/女.png');
-          // background-size: 35px 35px;
-          background-repeat: no-repeat;
-          background-position: center center;
-          background-color: rgb(37, 194, 37);
-        }
-        div:nth-child(6) {
-          // background-color: palegreen;
-          background-image: url('../assets/完成.png');
-          // background-size: 35px 35px;
-          background-repeat: no-repeat;
-          background-position: center center;
-          background-color: rgb(64, 238, 238);
         }
       }
     }

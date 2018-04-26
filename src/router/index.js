@@ -55,12 +55,22 @@ export default new Router({
               name: 'category',
               component: category,
               children: [
-                {
-                  path: '/',
-                  name: 'list',
-                  component: list
-                }
+                // {
+                //   path: '/',
+                //   name: 'list',
+                //   component: list
+                // },
+                // {
+                //   path: '/cater',
+                //   name: 'list',
+                //   component: list
+                // }
               ]
+            }, 
+            {
+              path: '/cater',
+              name: 'list',
+              component: list
             }
           ]
         }

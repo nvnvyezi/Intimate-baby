@@ -6,12 +6,20 @@
         <mt-swipe-item><img src="../assets/swipe2.jpg" alt="" srcset=""></mt-swipe-item>
         <mt-swipe-item><img src="../assets/swipe3.jpg" alt="" srcset=""></mt-swipe-item>
     </mt-swipe>
+    <nav id="nav2">
+      <router-link to="/" tag="div"><span>强推</span></router-link>
+      <router-link to="cate" tag="div"><span>分类</span></router-link>
+      <router-link to="" tag="div"><span>排行</span></router-link>
+      <router-link to="" tag="div"><span>男频</span></router-link>
+      <router-link to="" tag="div"><span>女频</span></router-link>
+      <router-link to="" tag="div"><span>完本</span></router-link>
+    </nav>
     <section>
       <div class="book-box">
         <h3>推荐书籍</h3>
         <div class="li__box">
             <ul>
-              <li v-for="(item, index) in result1"><router-link to="/"><img :src="item" :alt="index"><span>{{ index }}</span></router-link></li>
+              <li v-for="(item, index) in result1" :key="index"><router-link to="/"><img :src="item" :alt="index"><span>{{ index }}</span></router-link></li>
             </ul>
           </div>
         </div>
@@ -20,7 +28,7 @@
       <div class="book__box">
         <h3>推荐书籍</h3>
         <ul>
-          <router-link to="/" tag="li" v-for="(item, index) in result" :key="item.sort">
+          <router-link to="/" tag="li" v-for="(item, index) in result" :key="index">
             <strong>{{ item.sort  }}</strong>
             <span>{{ item.bookName }}</span>
             <span class="r">{{ item.typ }}</span>
@@ -33,6 +41,10 @@
 </template>
 
 <script>
+import { Swipe, SwipeItem } from 'mint-ui';
+import Vue from 'vue'
+Vue.component(Swipe.name, Swipe);
+Vue.component(SwipeItem.name, SwipeItem);
 export default {
   name: 'recom',
   data () {
@@ -58,7 +70,7 @@ export default {
         response.json().then((data) => {
           // console.log(data.result);
           that.result = data.result;
-          console.log(that.result);
+          // console.log(that.result);
         })
       }).catch(() => {
         console.log(2);
@@ -115,14 +127,98 @@ export default {
     width: 100vw;
     height: auto;
     background-color: rgb(238, 237, 237);
-    // h3 {
-    //   width: 28px;
-    //   line-height: 12px;
-    //   font-size: 0.8rem;
-    //   font-weight: 500;
-    //   letter-spacing: 1px;
-    //   border-left: 3px solid rgb(247, 132, 24);
-    // }
+    .swipe__box {
+      width: 100vw;
+      height: 30vh;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+      #nav2 {
+        width: 100vw;
+        height: 68px;
+        margin-top: 0px;
+        padding-top: 15px;
+        // margin-bottom: 20px;
+        background-color: white;
+        // background-color: rgb(153, 161, 158);
+        // background-color: paleturquoise;
+        // position: fixed;
+        // bottom: 0;
+        // left: 0;
+        display: grid;
+        grid-template-columns: repeat(6, 40px);
+        grid-template-rows: repeat(1, 40px);
+        // justify-items: end;
+        // grid-gap: 10px 20px;
+        grid-column-gap: 10px;
+        grid-row-gap: 10px;
+        justify-content: center;
+        div{
+          width: 100%;
+          height: 100%;
+          justify-items: center;
+          // background-color: red;
+          display: inline-block;
+          border-radius: 16px;
+          span{
+            position: relative;
+            top: 46px;
+            left: 8px;
+            font-size: 0.4rem;
+            color: rgb(175, 172, 172);
+          }
+        }
+        div:nth-child(1) {
+          // background-color: palegreen;
+          background-image: url('../assets/推荐位.png');
+          // background-size: 35px 35px;
+          background-repeat: no-repeat;
+          background-position: center center;
+          background-color: rgb(238, 134, 93);
+        }
+        div:nth-child(2) {
+          // background-color: palegreen;
+          background-image: url('../assets/分类.png');
+          // background-size: 35px 35px;
+          background-repeat: no-repeat;
+          background-position: center center;
+          background-color: rgb(152, 88, 235);
+        }
+        div:nth-child(3) {
+          // background-color: palegreen;
+          background-image: url('../assets/排行榜.png');
+          // background-size: 35px 35px;
+          background-repeat: no-repeat;
+          background-position: center center;
+          background-color: rgb(245, 179, 57);
+        }
+        div:nth-child(4) {
+          // background-color: palegreen;
+          background-image: url('../assets/男.png');
+          // background-size: 35px 35px;
+          background-repeat: no-repeat;
+          background-position: center center;
+          background-color: rgb(60, 180, 250);
+        }
+        div:nth-child(5) {
+          // background-color: palegreen;
+          background-image: url('../assets/女.png');
+          // background-size: 35px 35px;
+          background-repeat: no-repeat;
+          background-position: center center;
+          background-color: rgb(37, 194, 37);
+        }
+        div:nth-child(6) {
+          // background-color: palegreen;
+          background-image: url('../assets/完成.png');
+          // background-size: 35px 35px;
+          background-repeat: no-repeat;
+          background-position: center center;
+          background-color: rgb(64, 238, 238);
+        }
+      }
     section {
       width: 100vw;
       height: auto;
