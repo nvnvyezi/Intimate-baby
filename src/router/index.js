@@ -13,7 +13,9 @@ import recommend from '@/components/recommend'
 import book from '@/components/book'
 import recom from '@/components/recom'
 import category from '@/components/category'
-import list from '@/components/list'
+
+import list from '@/category/list'
+import cateHome from '@/category/home'
 
 Vue.use(Router)
 Vue.use(MintUI)
@@ -55,22 +57,17 @@ export default new Router({
               name: 'category',
               component: category,
               children: [
-                // {
-                //   path: '/',
-                //   name: 'list',
-                //   component: list
-                // },
-                // {
-                //   path: '/cater',
-                //   name: 'list',
-                //   component: list
-                // }
+                {
+                  path: '/',
+                  name: 'cateHome',
+                  component: cateHome
+                },
+                {
+                  path: '/cater',
+                  name: 'list',
+                  component: list
+                }
               ]
-            }, 
-            {
-              path: '/cater',
-              name: 'list',
-              component: list
             }
           ]
         }

@@ -1,3 +1,4 @@
+//推荐主页面
 <template>
   <div class="box">
     <!-- <h3>强推</h3> -->
@@ -7,7 +8,7 @@
         <mt-swipe-item><img src="../assets/swipe3.jpg" alt="" srcset=""></mt-swipe-item>
     </mt-swipe>
     <nav id="nav2">
-      <router-link to="/" tag="div"><span>强推</span></router-link>
+      <!-- <span to="/" tag="div"><span>强推</span></span> -->
       <router-link to="cate" tag="div"><span>分类</span></router-link>
       <router-link to="" tag="div"><span>排行</span></router-link>
       <router-link to="" tag="div"><span>男频</span></router-link>
@@ -17,24 +18,29 @@
     <section>
       <div class="book-box">
         <h3>推荐书籍</h3>
-        <div class="li__box">
-            <ul>
-              <li v-for="(item, index) in result1" :key="index"><router-link to="/"><img :src="item" :alt="index"><span>{{ index }}</span></router-link></li>
-            </ul>
-          </div>
+        <div v-if="judge" class="li__box">
+          <ul>
+            <li v-for="(item, index) in result1" :key="index"><router-link to="/"><img :src="item" :alt="index"><span>{{ index }}</span></router-link></li>
+          </ul>
         </div>
+        <div v-else class="loading__box">
+          <img src="../assets/b421bb2aafbf4315acf62a078d5c11e2.gif" alt="">
+        </div>
+      </div>
     </section>
     <section>
       <div class="book__box">
-        <h3>推荐书籍</h3>
-        <ul>
+        <h3>书籍列表</h3>
+        <ul v-if="judge1">
           <router-link to="/" tag="li" v-for="(item, index) in result" :key="index">
             <strong>{{ item.sort  }}</strong>
             <span>{{ item.bookName }}</span>
             <span class="r">{{ item.typ }}</span>
-            <!-- <span class="r">{{ item.author }}</span> -->
           </router-link>
         </ul>
+        <div v-else class="loading__box">
+          <img src="../assets/b421bb2aafbf4315acf62a078d5c11e2.gif" alt="">
+        </div>
       </div>
     </section>
   </div>
@@ -45,79 +51,35 @@ import { Swipe, SwipeItem } from 'mint-ui';
 import Vue from 'vue'
 Vue.component(Swipe.name, Swipe);
 Vue.component(SwipeItem.name, SwipeItem);
+import fetchGet from '../wheel/fetchGet'
+import loading from './loadingImg'
 export default {
   name: 'recom',
   data () {
     return {
       result: {},
-      result1: {}
+      result1: {},
+      judge: true,
+      judge1: true
     }
   },
-  mounted () {
+  created () {
+    this.judge = false;
+    this.judge1 = false;
     let that = this;
     if (window.fetch) {
-      let that = this;
-      let myHeaders = new Headers({
-        // 'Access-Control-Allow-Origin': '*',
-        // 'Content-Type': 'text/plain'
+      fetchGet('http://127.0.0.1:3000/bookRec', {}, 'get', (data) => {
+        // console.log(data, '')
+        that.result = data.result;
+        that.judge = true;
       })
-      fetch('http://127.0.0.1:3000/bookRec', {
-        method: 'GET',
-        headers: myHeaders,
-        mode: 'cors'
-      }).then(function (response) {
-        // console.log(response);
-        response.json().then((data) => {
-          // console.log(data.result);
-          that.result = data.result;
-          // console.log(that.result);
-        })
-      }).catch(() => {
-        console.log(2);
+      fetchGet('http://127.0.0.1:3000/bookRem', {}, 'get', (data) => {
+        // console.log(data, '')
+        that.result1 = data.result;
+        that.judge1 = true;
       })
-    } else {
-      $.ajax({
-        type: "get",
-        url: "http://127.0.0.1:3000/bookRem",
-        // data: "data",
-        dataType: "jsonp",
-        success: function (response) {
-          console.log(response);
-        }
-      });
     }
-    if (window.fetch) {
-      let that = this;
-      let myHeaders = new Headers({
-        // 'Access-Control-Allow-Origin': '*',
-        // 'Content-Type': 'text/plain'
-      })
-      fetch('http://127.0.0.1:3000/bookRem', {
-        method: 'GET',
-        headers: myHeaders,
-        mode: 'cors'
-      }).then(function (response) {
-        // console.log(response);
-        response.json().then((data) => {
-          // console.log(data.result);
-          that.result1 = data.result;
-          // console.log(that.result);
-        })
-      }).catch(() => {
-        console.log(2);
-      })
-    } else {
-      $.ajax({
-        type: "get",
-        url: "http://127.0.0.1:3000/bookRem",
-        // data: "data",
-        dataType: "jsonp",
-        success: function (response) {
-          console.log(response);
-        }
-      });
-    }
-  },
+  }
 }
 </script>
 
@@ -148,11 +110,11 @@ export default {
         // bottom: 0;
         // left: 0;
         display: grid;
-        grid-template-columns: repeat(6, 40px);
+        grid-template-columns: repeat(5, 40px);
         grid-template-rows: repeat(1, 40px);
         // justify-items: end;
         // grid-gap: 10px 20px;
-        grid-column-gap: 10px;
+        grid-column-gap: 20px;
         grid-row-gap: 10px;
         justify-content: center;
         div{
@@ -162,6 +124,9 @@ export default {
           // background-color: red;
           display: inline-block;
           border-radius: 16px;
+          background-repeat: no-repeat;
+          background-position: center center;
+          background-size: cover cover;
           span{
             position: relative;
             top: 46px;
@@ -171,51 +136,27 @@ export default {
           }
         }
         div:nth-child(1) {
-          // background-color: palegreen;
           background-image: url('../assets/推荐位.png');
-          // background-size: 35px 35px;
-          background-repeat: no-repeat;
-          background-position: center center;
           background-color: rgb(238, 134, 93);
         }
         div:nth-child(2) {
-          // background-color: palegreen;
           background-image: url('../assets/分类.png');
-          // background-size: 35px 35px;
-          background-repeat: no-repeat;
-          background-position: center center;
           background-color: rgb(152, 88, 235);
         }
         div:nth-child(3) {
-          // background-color: palegreen;
           background-image: url('../assets/排行榜.png');
-          // background-size: 35px 35px;
-          background-repeat: no-repeat;
-          background-position: center center;
           background-color: rgb(245, 179, 57);
         }
         div:nth-child(4) {
-          // background-color: palegreen;
           background-image: url('../assets/男.png');
-          // background-size: 35px 35px;
-          background-repeat: no-repeat;
-          background-position: center center;
           background-color: rgb(60, 180, 250);
         }
         div:nth-child(5) {
-          // background-color: palegreen;
           background-image: url('../assets/女.png');
-          // background-size: 35px 35px;
-          background-repeat: no-repeat;
-          background-position: center center;
           background-color: rgb(37, 194, 37);
         }
         div:nth-child(6) {
-          // background-color: palegreen;
           background-image: url('../assets/完成.png');
-          // background-size: 35px 35px;
-          background-repeat: no-repeat;
-          background-position: center center;
           background-color: rgb(64, 238, 238);
         }
       }
@@ -223,6 +164,7 @@ export default {
       width: 100vw;
       height: auto;
       background-color: white;
+      position: relative;
       .book-box {
         width: 90%;
         height: auto;
@@ -235,6 +177,16 @@ export default {
           font-weight: 400;
           padding: 20px 5px;
         }
+      }
+        .loading__box {
+          width: 100vw;
+          margin-left: -5vw;
+          height: auto;
+          img {
+            width: 100%;
+            height: auto;
+          }
+        }
         .li__box {
           ul {
             list-style-type: none;
@@ -244,10 +196,12 @@ export default {
             justify-items: center;
             grid-row-gap: 40px;
             li {
-              width: 70px;
+              width: 65px;
               height: 100px;
               display: inline-block;
               box-shadow: -5px 4px 2px 0px rgb(223, 220, 220);
+              transform: skewY(-4deg);
+              // overflow-x: hidden;
               // background-color: red;
               img {
                 width: 100%;
@@ -261,8 +215,10 @@ export default {
                 span {
                   margin-top: 20px;
                   padding-top: 20px;
-                  font-size: 0.1rem;
+                  font-size: 0.7rem;
                   font-weight: 400;
+                  color: rgb(155, 155, 160);
+                  transform: scale3d(0.5,0.5,0.5);
                   width: 70px;
                   text-align: left;
                   white-space: nowrap;
@@ -273,7 +229,6 @@ export default {
             }
           }
         }
-      }
     }
     section h3 {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;

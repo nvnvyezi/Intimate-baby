@@ -20,10 +20,11 @@
         </router-link>
       </ul>
     </div>
-    <div v-else class="loading-box">
+    <!-- <div v-else class="loading-box">
       <img src="../assets/b421bb2aafbf4315acf62a078d5c11e2.gif" alt="">
         <loading class="loading_P"></loading>
-    </div>
+    </div> -->
+    <loading v-else></loading>
     <div v-if="judge" class="button__box">
       <button v-if="page !== 1" @click="adcPage">{{ up }}</button>
       <button v-else disabled="disabled">第一页</button>
@@ -36,7 +37,7 @@
 
 <script>
 import fetchGet from '../wheel/fetchGet'
-import loading from './loading'
+import loading from '../components/loadingImg'
 export default {
   components: {
     loading
@@ -92,15 +93,10 @@ export default {
       }
     }
   },
-  mounted () {
+  created () {
     this.getList();
   },
   watch: {
-    '$route': function (to) {
-      if (to.path === '/cater') {
-        this.getList();
-      }
-    },
     page () {
       clearTimeout(timeId);
       let timeId = setTimeout(() => {
@@ -211,23 +207,6 @@ export default {
             // border-bottom: none;
           }
         }
-      }
-      .loading-box {
-        width: 100%;
-        height: 100vh;
-        position: absolute;
-        top: 0%;
-        img {
-          width: 100%;
-        }
-        // background-color: rgb(17, 16, 16);
-        // opacity: 0.2;
-        // .loading_p{
-        //   background-color: red;
-        //   .container1 > div, .container2 > div, .container3 > div {
-        //     background-color: red;
-        //   }
-        // }
       }
       .button__box {
         width: 160px;
