@@ -45,12 +45,16 @@ module.exports = {
 
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, '../dist/index.html'),
+    //index: path.resolve(__dirname, '../intimate-baby/index.html'),
 
     // Paths
-    assetsRoot: path.resolve(__dirname, '../dist'),
+    //assetsRoot: path.resolve(__dirname, '../intimate-baby'),
+    index: '/usr/local/nginx/html/intimate-baby/index.html',
+
+    // Paths
+    assetsRoot: '/usr/local/nginx/html/intimate-baby',
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: './',
 
     /**
      * Source Maps

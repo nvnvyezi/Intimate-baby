@@ -4,23 +4,23 @@ import Router from 'vue-router'
 import MintUI from 'mint-ui'
 import 'mint-ui/lib/style.css'
 
-
-import HelloWorld from '@/components/HelloWorld'
-import loading from '@/components/loading'
-import home from '@/components/home'
-import recommend from '@/components/recommend'
+import HelloWorld from '@/login/HelloWorld'
+// import loading from '@/components/loading'
+import home from '@/components/footNav'
+// import recommend from '@/components/recommend'
 
 import book from '@/components/book'
-import recom from '@/components/recom'
-import category from '@/components/category'
+import recom from '@/components/bookRecom'
+import category from '@/components/bookCategory'
 
-import list from '@/category/list'
-import cateHome from '@/category/home'
+import list from '@/category/bookList'
+import cateHome from '@/category/bookHome'
 
 Vue.use(Router)
 Vue.use(MintUI)
 
 export default new Router({
+  base: 'intimate-baby',
   routes: [
     {
       path: '/login',

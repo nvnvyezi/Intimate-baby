@@ -1,3 +1,4 @@
+//分类的书单
 <template>
   <div class="box">
     <div v-if="judge" class="ul-box">
@@ -82,6 +83,7 @@ export default {
   },
   computed: {
     index () {
+      console.log(this.$store.state.a.index);
       return this.$store.state.a.index;
     },
     page: {
