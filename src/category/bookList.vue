@@ -83,7 +83,7 @@ export default {
   },
   computed: {
     index () {
-      console.log(this.$store.state.a.index);
+      // console.log(this.$store.state.a.index);
       return this.$store.state.a.index;
     },
     page: {

@@ -10,7 +10,7 @@
     <nav id="nav2">
       <!-- <span to="/" tag="div"><span>强推</span></span> -->
       <router-link to="cate" tag="div"><span>分类</span></router-link>
-      <router-link to="" tag="div"><span>排行</span></router-link>
+      <router-link to="seniority" tag="div"><span>排行</span></router-link>
       <router-link to="" tag="div"><span>男频</span></router-link>
       <router-link to="" tag="div"><span>女频</span></router-link>
       <router-link to="" tag="div"><span>完本</span></router-link>

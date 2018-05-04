@@ -1,33 +1,39 @@
 //小说分类
 <template>
   <div class="box">
-    <div class="list">
+    <div v-if="judge" class="list">
       <ul>
         <li v-for="(item, index) in list" :key="index"><i></i><router-link @click.native="urlList" to="cater" tag="span">{{ item }}</router-link></li>
         <!-- <li v-for="(item, index) in list" :key="index"><i></i><span @click="url">{{ item }}</span></li> -->
       </ul>
+    </div>
+    <div v-else class="loading__box">
+      <img src="../assets/b421bb2aafbf4315acf62a078d5c11e2.gif" alt="">
     </div>
   </div>
 </template>
 
 <script>
 import fetchGet from '../wheel/fetchGet'
+import loading from '../components/loadingImg'
 export default {
+  components: {
+    loading
+  },
   name: 'cateHome',
   data () {
     return {
-      list: []
+      list: [],
+      judge: true
     }
   },
-  mounted () {
-    this.$store.dispatch({
-      type: 'hideFalse',
-      bool: true
-    })
+  created () {
+    this.judge = false;
     let that = this;
     if (window.fetch) {
       fetchGet('http://127.0.0.1:3000/bookList', {}, 'get', (data) => {
         this.list = data.result;
+        this.judge = true;
       })
     }
   },
@@ -158,6 +164,14 @@ export default {
             background-image: url('../assets/nvsheng.png');
           }
         }
+      }
+    }
+    .loading__box {
+      width: 100vw;
+      height: auto;
+      img {
+        width: 100%;
+        height: auto;
       }
     }
   }

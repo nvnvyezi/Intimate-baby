@@ -4,17 +4,17 @@ import Router from 'vue-router'
 import MintUI from 'mint-ui'
 import 'mint-ui/lib/style.css'
 
-import HelloWorld from '@/login/HelloWorld'
+// import HelloWorld from '@/login/HelloWorld'
+const HelloWorld = () => import ( /*webpackChunkName: "HelloWorld"*/'@/login/HelloWorld');
 // import loading from '@/components/loading'
-import home from '@/components/footNav'
-// import recommend from '@/components/recommend'
+const home = () => import ( /*webpackChunkName: "footNav"*/'@/components/footNav');
+const book = () => import ( /*webpackChunkName: "book"*/'@/components/book');
+const recom = () => import ( /*webpackChunkName: "bookRecom"*/'@/components/bookRecom');
+const category = () => import ( /*webpackChunkName: "bookCategory"*/'@/components/bookCategory');
+const list = () => import ( /*webpackChunkName: "bookList"*/'@/category/bookList');
+const cateHome = () => import ( /*webpackChunkName: "bookHome"*/'@/category/bookHome');
 
-import book from '@/components/book'
-import recom from '@/components/bookRecom'
-import category from '@/components/bookCategory'
-
-import list from '@/category/bookList'
-import cateHome from '@/category/bookHome'
+import bookSenionityHome from '@/components/bookSeniorityHome'
 
 Vue.use(Router)
 Vue.use(MintUI)
@@ -60,16 +60,27 @@ export default new Router({
                 {
                   path: '/',
                   name: 'cateHome',
-                  component: cateHome
+                  component: cateHome,
+                  meta: {
+                    keepAlive: true
+                  }
                 },
                 {
                   path: '/cater',
                   name: 'list',
-                  component: list
+                  component: list,
+                  meta: {
+                    keepAlive: false
+                  }
                 }
               ]
             }
           ]
+        },
+        {
+          path: '/seniority',
+          name: 'bookSeniorityHome',
+          component: bookSenionityHome
         }
       ]
     }

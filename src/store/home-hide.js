@@ -4,9 +4,8 @@ const homeHide = {
     index: 0,
     page: 1
   },
-  getters: {
-    
-  },
+  // getters: {
+  // },
   mutations: {
     changeHide (state, data) {
       state.hide = data.bool;

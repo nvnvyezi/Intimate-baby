@@ -124,7 +124,7 @@ export default {
     }
     .box {
       width: 100vw;
-      height: 100vh;
+      height: auto;
       background-color: rgb(240, 235, 235);
       .swipe__box {
         width: 100vw;

@@ -12,8 +12,9 @@
       <list></list>
     </div> -->
     <keep-alive>
-      <router-view @changeList="changeList"></router-view>
+      <router-view v-if="$route.meta.keepAlive" @changeList="changeList"></router-view>
     </keep-alive>
+    <router-view v-if="!$route.meta.keepAlive" @changeList="changeList"></router-view>
   </div>
 </template>
 
@@ -100,6 +101,7 @@ export default {
   .box {
     width: 100vw;
     height: auto;
+    // overflow: hidden;
     // margin-top: 10px;
     background-color: rgb(255, 255, 255);
     nav {
