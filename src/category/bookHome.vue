@@ -1,16 +1,17 @@
 //小说分类
 <template>
   <div class="box">
-    <div v-if="judge" class="list">
+    <p class="refresh"></p>
+    <div ref="aaa" v-if="judge" class="list seniority__list">
       <ul>
-        <li v-for="(item, index) in list" :key="index"><i></i><router-link @click.native="urlList" to="cater" tag="span">{{ item }}</router-link></li>
-        <!-- <li v-for="(item, index) in list" :key="index"><i></i><span @click="url">{{ item }}</span></li> -->
+        <li v-for="(item, index) in list" :key="index"><i></i><router-link @click.native="urlList" :to="userRouter" tag="span">{{ item }}</router-link></li>
       </ul>
     </div>
     <div v-else class="loading__box">
       <img src="../assets/b421bb2aafbf4315acf62a078d5c11e2.gif" alt="">
     </div>
   </div>
+  
 </template>
 
 <script>
@@ -18,20 +19,65 @@ import fetchGet from '../wheel/fetchGet'
 import loading from '../components/loadingImg'
 export default {
   components: {
-    loading
+    loading,
   },
   name: 'cateHome',
   data () {
     return {
       list: [],
-      judge: true
+      judge: true,
+      refreshJudge: false,
+      userRouter: 'cater'
     }
   },
+  // updated () {
+  //   const refresh = document.getElementsByClassName('refresh');
+  //   const seniority__list = document.getElementsByClassName('seniority__list');
+  //   let _startPos = 0;
+  //   let transitionHeight = 0;
+  //   let scrollTop = 0;
+  //   seniority__list[0].addEventListener('touchstart', function (e) {  
+  //     // console.log('初始位置', e.touches[0].pageY);
+  //     scrollTop = document.body.scrollTop;
+  //     _startPos = e.touches[0].pageY;
+  //   }, false);
+  //   seniority__list[0].addEventListener('touchmove', function (e) {  
+  //     // console.log('当前位置', e.touches[0].pageY);
+  //     transitionHeight = e.touches[0].pageY - _startPos;
+  //     if (transitionHeight > 0 && scrollTop === 0 && transitionHeight < 60) {
+  //       // console.log(seniority__list)
+  //       refresh[0].innerText = '下拉刷新';
+  //       seniority__list[0].style.transform = 'translateY(' + transitionHeight +'px)';
+  //       if (window.fetch) {
+  //         fetchGet('http://127.0.0.1:3000/bookList', {}, 'get', (data) => {
+  //           refresh[0].innerText = '成功';
+  //           seniority__list[0].classList.remove('refresh__transition');
+  //           setTimeout(() => {
+  //             refresh[0].innerText = '';
+  //           }, 500);
+  //           this.list = data.result;
+  //         })
+  //       }
+  //     }
+  //   }, false);
+  //   seniority__list[0].addEventListener('touchend', function (e) {  
+  //     seniority__list[0].classList.add('refresh__transition');
+  //     seniority__list[0].style.transform = 'translateY(0px)';
+  //     refresh[0].innerText = '更新中...';
+  //     // console.log(seniority__list[0].offsetTop);
+  //   })
+  // },
   created () {
     this.judge = false;
     let that = this;
+    if (this.$route.path === '/cate') {
+      this.userRouter = 'cater';
+    }
+    if (this.$route.path === '/seniority') {
+      this.userRouter = 'seniorityList';
+    }
     if (window.fetch) {
-      fetchGet('http://127.0.0.1:3000/bookList', {}, 'get', (data) => {
+      fetchGet('http://'+ window.location.hostname +':3000/bookList', {}, 'get', (data) => {
         this.list = data.result;
         this.judge = true;
       })
@@ -69,7 +115,9 @@ export default {
       }
     },
     sendIndex (num) {
-      this.$emit('changeList', this.list[num]);
+      if (this.$route.path === '/cate') {
+        this.$emit('changeList', this.list[num]);
+      }
       this.$store.dispatch({
         type: 'changeNum',
         num: num
@@ -90,6 +138,12 @@ export default {
     height: auto;
     // margin-top: 10px;
     background-color: rgb(255, 255, 255);
+    .refresh {
+      text-align: center;
+    }
+    .refresh__transition {
+      transition: transform .5s ease .1s;
+    }
     .list {
       width: 100vw;
       height: auto;
@@ -99,13 +153,7 @@ export default {
           line-height: 20px;
           list-style-type: none;
           display: inline-block;
-          // background-image: url('../assets/swipe.jpg');
-          // border-radius: 10px;
-          // background-size: 40px 40px;
-          // background-repeat: no-repeat;
-          // background-position: left top;
           border-bottom: 1px solid rgb(236, 236, 236);
-          // background-color: white;
           i {
             width: 40px;
             height: 40px;

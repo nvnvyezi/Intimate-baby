@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import $ from 'jquery'
 import fetchGet from '../wheel/fetchGet'
 import loading from '../components/loadingImg'
 export default {
@@ -75,9 +76,19 @@ export default {
     getList () {
       this.judge = false;
       if (window.fetch) {
-        fetchGet('http://'+ window.location.hostname +':3000/allList', {list: this.index, page: this.page}, 'get', (data) => {
-          this.list = data.result;
+        fetchGet('http://'+ window.location.hostname +':3000/bookSeniorityHome', {listNum: this.index, pageNum: this.page, dateNum: this.dateNum}, 'get', (data) => {
+          // console.log(data)
+          this.list = data.result.listArr;
           this.judge = true;
+        });
+        $.ajax({
+          type: "get",
+          url: "http://g.hongshu.com/bookajax/search.do?keyword=一",
+          // data: "data",
+          dataType: "jsonp",
+          success: function (response) {
+            console.log(response)
+          }
         });
       }
     }
@@ -94,14 +105,23 @@ export default {
       set: function (value) {
         this.$store.state.a.page = value;
       }
+    },
+    dateNum () {
+      return this.$store.state.a.dateNum;
     }
   },
   created () {
     this.getList();
+    this.$emit('changeName');
   },
   watch: {
     page () {
       clearTimeout(timeId);
+      let timeId = setTimeout(() => {
+        this.getList();
+      }, 100);
+    },
+    dateNum () {
       let timeId = setTimeout(() => {
         this.getList();
       }, 100);

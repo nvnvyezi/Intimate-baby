@@ -2,17 +2,10 @@
 
 <template>
   <div class="box">
-    <nav>
-      <div @click="back">↤</div>
-      <div>
-        <span>{{ listName }}</span>
-      </div>
-      <router-link to="/" tag="div">H</router-link>
-    </nav>
-    <p class="refresh"></p>
+    <!-- <p class="refresh"></p> -->
     <div class="seniority__list">
-      <ul v-for="(item, index) in data" :key="index">
-        <li><h3>{{ item.title }}</h3><p>{{ item.text }}</p></li>
+      <ul>
+        <router-link to="senioritylist" tag="li" v-for="(item, index) in data" :key="index"><i></i><div class="seniority__list--section"><h3>{{ item.title }}</h3><p>{{ item.text }}</p></div></router-link>
       </ul>
     </div>
   </div>
@@ -47,39 +40,6 @@ export default {
         },
       ]
     }
-  },
-  created () {
-    const refresh = document.getElementsByClassName('refresh');
-    const seniority__list = document.getElementsByClassName('seniority__list');
-    let _startPos = 0;
-    let transitionHeight = 0;
-    let scrollTop = 0;
-    document.addEventListener('touchstart', function (e) {  
-      console.log('初始位置', e.touches[0].pageY);
-      scrollTop = document.body.scrollTop;
-      _startPos = e.touches[0].pageY;
-      // console.log(box);
-      // box[1].style.transition = 'transform 0s';
-    }, false);
-    document.addEventListener('touchmove', function (e) {  
-      // console.log('当前位置', e.touches[0].pageY);
-      transitionHeight = e.touches[0].pageY - _startPos;
-      if (transitionHeight > 0 && scrollTop === 0) {
-        // console.log(seniority__list)
-        refresh[0].innerText = '下拉刷新';
-        seniority__list[0].style.transform = 'translateY(' + transitionHeight +'px)';
-      }
-    }, false);
-    document.addEventListener('touchend', function (e) {  
-      seniority__list[0].style.transition = 'transform 0.5s ease 1s';
-      seniority__list[0].style.transform = 'translateY(0px)';
-      refresh[0].innerText = '更新中...';
-    })
-  },
-  methods: {
-    back () {
-      this.$router.go(-1);
-    }
   }
 }
 </script>
@@ -96,15 +56,72 @@ export default {
     // overflow: hidden;
     // margin-top: 10px;
     position: relative;
-    background-color: rgb(255, 255, 255);
-    nav {
-      width: 100%;
-      line-height: 45px;
-      background-color: rgb(241, 157, 60);
-      display: grid;
-      grid-template-columns: 50px auto 50px;
-      color: white;
-      text-align: center;
+    background-color: rgb(241, 240, 240);
+    .seniority__list {
+      width: 100vw;
+      height: auto;
+      ul {
+        list-style-type: none;
+        li {
+          display: inline-block;
+          width: 100%;
+          height: 80px;
+          border-bottom: 5px solid rgb(241, 240, 240);
+          background-color: white;
+          i {
+            width: 40px;
+            height: 80px;
+            float: left;
+            border-left: 10px solid transparent;
+            display: inline-block;
+            background-image: url('../assets/all.png');
+            border-radius: 50%;
+            background-size: 30px 30px;
+            background-repeat: no-repeat;
+            background-position: center center;
+          }
+          .seniority__list--section {
+            width: 200px;
+            height: 50px;
+            border-left: 60px solid transparent;
+            border-top: 20px solid transparent;
+            h3 {
+              display: block;
+              font-size: .9rem;
+              font-weight: 400;
+            }
+            p {
+              font-size: 0.7rem;
+              font-weight: 300;
+            }
+          }
+        }
+        li:nth-child(2) {
+          i {
+            background-image: url('../assets/xuanhuan.png');
+          }
+        }
+        li:nth-child(3) {
+          i {
+            background-image: url('../assets/wuxia.png');
+          }
+        }
+        li:nth-child(4) {
+          i {
+            background-image: url('../assets/kehuan.png');
+          }
+        }
+        li:nth-child(5) {
+          i {
+            background-image: url('../assets/lishi.png');
+          }
+        }
+        li:nth-child(6) {
+          i {
+            background-image: url('../assets/dushi.png');
+          }
+        }
+      }
     }
   }
 }

@@ -2,7 +2,8 @@ const homeHide = {
   state: {
     hide: true,
     index: 0,
-    page: 1
+    page: 1,
+    dateNum: 0
   },
   // getters: {
   // },
@@ -15,6 +16,9 @@ const homeHide = {
     },
     page (state, data) {
       state.page = data.page;
+    },
+    changeDateNum (state, data) {
+      state.dateNum = data.num;
     }
   },
   actions: {
@@ -26,6 +30,9 @@ const homeHide = {
     },
     changePage ({ commit }, data) {
       commit('page', data);
+    },
+    changeDate ({ commit }, data) {
+      commit('changeDateNum', data);
     }
   }
 }

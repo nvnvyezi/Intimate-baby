@@ -68,12 +68,12 @@ export default {
     this.judge1 = false;
     let that = this;
     if (window.fetch) {
-      fetchGet('http://127.0.0.1:3000/bookRec', {}, 'get', (data) => {
+      fetchGet('http://'+ window.location.hostname +':3000/bookRec', {}, 'get', (data) => {
         // console.log(data, '')
         that.result = data.result;
         that.judge = true;
       })
-      fetchGet('http://127.0.0.1:3000/bookRem', {}, 'get', (data) => {
+      fetchGet('http://'+ window.location.hostname +':3000/bookRem', {}, 'get', (data) => {
         // console.log(data, '')
         that.result1 = data.result;
         that.judge1 = true;

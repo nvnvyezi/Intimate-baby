@@ -14,7 +14,9 @@ const category = () => import ( /*webpackChunkName: "bookCategory"*/'@/component
 const list = () => import ( /*webpackChunkName: "bookList"*/'@/category/bookList');
 const cateHome = () => import ( /*webpackChunkName: "bookHome"*/'@/category/bookHome');
 
-import bookSenionityHome from '@/components/bookSeniorityHome'
+const bookSeniorityRouter = () => import ( /*webpackChunkName: "bookSeniorityRouter"*/'@/components/bookSeniorityRouter');
+// const bookSeniorityHome = () => import ( /*webpackChunkName: "bookSeniorityHome"*/'@/components/bookSeniorityHome');
+const bookSeniorityList = () => import ( /*webpackChunkName: "bookSeniorityList"*/'@/components/bookSeniorityList');
 
 Vue.use(Router)
 Vue.use(MintUI)
@@ -79,8 +81,33 @@ export default new Router({
         },
         {
           path: '/seniority',
-          name: 'bookSeniorityHome',
-          component: bookSenionityHome
+          name: 'book',
+          component: book,
+          children: [
+            {
+              path: '/',
+              name: 'bookSeniorityRouter',
+              component: bookSeniorityRouter,
+              children: [
+                {
+                  path: '/',
+                  name: 'cateHome',
+                  component: cateHome,
+                  meta: {
+                    keepAlive: true
+                  }
+                },
+                {
+                  path: '/seniorityList',
+                  name: 'bookSeniorityList',
+                  component: bookSeniorityList,
+                  meta: {
+                    keepAlive: false
+                  }
+                },
+              ]
+            },
+          ]
         }
       ]
     }
