@@ -18,6 +18,9 @@ const bookSeniorityRouter = () => import ( /*webpackChunkName: "bookSeniorityRou
 // const bookSeniorityHome = () => import ( /*webpackChunkName: "bookSeniorityHome"*/'@/components/bookSeniorityHome');
 const bookSeniorityList = () => import ( /*webpackChunkName: "bookSeniorityList"*/'@/components/bookSeniorityList');
 
+const bookSearchRouter = () => import ( /*webpackChunkName: "bookSearchRouter"*/'@/components/bookSearchRouter');
+const bookSearch = () => import ( /*webpackChunkName: "bookSearch"*/'@/components/bookSearch');
+
 Vue.use(Router)
 Vue.use(MintUI)
 
@@ -108,7 +111,19 @@ export default new Router({
               ]
             },
           ]
-        }
+        },
+        {
+          path: '/booksearch',
+          name: 'bookSearchRouter',
+          component: bookSearchRouter,
+          children: [
+            {
+              path: '/',
+              name: 'bookSearch',
+              component: bookSearch,
+            }
+          ]
+        },
       ]
     }
   ]
