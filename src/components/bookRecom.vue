@@ -116,19 +116,30 @@
       <div class="bestSelling__ul">
         <router-link class="bestSelling__ul__li" v-for="(item, index) in bestSelResult" :key="index" to="" tag="li">
           <div v-if="index === 0" class="bestSelling__ul__li__block">
-            <img class="bestSelling__ul__li__block--img" :src="item.imgUrl" :alt="item.bookName" />
-            <h3 class="bestSelling__ul__li__block--title">{{ item.bookName }}</h3>
-            <p class="bestSelling__ul__li__block--author">{{ item.authorName }}</p>
-            <p class="bestSelling__ul__li__block--info">{{ item.introduction }}</p>
-            <span class="bestSelling__ul__li__block--stat">{{ item.stat_name }}</span>
-            <span class="bestSelling__ul__li__block--size">{{ item.size }}</span>
-            <span class="bestSelling__ul__li__block--tag">{{ item.tag }}</span>
+            <div class="bestSelling__ul__li__block--left">
+              <img class="bestSelling__ul__li__block--left--img" :src="item.imgUrl" :alt="item.bookName" />
+              <i class="bestSelling__ul__li__block--left--icon"></i>
+            </div>
+            <div class="bestSelling__ul__li__block--right">
+              <h3 class="bestSelling__ul__li__block--right--title">{{ item.bookName }}</h3>
+              <p class="bestSelling__ul__li__block--right--author">{{ item.authorName }}</p>
+              <p class="bestSelling__ul__li__block--right--info">{{ item.introduction }}</p>
+              <div class="bestSelling__ul__li__block--right--tag">
+                <span class="bestSelling__ul__li__block--right--stat">{{ item.stat_name }}</span>
+                <span class="bestSelling__ul__li__block--right--size">{{ item.size }}</span>
+                <span class="bestSelling__ul__li__block--right--tags">{{ item.tag }}</span>
+              </div>
+            </div>
           </div>
+          <i v-show="index !== 0" class="bestSelling__ul__li--list">{{ index + 1 }}</i>
           <h3 class="bestSelling__ul__li--title" v-show="index !== 0">{{ item.bookName }}</h3>
           <span class="bestSelling__ul__li--stat" v-show="index !== 0">{{ item.stat_name }}</span>
           <span class="bestSelling__ul__li--type" v-show="index !== 0">{{ item.class_name }}</span>
         </router-link>
       </div>
+      <router-link @click.native="changeProp" to="moreBook" tag="span" class="bestSelling__foot">
+        <div class="bestSelling__foot--text">查看更多</div>
+      </router-link>
     </section>
   </div>
 </template>
@@ -146,6 +157,7 @@ export default {
     return {
       result: {},
       result1: [],
+      swipeData: [],
       boyResult: [],
       boyResult1: [],
       girlResult: [],
@@ -162,7 +174,7 @@ export default {
       judge1: true,
       refreshJudge: true,
       refreshJudge1: true,
-      swipeData: []
+      moreProp: ''
     }
   },
   created () {
@@ -214,6 +226,12 @@ export default {
     this.getBestSelling();
   },
   methods: {
+    changeProp () {
+      this.$store.commit({
+        type: 'changeMoreBookTitle',
+        title: this.list4
+      })
+    },
     getRecom (callback) {
       const options = {
         appId: '11',
@@ -408,7 +426,7 @@ export default {
             obj.bid = item.bid;
             obj.bookName = item.bookname;
             obj.authorName = item.author_name;
-            obj.size = Math.ceil(parseInt(item.size.slice(0, 3)));
+            obj.size = item.size.slice(0, 3) + '万字';
             obj.stat_name = item.stat_name;
             obj.class_name = item.class_name;
             obj.introduction = item.introduction;
@@ -447,6 +465,7 @@ export default {
 
 <style lang="less" scoped>
 @media screen and(max-width: 720px){
+  @graycolor:rgb(155, 155, 160);
   .box {
     width: 100vw;
     height: auto;
@@ -456,6 +475,30 @@ export default {
       font-size: 0.5rem;
       font-weight: 400;
       padding: 20px 5px;
+    }
+    .statNameG {
+      height: 1rem;
+      line-height: 1rem;
+      padding: 0.2rem 0.5rem 0.1rem;
+    }
+    .statName (@fcolor: #70a7e3) {
+      .statNameG;
+      color: @fcolor;
+      border: 0.005rem solid @fcolor;
+      margin-right: 0.3rem;
+      font-size: 0.7rem;
+    }
+    .statNamered {
+      .statName(#f08300)
+    }
+    .statNameblue {
+      .statName(#499fff);
+    }
+    .borderColorG {
+      height: 13/12rem;
+      padding: 0.2rem 0.5rem 0.1rem;
+      color: @graycolor;
+      border: 0.005rem solid @graycolor;
     }
     #nav2 {
       width: 100vw;
@@ -565,24 +608,6 @@ export default {
             }
             .boy__box--text__ul--li--tags {
               width: 35%;
-              .statNameG {
-                height: 1rem;
-                line-height: 1rem;
-                padding: 0.3rem 0.5rem 0.1rem;
-              }
-              .statName (@fcolor: #70a7e3) {
-                .statNameG;
-                color: @fcolor;
-                border: 0.005rem solid @fcolor;
-                margin-right: 0.5rem;
-                font-size: 0.7rem;
-              }
-              .statNamered {
-                .statName(#f08300)
-              }
-              .statNameblue {
-                .statName(#70a7e3);
-              }
               span:last-child {
                 .statNameG;
                 color: rgb(160, 158, 158);
@@ -728,19 +753,132 @@ export default {
         height: auto;
         margin: 0 auto;
         list-style: none;
+        .bestSellH3 {
+          font-size: 1.5rem;
+          font-weight: 550;
+          padding: 0;
+        }
         .bestSelling__ul__li:first-child {
           width: 100%;
           height: 145/12rem;
-          .bestSelling__ul__li--img {
-            width: 84/12rem;
-            height: 112/12rem;
-            float: left;
+          border-top: none;
+          .bestSelling__ul__li__block {
+            width: 100%;
+            height: auto;
+            .bestSelling__ul__li__block--left {
+              width: 84/12rem;
+              height: 112/12rem;
+              float: left;
+              position: relative;
+              .bestSelling__ul__li__block--left--img {
+                width: 100%;
+                height: auto;
+              }
+              .bestSelling__ul__li__block--left--icon {
+                background-image: url('../assets/bestSellicon.png');
+                display: inline-block;
+                width: 22.5/12rem;
+                height: 34.5/12rem;
+                position: absolute;
+                top: 0;
+                z-index: 2;
+                background-size: 100% 100%;
+                background-repeat: no-repeat;
+              }
+            }
+            .bestSelling__ul__li__block--right {
+              width: 188/12rem;
+              height: 113/12rem;
+              float: right;
+              .bestSelling__ul__li__block--right--title {
+                .bestSellH3;
+              }
+              .bestSelling__ul__li__block--right--author {
+                font-size: 0.7rem;
+                color: @graycolor;
+                margin: 0.4rem 0;
+              }
+              .bestSelling__ul__li__block--right--info {
+                width: 100%;
+                height: 3rem;
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                text-overflow: ellipsis;
+                color: @graycolor;
+                margin: 0.5rem 0;
+              }
+              .bestSelling__ul__li__block--right--tag {
+                .bestSelling__ul__li__block--right--stat {
+                  .statNamered;
+                }
+                .bestSelling__ul__li__block--right--size {
+                  width: 58.03/12rem;
+                  .borderColorG;
+                }
+                .bestSelling__ul__li__block--right--tags {
+                  width: 38.02/12rem;
+                  margin-left: 0.3rem;
+                  .borderColorG;
+                }
+              }
+            }
           }
         }
         .bestSelling__ul__li {
           width: 100%;
           height: 52/12rem;
+          border-top: 1px solid (@graycolor * 1.53);
+          display: -webkit-box;
+          -webkit-box-orient: horizontal;
+          -webkit-box-align: center;
+          .bestSelling__ul__li--list {
+            .bestSellH3;
+            font-size: 2rem;
+            -webkit-box-flex: 1;
+            color: @graycolor;
+          }
+          .bestSelling__ul__li--title {
+            .bestSellH3;
+            -webkit-box-flex: 3;
+            margin-left: 1rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          .bestSelling__ul__li--stat {
+            text-align: right;
+            -webkit-box-flex: 2;
+            .statNameblue;
+          }
+          .bestSelling__ul__li--type {
+            .borderColorG;
+          }
         }
+        .bestSelling__ul__li:nth-child(2) {
+          .bestSelling__ul__li--list {
+            color: #FFBE73;
+          }
+        }
+        .bestSelling__ul__li:nth-child(3) {
+          .bestSelling__ul__li--list {
+            color: #FFD873;
+          }
+        }
+      }
+      .bestSelling__foot {
+        width: 100%;
+        height: 48/12rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .bestSelling__foot--text {
+          font-size: 1.4rem;
+          letter-spacing: 0.05rem;
+        }
+      }
+      .bestSelling__foot:hover {
+        background-color: #f7f7fa;
       }
     }
   }

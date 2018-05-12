@@ -3,7 +3,8 @@ const homeHide = {
     hide: true,
     index: 0,
     page: 1,
-    dateNum: 0
+    dateNum: 0,
+    moreBookTitle: '畅销榜'
   },
   // getters: {
   // },
@@ -19,6 +20,9 @@ const homeHide = {
     },
     changeDateNum (state, data) {
       state.dateNum = data.num;
+    },
+    changeMoreBookTitle (state, data) {
+      state.moreBookTitle = data.title;
     }
   },
   actions: {

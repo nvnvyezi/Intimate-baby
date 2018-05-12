@@ -10,6 +10,8 @@ const HelloWorld = () => import ( /*webpackChunkName: "HelloWorld"*/'@/login/Hel
 const home = () => import ( /*webpackChunkName: "footNav"*/'@/components/footNav');
 const book = () => import ( /*webpackChunkName: "book"*/'@/components/book');
 const recom = () => import ( /*webpackChunkName: "bookRecom"*/'@/components/bookRecom');
+const moreBook = () => import ( /*webpackChunkName: "moreBook"*/'@/components/templateMoreBook');
+
 const category = () => import ( /*webpackChunkName: "bookCategory"*/'@/components/bookCategory');
 const list = () => import ( /*webpackChunkName: "bookList"*/'@/category/bookList');
 const cateHome = () => import ( /*webpackChunkName: "bookHome"*/'@/category/bookHome');
@@ -42,11 +44,6 @@ export default new Router({
       name: 'home',
       component: home,
       children: [
-        // {
-        //   path: '/',
-        //   name: 'recommend',
-        //   component: recommend
-        // },
         {
           path: '/',
           name: 'book',
@@ -58,7 +55,19 @@ export default new Router({
               component: recom
             },
             {
-              path: '/cate',
+              path: '/moreBook',
+              name: 'moreBook',
+              component: moreBook
+            }
+          ]
+        },
+        {
+          path: '/cate',
+          name: 'book',
+          component: book,
+          children: [
+            {
+              path: '/',
               name: 'category',
               component: category,
               children: [
