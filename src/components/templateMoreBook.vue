@@ -9,12 +9,12 @@
     </nav>
     <nav class="navType">
       <ul class="navType__ul">
-        <li class="navType__ul__li liColor">男生</li>
-        <li class="navType__ul__li">女生</li>
+        <li class="navType__ul__li liColor"  @click="changeSex">男生</li>
+        <li class="navType__ul__li"  @click="changeSex">女生</li>
       </ul>
     </nav>
-    <bookList v-if="sexJudge" sex="男生"></bookList>
-    <bookList v-else sex="女生"></bookList>
+    <bookList v-if="sexJudge" :sex=sex></bookList>
+    <bookList v-else :sex=sex></bookList>
   </div>
 </template>
 
@@ -27,7 +27,8 @@ export default {
   name: 'moreBook',
   data () {
     return {
-      sexJudge: true
+      sexJudge: true,
+      sex: 'man'
     }
   },
   computed: {
@@ -44,6 +45,19 @@ export default {
   methods: {
     back () {
       this.$router.go(-1);
+    },
+    changeSex () {
+      this.sexJudge = !this.sexJudge;
+      const li = document.getElementsByClassName('navType__ul__li');
+      if (this.sexJudge) {
+        this.sex = 'man';
+        li[1].classList.remove('liColor');
+        li[0].classList.add('liColor');
+      } else {
+        this.sex = 'woman';
+        li[0].classList.remove('liColor');
+        li[1].classList.add('liColor');
+      }
     }
   }
 }

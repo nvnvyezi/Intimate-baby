@@ -137,9 +137,23 @@
           <span class="bestSelling__ul__li--type" v-show="index !== 0">{{ item.class_name }}</span>
         </router-link>
       </div>
-      <router-link @click.native="changeProp" to="moreBook" tag="span" class="bestSelling__foot">
+      <router-link @click.native="changeProp" to="moreBook" tag="div" class="bestSelling__foot">
         <div class="bestSelling__foot--text">查看更多</div>
       </router-link>
+    </section>
+    <section class="new">
+      <h3>{{ list5 }}</h3>
+      <div class="new--middle">
+        <ul class="new--middle__ul">
+          <router-link class="new--middle__ul__li" to="" tag="li" v-for="(item, index) in newResult" :key="index">
+            <img class="new--middle__ul__li--img" :src="item.imgUrl" :alt="item.linkText" />
+            <span class="new--middle__ul__li--title">{{ item.linkText }}</span>
+          </router-link>
+        </ul>
+      </div>
+      <div class="new--foot">
+        <router-link class="new--foot__title" to="moreBook" tag="div">查看更多</router-link>
+      </div>
     </section>
   </div>
 </template>
@@ -164,11 +178,13 @@ export default {
       girlResult1: [],
       doneResult: [],
       bestSelResult: [],
+      newResult: [],
       list: '',
       list1: '',
       list2: '',
       list3: '',
       list4: '',
+      list5: '',
       judge: true,
       doneJudge: true,
       judge1: true,
@@ -226,11 +242,14 @@ export default {
     this.getBestSelling();
   },
   methods: {
-    changeProp () {
-      this.$store.commit({
-        type: 'changeMoreBookTitle',
-        title: this.list4
-      })
+    changeProp (e) {
+      console.log(document.documentElement.scrollTop, document.body.scrollTop)
+      if (e.currentTarget.getAttribute('class') === 'bestSelling__foot') {
+        this.$store.commit({
+          type: 'changeMoreBookTitle',
+          title: '精品畅销'
+        })
+      }
     },
     getRecom (callback) {
       const options = {
@@ -421,6 +440,7 @@ export default {
         fetchGet('http://novelapi.sm.cn/eva_bookstore/v1/module/query', options, 'get', (data) => {
           // console.log(data, data.data.module[3].m_s_name)
           this.list4 = data.data.module[4].m_s_name;
+          this.list5 = data.data.module[8].m_s_name;
           Array.prototype.forEach.call(data.data.module[4].content, (item, index) => { 
             let obj = {};
             obj.bid = item.bid;
@@ -434,28 +454,13 @@ export default {
             obj.imgUrl = item.book_cover;
             this.bestSelResult.push(obj);
           })
-          // Array.prototype.forEach.call(data.data.module[6].content, (item, index) => { 
-          //   let obj = {};
-          //   obj.bid = item.bid;
-          //   if (index < 4) {
-          //     obj.imgUrl = item.book_cover;
-          //     obj.linkText = item.bookname.length < 5 ? item.bookname : item.bookname.slice(0, 3) + '...';
-          //     this.girlResult.push(obj);
-          //   } else {
-          //     obj.linkText = item.bookname;
-          //     obj.stat_name = item.stat_name;
-          //     obj.class_name = item.class_name;
-          //     obj.introduction = item.introduction;
-          //     this.girlResult1.push(obj);
-          //   }
-          // })
-          // Array.prototype.forEach.call(data.data.module[9].content, (item) => {  
-          //   let obj = {};
-          //   obj.imgUrl = item.book_cover;
-          //   obj.linkText = item.bookname.length < 5 ? item.bookname : item.bookname.slice(0, 3) + '...';
-          //   obj.bid = item.bid;
-          //   this.doneResult.push(obj);
-          // })
+          Array.prototype.forEach.call(data.data.module[8].content, (item) => {  
+            let obj = {};
+            obj.imgUrl = item.book_cover;
+            obj.linkText = item.bookname.length < 5 ? item.bookname : item.bookname.slice(0, 3) + '...';
+            obj.bid = item.bid;
+            this.newResult.push(obj);
+          })
         })
       }
     }
@@ -743,8 +748,9 @@ export default {
     }
     .bestSelling {
       width: 100%;
-      height: 32rem;
+      height: 39rem;
       background-color: white;
+      border-bottom: 0.7rem solid #f0ebeb;
       h3 {
         .sectionH3;
       }
@@ -879,6 +885,52 @@ export default {
       }
       .bestSelling__foot:hover {
         background-color: #f7f7fa;
+      }
+    }
+    .new {
+      width: 100%;
+      height: 232/12rem;
+      background-color: white;
+      h3 {
+        .sectionH3;
+      }
+      .new--middle {
+        width: 320/12rem;
+        height: 120/12rem;
+        .new--middle__ul {
+          width: 90%;
+          height: 100%;
+          margin: 0 auto;
+          display: grid;
+          grid-template-columns: repeat(4, 25%);
+          list-style: none;
+          justify-items: center;
+          .new--middle__ul__li {
+            width: 60/12rem;
+            height: 79.98/12rem;
+            .new--middle__ul__li--img {
+              width: 100%;
+              height: 100%;
+            }
+            .new--middle__ul__li--title {
+              color: #a7a7a7;
+            }
+          }
+        }
+      }
+      .new--foot {
+        width: 100%;
+        height: 48/12rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .new--foot__title {
+          font-size: 1.4rem;
+          letter-spacing: 0.05rem;
+        }
+        &:hover {
+          background-color: #f7f7fa;
+        }
       }
     }
   }

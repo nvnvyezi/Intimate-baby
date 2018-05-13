@@ -36,7 +36,7 @@ let fetchGet = (url, params, method, callback) => {
       } else {
         url += '&' + paramsArr.join('&');
       }
-      console.log('url', url);
+      // console.log('url', url);
       fetch(url, {
         method: 'get',
         mode: 'cors'
