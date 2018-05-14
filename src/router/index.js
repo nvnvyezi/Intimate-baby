@@ -4,6 +4,12 @@ import Router from 'vue-router'
 import MintUI from 'mint-ui'
 import 'mint-ui/lib/style.css'
 
+import lazyLoad from '../wheel/lazyLoad'
+
+Vue.use(Router)
+Vue.use(MintUI)
+Vue.use(lazyLoad)
+
 // import HelloWorld from '@/login/HelloWorld'
 const HelloWorld = () => import ( /*webpackChunkName: "HelloWorld"*/'@/login/HelloWorld');
 // import loading from '@/components/loading'
@@ -22,9 +28,6 @@ const bookSeniorityList = () => import ( /*webpackChunkName: "bookSeniorityList"
 
 const bookSearchRouter = () => import ( /*webpackChunkName: "bookSearchRouter"*/'@/components/bookSearchRouter');
 const bookSearch = () => import ( /*webpackChunkName: "bookSearch"*/'@/components/bookSearch');
-
-Vue.use(Router)
-Vue.use(MintUI)
 
 export default new Router({
   base: 'intimate-baby',

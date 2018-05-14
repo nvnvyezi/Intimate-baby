@@ -4,16 +4,31 @@
       <div class="form__search__content">
         <span class="form__search__content--icon"></span>
         <input class="form__search__content--input" type="text" name="" @input="getSearchData" placeholder="书名/作者/关键词" />
-        <router-link class="form__search__content--button" to="bookSearchList" @click.native="saveHistory" tag="button">搜索</router-link>
+        <!-- <router-link class="form__search__content--button" to="bookSearchList" @click.native="saveHistory" tag="button">搜索</router-link> -->
       </div>
     </div>
     <div v-show="searchJudge" class="searchDataBox1">
       <ul class="searchDataBox1__ul">
-        <li class="searchDataBox1__ul--li" v-for="(item, index) in searchData1" :key="index">{{ item }}</li>
+        <router-link to="" class="searchDataBox1__ul--li" tag="li" @click.native="saveHistory" v-for="(item, index) in searchData1" :key="index">{{ item }}</router-link>
       </ul>
     </div>
-    <div>
-      <header><h3>搜索历史</h3></header>
+    <div class="recommend" style="border-bottom: 0.7rem solid rgb(243, 243, 243);">
+      <ul class="recommend--ul">
+        <li class="recommend--ul--li" v-for="(item, index) in recommendData" :key="index">{{ item }}</li>
+      </ul>
+      <div class="refresh__box" @click="addrefresh1">
+        <span class="refresh__box--text">换一换</span>
+        <span class="refresh__box--icon"></span>
+      </div>
+    </div>
+    <div class="history">
+      <header class="history--header">
+        <h3 class="history--header--h3">搜索历史</h3>
+        <span class="history--header--delete">删除</span>
+      </header>
+      <ul class="history--ul">
+        <router-link to="" class="history__ul--li" tag="li" v-for="(item, index) in localData" :key="index">{{ item }}</router-link>
+      </ul>
     </div>
   </div>
 </template>
@@ -28,10 +43,53 @@ export default {
       searchJudge: false,
       searchData1: [],
       q: '',
-      searchHistory: []
+      searchHistory: [],
+      recommendData: [],
+      refreshJudge: true,
+      localData: []
+    }
+  },
+  created () {
+    this.getrecomData();
+  },
+  mounted () {
+    if (localStorage.getItem('searchHistory') !== null) {
+      this.localData = localStorage.getItem('searchHistory').split(',');
     }
   },
   methods: {
+    addrefresh1 () {
+      if (this.refreshJudge) {
+        this.refreshJudge = false;
+        this.judge  = false;
+        this.getrecomData();
+        let refresh = document.getElementsByClassName('refresh__box--icon');
+        refresh[0].classList.add('refreshing');
+        setTimeout(() => {
+          this.refreshJudge = true;
+          refresh[0].classList.remove('refreshing');
+        }, 1000);
+      }
+    },
+    getrecomData () {
+      if (window.fetch) {
+        const options = {
+          do: 'is_payreco',
+          id: '8000000',
+          qtf: 'shuqiApp',
+          qtn: 'cpSearchReplace_sug',
+          nums: 9,
+          shuqi_h5: '',
+          _: '1526306009274'
+        }
+        this.recommendData = [];
+        fetchGet('http://read.xiaoshuo1-sm.com/novel/i.php', options, 'get', (data) => {
+          Array.prototype.forEach.call(data.data, (item) => {
+            this.recommendData.push(item.title.length > 4 ? `${item.title.slice(0, 3)}...` : item.title);
+          })
+        })
+      }
+    },
     getSearchData (e) {
       this.q = e.target.value;
       if (window.fetch) {
@@ -80,6 +138,7 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
+      position: relative;
       .form__search__content {
         width: 90%;
         // height: 3.5rem;
@@ -103,10 +162,6 @@ export default {
           border: none;
           outline: none;
         }
-        .form__search__content--button {
-          width: 5rem;
-          border: none;
-        }
       }
     }
     .searchDataBox1 {
@@ -114,6 +169,7 @@ export default {
       height: auto;
       margin: 0 auto;
       background-color: white;
+      position: absolute;
       .searchDataBox1__ul {
         list-style: none;
         width: 90%;
@@ -127,6 +183,93 @@ export default {
       }
       .searchDataBox1__ul--li:last-child {
         border-bottom: none;
+      }
+    }
+    .recommend {
+      width: 100%;
+      height: auto;
+      background-color: white;
+      .recommend--ul {
+        width: 100%;
+        height: 199.78/12rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-items: center;
+        list-style: none;
+        padding: 1.2rem 0;
+        border-bottom: 0.1rem solid rgb(241, 240, 240);
+        .recommend--ul--li {
+          width: 72.66/12rem;
+          height: 31/12rem;
+          line-height: 31/12rem;
+          margin: 1rem 1rem;
+          border: 1px solid rgb(236, 232, 232);
+          border-radius: 40%;
+          text-align: center;
+          color: rgb(63, 57, 57);
+        }
+      }
+      .refresh__box {
+        width: 100%;
+        height: 4rem;
+        line-height: 4rem;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .refresh__box--text {
+          font-size: 1.4rem;
+          letter-spacing: 1px;
+          color: #333;
+          display: inline-block;
+        }
+        .refresh__box--icon {
+          width: 1.5rem;
+          height: 4rem;
+          background-image: url('../assets/refresh.png');
+          background-repeat: no-repeat;
+          background-position: 0.5rem center;
+          background-size: 1rem 1rem;
+        }
+        .refreshing {
+          transition: transform 1s ease;
+          transform: rotate(360deg);
+          transform-origin: 65% center;
+        }
+      }
+    }
+    .history {
+      width: 100%;
+      height: auto;
+      background-color: white;
+      .history--header {
+        width: 100%;
+        display: flex;
+        margin: 0 auto;
+        justify-content: space-between;
+        align-items: center;
+        .history--header--h3 {
+          font-size: 1.4rem;
+          font-weight: 400;
+          padding: 1rem 0;
+        }
+        .history--header--delete {
+          width: 3rem;
+          color: rgb(180, 177, 177);
+          font-size: 1.2rem;
+          padding: 0 1rem;
+          &::before {
+            content: '';
+            width: 4rem;
+            height: 1rem;
+            background-image: url('../assets/delete.png');
+            background-size: 1rem 1rem;
+            background-repeat: no-repeat;
+            display: block;
+            background-position: left center;
+          }
+        }
       }
     }
   }

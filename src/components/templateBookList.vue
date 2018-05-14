@@ -3,7 +3,7 @@
     <ul class="box__ul">
       <router-link class="box__ul__li" to="" tag="li" v-for="(item, index) in arrResult" :key="index">
         <div class="box__ul__li--imgBox">
-          <img class="box__ul__li--imgBox--img" src="" :lazy-img="item.imgUrl" :alt="item.author">
+          <img class="box__ul__li--imgBox--img" src="" v-lazyLoad="item.imgUrl" :alt="item.author">
         </div>
         <div class="box__ul__li--right">
           <div class="box__ul__li--right--title">
@@ -60,10 +60,6 @@ export default {
       this.switchData();
     }
   },
-  updated () {
-    this.imgLazyLoad();
-    // window.addEventListener('scroll', this.imgLazyLoad, true);
-  },
   methods: {
     getData (index) {
       if (window.fetch) {
@@ -94,25 +90,6 @@ export default {
         })
       }
     },
-    imgLazyLoad () {
-      const li = document.getElementsByTagName('li');
-      const img = document.getElementsByTagName('img');
-      const box = document.getElementsByClassName('box');
-      const len = li.length;
-      if (len !== 1) {
-        const screenHeight = document.documentElement.clientHeight;
-        for (let i = this.flag; i < len; i++) {
-        const moveHeight = document.documentElement.scrollTop || document.body.scrollTop;
-          console.log(li[i].offsetTop, screenHeight, document.documentElement.scrollTop, window.pageYOffset, document.body.scrollTop)
-          if (li[i].offsetTop < screenHeight + moveHeight - 300) {
-            this.flag++;
-            console.log(this.flag, 'qqqqqqqq');
-            img[i - 1].src = img[i - 1].getAttribute('lazy-img');
-          }
-        }
-        console.log('ooooooooo')
-      }
-    },
     switchData () {
       switch (this.sex) {
         case 'man':
@@ -127,10 +104,19 @@ export default {
     }
   },
   mounted () {
+    switch (this.$store.state.a.moreBookTitle) {
+      case '精品畅销':
+        this.arrParams[0].type = 1;
+        this.arrParams[1].type = 1;
+        break;
+      case '新书潜力':
+        this.arrParams[0].type = 6;
+        this.arrParams[1].type = 6;
+        break; 
+      default:
+        break;
+    }
     this.switchData();
-  },
-  destroyed () {
-    // window.removeEventListener('scroll', this.imgLazyLoad, true);
   }
 }
 </script>
@@ -250,12 +236,12 @@ export default {
             .box__ul__li--right--tags--one,
             .box__ul__li--right--tags--two {
               border: 1px solid @borderColor;
-              padding: 0.3rem 0.5rem 0.1rem 0.5rem;
-              font-size: 1.25rem;
+              padding: 0.3rem 0.3rem 0.1rem 0.3rem;
+              font-size: 1.2rem;
             }
             .box__ul__li--right--tags--three {
               border: 1px solid rgba(73,159,255,.3);
-              padding: 0.3rem 0.5rem 0.1rem 0.5rem;
+              padding: 0.3rem 0.3rem 0.1rem 0.3rem;
               font-size: 1.25rem;
               color: #499fff;
             }

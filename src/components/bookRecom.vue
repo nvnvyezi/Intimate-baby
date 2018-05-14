@@ -21,7 +21,7 @@
             <ul>
               <li v-for="(item, index) in result1" :key="index">
                 <router-link to="/">
-                  <img :src="item.imgUrl" :alt="item.linkText">
+                  <img src="" v-lazyLoad="item.imgUrl" :alt="item.linkText">
                   <span>{{ item.linkText }}</span>
                 </router-link>
               </li>
@@ -42,7 +42,7 @@
       <div class="boy__box--img">
         <ul class="boy__box--img__ul">
           <router-link class="boy__box--img__ul--li" v-for="(item, index) in boyResult" :key="index" to="" tag="li">
-            <img :src="item.imgUrl" :alt="item.linkText">
+            <img src="" v-lazyLoad="item.imgUrl" :alt="item.linkText">
             <span>{{ item.linkText }}</span>
           </router-link>
         </ul>
@@ -52,7 +52,8 @@
           <router-link class="boy__box--text__ul--li" v-for="(item, index) in boyResult1" :key="index" to="" tag="li">
             <div class="boy__box--text__ul--li--h3">{{ item.linkText}}</div>
             <div class="boy__box--text__ul--li--tags">
-              <span class="statNamered">{{ item.stat_name }}</span>
+              <span v-if="item.stat_name == '连载'" class="statNameblue">{{ item.stat_name }}</span>
+              <span v-else class="statNamered">{{ item.stat_name }}</span>
               <span>{{ item.class_name }}</span>
             </div>
             <div class="boy__box--text__ul--li--text">
@@ -67,7 +68,7 @@
       <div class="boy__box--img">
         <ul class="boy__box--img__ul">
           <router-link class="boy__box--img__ul--li" v-for="(item, index) in girlResult" :key="index" to="" tag="li">
-            <img :src="item.imgUrl" :alt="item.linkText">
+            <img src="" v-lazyLoad="item.imgUrl" :alt="item.linkText">
             <span>{{ item.linkText }}</span>
           </router-link>
         </ul>
@@ -77,7 +78,8 @@
           <router-link class="boy__box--text__ul--li" v-for="(item, index) in girlResult1" :key="index" to="" tag="li">
             <div class="boy__box--text__ul--li--h3">{{ item.linkText}}</div>
             <div class="boy__box--text__ul--li--tags">
-              <span class="statNamered">{{ item.stat_name }}</span>
+              <span v-if="item.stat_name == '连载'" class="statNameblue">{{ item.stat_name }}</span>
+              <span v-else class="statNamered">{{ item.stat_name }}</span>
               <span>{{ item.class_name }}</span>
             </div>
             <div class="boy__box--text__ul--li--text">
@@ -95,7 +97,7 @@
             <ul>
               <li v-for="(item, index) in doneResult" :key="index">
                 <router-link to="/">
-                  <img :src="item.imgUrl" :alt="item.linkText">
+                  <img src="" v-lazyLoad="item.imgUrl" :alt="item.linkText">
                   <span>{{ item.linkText }}</span>
                 </router-link>
               </li>
@@ -117,7 +119,7 @@
         <router-link class="bestSelling__ul__li" v-for="(item, index) in bestSelResult" :key="index" to="" tag="li">
           <div v-if="index === 0" class="bestSelling__ul__li__block">
             <div class="bestSelling__ul__li__block--left">
-              <img class="bestSelling__ul__li__block--left--img" :src="item.imgUrl" :alt="item.bookName" />
+              <img class="bestSelling__ul__li__block--left--img" src="" v-lazyLoad="item.imgUrl" :alt="item.bookName" />
               <i class="bestSelling__ul__li__block--left--icon"></i>
             </div>
             <div class="bestSelling__ul__li__block--right">
@@ -146,13 +148,38 @@
       <div class="new--middle">
         <ul class="new--middle__ul">
           <router-link class="new--middle__ul__li" to="" tag="li" v-for="(item, index) in newResult" :key="index">
-            <img class="new--middle__ul__li--img" :src="item.imgUrl" :alt="item.linkText" />
+            <img class="new--middle__ul__li--img" src="" v-lazyLoad="item.imgUrl" :alt="item.linkText" />
             <span class="new--middle__ul__li--title">{{ item.linkText }}</span>
           </router-link>
         </ul>
       </div>
-      <div class="new--foot">
-        <router-link class="new--foot__title" to="moreBook" tag="div">查看更多</router-link>
+      <router-link @click.native="changeProp" class="new--foot" to="moreBook" tag="div">
+        <div class="new--foot__title">
+          查看更多
+        </div>
+      </router-link>
+    </section>
+    <section class="recommend">
+      <h3>{{ list6 }}</h3>
+      <div class="recommend--body">
+        <ul class="recommend--body--ul">
+          <router-link class="recommend--body--ul--li" to="" tag="li" v-for="(item, index) in recommendResult" :key="index">
+            <div class="recommend--body--ul--li__left">
+              <img class="recommend--body--ul--li__left--img" src="" v-lazyLoad="item.imgUrl" :alt="item.bookName">
+            </div>
+            <div class="recommend--body--ul--li__right">
+              <h3 class="recommend--body--ul--li__right--title">{{ item.bookName }}</h3>
+              <p class="recommend--body--ul--li__right--author">{{ item.authorName }}</p>
+              <p class="recommend--body--ul--li__right--info">{{ item.introduction }}</p>
+              <div class="recommend--body--ul--li__right--tags">
+                <span v-if="item.stat_name == '连载'" class="statNameblue">{{ item.stat_name }}</span>
+                <span v-else class="statNamered">{{ item.stat_name }}</span>
+                <span class="recommend--body--ul--li__right--tags--two">{{ item.size }}</span>
+                <span class="recommend--body--ul--li__right--tags--three">{{ item.class_name }}</span>
+              </div>
+            </div>
+          </router-link>
+        </ul>
       </div>
     </section>
   </div>
@@ -179,12 +206,14 @@ export default {
       doneResult: [],
       bestSelResult: [],
       newResult: [],
+      recommendResult: [],
       list: '',
       list1: '',
       list2: '',
       list3: '',
       list4: '',
       list5: '',
+      list6: '',
       judge: true,
       doneJudge: true,
       judge1: true,
@@ -240,15 +269,26 @@ export default {
     }
     this.getBoyGirl(function (param) {  });
     this.getBestSelling();
+    this.getRecommend();
   },
   methods: {
     changeProp (e) {
-      console.log(document.documentElement.scrollTop, document.body.scrollTop)
-      if (e.currentTarget.getAttribute('class') === 'bestSelling__foot') {
-        this.$store.commit({
-          type: 'changeMoreBookTitle',
-          title: '精品畅销'
-        })
+      // console.log(document.documentElement.scrollTop, document.body.scrollTop)
+      switch (e.currentTarget.getAttribute('class')) {
+        case 'bestSelling__foot':
+          this.$store.commit({
+            type: 'changeMoreBookTitle',
+            title: '精品畅销'
+          })
+          break;
+        case 'new--foot':
+          this.$store.commit({
+            type: 'changeMoreBookTitle',
+            title: '新书潜力'
+          })
+          break;
+        default:
+          break;
       }
     },
     getRecom (callback) {
@@ -463,6 +503,44 @@ export default {
           })
         })
       }
+    },
+    getRecommend () {
+      const options = {
+        appId: '11',
+        pageId: '93',
+        channelId: '',
+        versionId: '',
+        ver: '',
+        shuqi_h5: '', 
+        md5key: '',
+        userId: '8000000',
+        timestamp: '1526290238',
+        type: '2',
+        resetcache: '', 
+        func_id: '33,11,28,33,12,33,11,19,33',
+        orderid: '35,36,37,38,39,40,41,42,43',
+        sign: '3E26701E27A6ABD551FAE9A643AF4906',
+        key: 'shuqiapi',
+        _: '1526290238825'
+      }
+      if (window.fetch) {        
+        fetchGet('http://novelapi.sm.cn/eva_bookstore/v1/module/query', options, 'get', (data) => {
+          // console.log(data, data.data.module[6].m_s_name)
+          this.list6 = data.data.module[6].content.title;
+          Array.prototype.forEach.call(data.data.module[7].content, (item, index) => { 
+            let obj = {};
+            obj.bid = item.bid;
+            obj.bookName = item.bookname;
+            obj.authorName = item.author_name;
+            obj.size = item.size.slice(0, 3) + '万字';
+            obj.stat_name = item.stat_name;
+            obj.class_name = item.class_name;
+            obj.introduction = item.introduction;
+            obj.imgUrl = item.book_cover;
+            this.recommendResult.push(obj);
+          })
+        })
+      }
     }
   }
 }
@@ -562,9 +640,10 @@ export default {
     }
     .boy__box {
       width: 100%;
-      height: 34rem;
+      height: auto;
       border-bottom: 0.7rem solid #f0ebeb;
       background-color: white;
+      padding-bottom: 1rem;
       h3 {
         .sectionH3;
       }
@@ -748,7 +827,7 @@ export default {
     }
     .bestSelling {
       width: 100%;
-      height: 39rem;
+      height: auto;
       background-color: white;
       border-bottom: 0.7rem solid #f0ebeb;
       h3 {
@@ -787,7 +866,7 @@ export default {
                 height: 34.5/12rem;
                 position: absolute;
                 top: 0;
-                z-index: 2;
+                z-index: 0;
                 background-size: 100% 100%;
                 background-repeat: no-repeat;
               }
@@ -889,8 +968,9 @@ export default {
     }
     .new {
       width: 100%;
-      height: 232/12rem;
+      height: auto;
       background-color: white;
+      border-bottom: 0.7rem solid #f0ebeb;
       h3 {
         .sectionH3;
       }
@@ -930,6 +1010,76 @@ export default {
         }
         &:hover {
           background-color: #f7f7fa;
+        }
+      }
+    }
+    .recommend {
+      width: 100%;
+      height: auto;
+      background-color: white;
+      h3 {
+        .sectionH3;
+      }
+      .recommend--body {
+        width: 90%;
+        margin: 0 auto;
+        .recommend--body--ul {
+          width: 100%;
+          list-style: none;
+          .recommend--body--ul--li {
+            width: 100%;
+            height: auto;
+            display: flex;
+            justify-content: space-between;
+            padding: 1.3rem 0;
+            border-bottom: 0.1rem solid #f0ebeb;
+            .recommend--body--ul--li__left {
+              width: 84/12rem;
+              height: 112/12rem;
+              .recommend--body--ul--li__left--img {
+                width: 100%;
+                height: 100%;
+              }
+            }
+            .recommend--body--ul--li__right {
+              width: 188/12rem;
+              height: 113/12rem;
+              .recommend--body--ul--li__right--title {
+                font-size: 1.5rem;
+                width: 100%;
+                height: 19/12rem;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                padding: 0;
+                font-family: "Helvetica Neue",Helvetica,STHeiTi,sans-serif;
+              }
+              .recommend--body--ul--li__right--author {
+                font-size: 0.7rem;
+                color: rgb(170, 169, 169);
+                padding: 0.5rem 0;
+              }
+              .recommend--body--ul--li__right--info {
+                width: 100%;
+                height: 3rem;
+                color: rgb(170, 169, 169);
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                text-overflow: ellipsis;
+                -webkit-box-orient: vertical;
+              }
+              .recommend--body--ul--li__right--tags {
+                margin-top: 0.7rem;
+                .recommend--body--ul--li__right--tags--two,
+                .recommend--body--ul--li__right--tags--three {
+                  height: 13/12rem;
+                  padding: 0.2rem 0.4rem 0.1rem;
+                  color: rgb(145, 141, 141);
+                  border: 0.005rem solid rgb(224, 222, 222);
+                }
+              }
+            }
+          }
         }
       }
     }

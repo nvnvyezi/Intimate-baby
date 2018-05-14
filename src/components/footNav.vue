@@ -26,6 +26,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { init } from "../wheel/lazyLoad";
 export default {
   name: 'home',
   data () {
@@ -60,30 +61,39 @@ export default {
       }
     }
   },
+  destroyed () {
+    document.removeEventListener('touchstart');
+    document.removeEventListener('touchmove');
+    document.removeEventListener('touchend');
+  },
   mounted () {
-    let that = this;
-    document.addEventListener('touchstart', function (e) {
+    document.addEventListener('touchstart', this.start, false);
+    document.addEventListener('touchmove', init, false);
+    document.addEventListener('touchend', this.end, false);
+  },
+  methods: {
+    start (e) {
       this.startx = e.touches[0].pageX;
       this.starty = e.touches[0].pageY;
-      // console.log(this.startx);
-      // console.log(this.starty);
-    }, false);
-    document.addEventListener('touchend', function (e) {
+      init();
+    },
+    end (e) {
+      init();
       let endx, endy;
       endx = e.changedTouches[0].pageX;
       endy = e.changedTouches[0].pageY;
-      let direction = that.getDirection(this.startx, this.starty, endx, endy);
+      let direction = this.getDirection(this.startx, this.starty, endx, endy);
       switch (direction) {
         case 0:
           // console.log('为华东');
           break;
         case 1:
           // console.log('向上');
-          that.hideChange(1);
+          this.hideChange(1);
           break;
         case 2:
           // console.log('下');
-          that.hideChange(2);
+          this.hideChange(2);
           break;
         case 3:
           // console.log('坐');
@@ -94,9 +104,7 @@ export default {
         default:
           break;
       }
-    }, false);
-  },
-  methods: {
+    },
     hideChange (num) {
       // console.log(1);
       let bool;
