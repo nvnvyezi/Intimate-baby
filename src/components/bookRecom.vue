@@ -20,7 +20,7 @@
           <div class="li__box--ul">
             <ul>
               <li v-for="(item, index) in result1" :key="index">
-                <router-link to="/">
+                <router-link to="bookinformation">
                   <img src="" v-lazyLoad="item.imgUrl" :alt="item.linkText">
                   <span>{{ item.linkText }}</span>
                 </router-link>
@@ -41,7 +41,7 @@
       <h3>{{ list1 }}</h3>
       <div class="boy__box--img">
         <ul class="boy__box--img__ul">
-          <router-link class="boy__box--img__ul--li" v-for="(item, index) in boyResult" :key="index" to="" tag="li">
+          <router-link class="boy__box--img__ul--li" v-for="(item, index) in boyResult" :key="index" to="bookinformation" tag="li">
             <img src="" v-lazyLoad="item.imgUrl" :alt="item.linkText">
             <span>{{ item.linkText }}</span>
           </router-link>
@@ -49,7 +49,7 @@
       </div>
       <div class="boy__box--text">
         <ul class="boy__box--text__ul">
-          <router-link class="boy__box--text__ul--li" v-for="(item, index) in boyResult1" :key="index" to="" tag="li">
+          <router-link class="boy__box--text__ul--li" v-for="(item, index) in boyResult1" :key="index" to="bookinformation" tag="li">
             <div class="boy__box--text__ul--li--h3">{{ item.linkText}}</div>
             <div class="boy__box--text__ul--li--tags">
               <span v-if="item.stat_name == '连载'" class="statNameblue">{{ item.stat_name }}</span>
@@ -67,7 +67,7 @@
       <h3>{{ list2 }}</h3>
       <div class="boy__box--img">
         <ul class="boy__box--img__ul">
-          <router-link class="boy__box--img__ul--li" v-for="(item, index) in girlResult" :key="index" to="" tag="li">
+          <router-link class="boy__box--img__ul--li" v-for="(item, index) in girlResult" :key="index" to="bookinformation" tag="li">
             <img src="" v-lazyLoad="item.imgUrl" :alt="item.linkText">
             <span>{{ item.linkText }}</span>
           </router-link>
@@ -75,7 +75,7 @@
       </div>
       <div class="boy__box--text">
         <ul class="boy__box--text__ul">
-          <router-link class="boy__box--text__ul--li" v-for="(item, index) in girlResult1" :key="index" to="" tag="li">
+          <router-link class="boy__box--text__ul--li" v-for="(item, index) in girlResult1" :key="index" to="bookinformation" tag="li">
             <div class="boy__box--text__ul--li--h3">{{ item.linkText}}</div>
             <div class="boy__box--text__ul--li--tags">
               <span v-if="item.stat_name == '连载'" class="statNameblue">{{ item.stat_name }}</span>
@@ -96,7 +96,7 @@
           <div class="li__box--ul">
             <ul>
               <li v-for="(item, index) in doneResult" :key="index">
-                <router-link to="/">
+                <router-link to="bookinformation">
                   <img src="" v-lazyLoad="item.imgUrl" :alt="item.linkText">
                   <span>{{ item.linkText }}</span>
                 </router-link>
@@ -116,7 +116,7 @@
     <section class="bestSelling">
       <h3>{{ list4 }}</h3>
       <div class="bestSelling__ul">
-        <router-link class="bestSelling__ul__li" v-for="(item, index) in bestSelResult" :key="index" to="" tag="li">
+        <router-link class="bestSelling__ul__li" v-for="(item, index) in bestSelResult" :key="index" to="bookinformation" tag="li">
           <div v-if="index === 0" class="bestSelling__ul__li__block">
             <div class="bestSelling__ul__li__block--left">
               <img class="bestSelling__ul__li__block--left--img" src="" v-lazyLoad="item.imgUrl" :alt="item.bookName" />
@@ -147,7 +147,7 @@
       <h3>{{ list5 }}</h3>
       <div class="new--middle">
         <ul class="new--middle__ul">
-          <router-link class="new--middle__ul__li" to="" tag="li" v-for="(item, index) in newResult" :key="index">
+          <router-link class="new--middle__ul__li" to="bookinformation" tag="li" v-for="(item, index) in newResult" :key="index">
             <img class="new--middle__ul__li--img" src="" v-lazyLoad="item.imgUrl" :alt="item.linkText" />
             <span class="new--middle__ul__li--title">{{ item.linkText }}</span>
           </router-link>
@@ -163,7 +163,7 @@
       <h3>{{ list6 }}</h3>
       <div class="recommend--body">
         <ul class="recommend--body--ul">
-          <router-link class="recommend--body--ul--li" to="" tag="li" v-for="(item, index) in recommendResult" :key="index">
+          <router-link class="recommend--body--ul--li" to="bookinformation" tag="li" v-for="(item, index) in recommendResult" :key="index">
             <div class="recommend--body--ul--li__left">
               <img class="recommend--body--ul--li__left--img" src="" v-lazyLoad="item.imgUrl" :alt="item.bookName">
             </div>

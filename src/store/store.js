@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 import homeHide from './home-hide'
+import bookSearch from './book-search'
 
 // const homeHide = {
 //     state: {
@@ -25,7 +26,8 @@ import homeHide from './home-hide'
 
 const store = new Vuex.Store({
   modules: {
-      a: homeHide
+      a: homeHide,
+      bookSearch
   }
 })
 

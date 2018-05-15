@@ -28,6 +28,10 @@ const bookSeniorityList = () => import ( /*webpackChunkName: "bookSeniorityList"
 
 const bookSearchRouter = () => import ( /*webpackChunkName: "bookSearchRouter"*/'@/components/bookSearchRouter');
 const bookSearch = () => import ( /*webpackChunkName: "bookSearch"*/'@/components/bookSearch');
+const bookSearchData = () => import ( /*webpackChunkName: "bookSearchData"*/'@/components/bookSearchData');
+
+const bookInformationRouter = () => import ( /*webpackChunkName: "bookInformationRouter"*/'@/components/bookInformationRouter');
+
 
 export default new Router({
   base: 'intimate-baby',
@@ -133,9 +137,25 @@ export default new Router({
               path: '/',
               name: 'bookSearch',
               component: bookSearch,
+              meta: {
+                keepAlive: true
+              }
+            },
+            {
+              path: '/booksearchdata',
+              name: 'bookSearchData',
+              component: bookSearchData,
+              meta: {
+                keepAlive: false
+              }
             }
           ]
         },
+        {
+          path: '/bookinformation',
+          name: 'bookInformationRouter',
+          component: bookInformationRouter
+        }
       ]
     }
   ]

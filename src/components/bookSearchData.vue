@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <ul class="box__ul">
-      <router-link class="box__ul__li" to="bookinformation" tag="li" v-for="(item, index) in arrResult" :key="index">
+      <router-link class="box__ul__li" to="bookinformation" tag="li" v-for="(item, index) in searchResult" :key="index">
         <div class="box__ul__li--imgBox">
           <img class="box__ul__li--imgBox--img" src="" v-lazyLoad="item.imgUrl" :alt="item.author">
         </div>
@@ -27,99 +27,46 @@
 </template>
 
 <script>
-import fetchGet from '../wheel/fetchGet';
+import fetchGet from '../wheel/fetchGet'
 export default {
-  name: 'bookList',
-  props: {
-    sex: {
-      type: String,
-      required: true
-    }
-  },
+  name: 'bookSearchData',
   data () {
     return {
-      arrResult: [],
-      flag: 2,
-      arrParams: [
-        {
-          type: 1,
-          page: 1,
-          gender: 1,
-          _: '1526130774446'
-        },
-        {
-          type: 1,
-          page: 1,
-          gender: 2,
-          _: '1526211470093'
-        }
-      ]
-    }
-  },
-  watch: {
-    sex () {
-      this.switchData();
-    }
-  },
-  methods: {
-    getData (index) {
-      if (window.fetch) {
-        const options = {
-          do: 'is_novelrank',
-          p: 1,
-          page: this.arrParams[index].page,
-          size: 10,
-          onlyCpBooks: 1,
-          gender: this.arrParams[index].gender,
-          type: this.arrParams[index].type,
-          shuqi_h5: '',
-          _: this.arrParams[index]._
-        }
-        this.arrResult = [];
-        fetchGet('http://read.xiaoshuo1-sm.com/novel/i.php', options, 'get', (data) => {
-          // console.log(data)
-          Array.prototype.forEach.call(data.data, (item) => {
-            let obj = {};
-            obj.imgUrl = item.cover;
-            obj.title = item.title;
-            obj.author = item.author;
-            obj.bid = item.bid;
-            obj.status = item.status;
-            obj.reads = (item.reads/10000).toFixed(1) + '万';
-            obj.words = (item.words/10000).toFixed(1) + '万字';
-            obj.tags = item.tags.split(",").slice(0, 2);
-            this.arrResult.push(obj);
-          })
-        })
-      }
-    },
-    switchData () {
-      switch (this.sex) {
-        case 'man':
-          this.getData(0);
-          break;
-        case 'woman':
-          this.getData(1);
-          break;
-        default:
-          break;
-      }
+      searchResult: []
     }
   },
   mounted () {
-    switch (this.$store.state.a.moreBookTitle) {
-      case '精品畅销':
-        this.arrParams[0].type = 1;
-        this.arrParams[1].type = 1;
-        break;
-      case '新书潜力':
-        this.arrParams[0].type = 6;
-        this.arrParams[1].type = 6;
-        break; 
-      default:
-        break;
+    if (window.fetch) {
+      const options = {
+        do: 'is_serchpay',
+        page: 1,
+        size: 10,
+        q: this.searchData || '元尊',
+        filterMigu: 1,
+        p: 3,
+        shuqi_h5: '', 
+        _: '1526385291046'
+      }
+      fetchGet('http://read.xiaoshuo1-sm.com/novel/i.php', options, 'get', (data) => {
+        Array.prototype.forEach.call(data.data, (item) => {
+          let obj = {};
+          obj.imgUrl = item.cover;
+          obj.title = item.title;
+          obj.author = item.author;
+          obj.status = item.status;
+          obj.bid = item.bid;
+          obj.reads = '加书架';
+          obj.words = (item.words/10000).toFixed(1) + '万字';
+          obj.tags = item.tags.split(",").slice(0, 2);
+          this.searchResult.push(obj);
+        })
+      })
     }
-    this.switchData();
+  },
+  computed: {
+    searchData () {
+      return this.$store.state.bookSearch.searchData;
+    }
   }
 }
 </script>
