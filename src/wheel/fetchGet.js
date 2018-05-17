@@ -4,10 +4,13 @@ let fetchGet = (url, params, method, callback) => {
     fetch(url, {
       method: 'post',
       mode: 'cors',
-      body: JSON.stringify(params),
-      headers: new Headers({
-        'Content-Type': 'application/json'
-      })
+      // body: JSON.stringify(params),
+      body: 'bookId=7400407&user_id=8000000&timestamp=1526459170942&sign=9d696af02e9d2a9680baddd0dbb10aa2&shuqi_h5=',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        // 'Accept': 'application/json',
+        // 'Origin': 'http://xiaoshuo.uc.cn'
+      }
     }).then((res) => {
       // console.log(res, '')
       if (res.status === 200 && res.ok) {
@@ -36,7 +39,6 @@ let fetchGet = (url, params, method, callback) => {
       } else {
         url += '&' + paramsArr.join('&');
       }
-      // console.log('url', url);
       fetch(url, {
         method: 'get',
         mode: 'cors'

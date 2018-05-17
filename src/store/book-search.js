@@ -1,14 +1,14 @@
 const bookSearch = {
   state: {
     searchData: '',
-    infoData: ''
+    infoBookName: ''
   },
   mutations: {
     changeSearchData (state, data) {
       state.searchData = data.data;
     },
     changeInfoData (state, data) {
-      state.infoData = data.info;
+      state.infoBookName = data.info;
     }
   },
   getters: {

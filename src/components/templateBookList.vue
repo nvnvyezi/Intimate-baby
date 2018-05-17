@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <ul class="box__ul">
-      <router-link class="box__ul__li" to="bookinformation" tag="li" v-for="(item, index) in arrResult" :key="index">
+      <router-link @click.native="changeInfoBook" class="box__ul__li" to="bookinformation" tag="li" v-for="(item, index) in arrResult" :key="index">
         <div class="box__ul__li--imgBox">
           <img class="box__ul__li--imgBox--img" src="" v-lazyLoad="item.imgUrl" :alt="item.author">
         </div>
@@ -62,6 +62,13 @@ export default {
     }
   },
   methods: {
+    changeInfoBook (e) {
+      let bookName = e.currentTarget.children[1].firstChild.firstChild.innerText;
+      this.$store.dispatch({
+        type: 'triggerInfoData',
+        info: bookName
+      })
+    },
     getData (index) {
       if (window.fetch) {
         const options = {

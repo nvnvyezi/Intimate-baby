@@ -19,7 +19,7 @@
         <div v-if="judge" class="li__box">
           <div class="li__box--ul">
             <ul>
-              <li v-for="(item, index) in result1" :key="index">
+              <li @click="changeInfoBook" class="aaa" v-for="(item, index) in result1" :key="index">
                 <router-link to="bookinformation">
                   <img src="" v-lazyLoad="item.imgUrl" :alt="item.linkText">
                   <span>{{ item.linkText }}</span>
@@ -41,7 +41,7 @@
       <h3>{{ list1 }}</h3>
       <div class="boy__box--img">
         <ul class="boy__box--img__ul">
-          <router-link class="boy__box--img__ul--li" v-for="(item, index) in boyResult" :key="index" to="bookinformation" tag="li">
+          <router-link @click.native="changeInfoBook" class="boy__box--img__ul--li  bbb" v-for="(item, index) in boyResult" :key="index" to="bookinformation" tag="li">
             <img src="" v-lazyLoad="item.imgUrl" :alt="item.linkText">
             <span>{{ item.linkText }}</span>
           </router-link>
@@ -49,7 +49,7 @@
       </div>
       <div class="boy__box--text">
         <ul class="boy__box--text__ul">
-          <router-link class="boy__box--text__ul--li" v-for="(item, index) in boyResult1" :key="index" to="bookinformation" tag="li">
+          <router-link @click.native="changeInfoBook" class="boy__box--text__ul--li ccc" v-for="(item, index) in boyResult1" :key="index" to="bookinformation" tag="li">
             <div class="boy__box--text__ul--li--h3">{{ item.linkText}}</div>
             <div class="boy__box--text__ul--li--tags">
               <span v-if="item.stat_name == '连载'" class="statNameblue">{{ item.stat_name }}</span>
@@ -67,7 +67,7 @@
       <h3>{{ list2 }}</h3>
       <div class="boy__box--img">
         <ul class="boy__box--img__ul">
-          <router-link class="boy__box--img__ul--li" v-for="(item, index) in girlResult" :key="index" to="bookinformation" tag="li">
+          <router-link @click.native="changeInfoBook" class="boy__box--img__ul--li bbb" v-for="(item, index) in girlResult" :key="index" to="bookinformation" tag="li">
             <img src="" v-lazyLoad="item.imgUrl" :alt="item.linkText">
             <span>{{ item.linkText }}</span>
           </router-link>
@@ -75,7 +75,7 @@
       </div>
       <div class="boy__box--text">
         <ul class="boy__box--text__ul">
-          <router-link class="boy__box--text__ul--li" v-for="(item, index) in girlResult1" :key="index" to="bookinformation" tag="li">
+          <router-link @click.native="changeInfoBook" class="boy__box--text__ul--li ccc" v-for="(item, index) in girlResult1" :key="index" to="bookinformation" tag="li">
             <div class="boy__box--text__ul--li--h3">{{ item.linkText}}</div>
             <div class="boy__box--text__ul--li--tags">
               <span v-if="item.stat_name == '连载'" class="statNameblue">{{ item.stat_name }}</span>
@@ -95,7 +95,7 @@
         <div v-if="doneJudge" class="li__box">
           <div class="li__box--ul">
             <ul>
-              <li v-for="(item, index) in doneResult" :key="index">
+              <li @click="changeInfoBook" class="aaa" v-for="(item, index) in doneResult" :key="index">
                 <router-link to="bookinformation">
                   <img src="" v-lazyLoad="item.imgUrl" :alt="item.linkText">
                   <span>{{ item.linkText }}</span>
@@ -116,7 +116,7 @@
     <section class="bestSelling">
       <h3>{{ list4 }}</h3>
       <div class="bestSelling__ul">
-        <router-link class="bestSelling__ul__li" v-for="(item, index) in bestSelResult" :key="index" to="bookinformation" tag="li">
+        <router-link @click.native="changeInfoBook" class="bestSelling__ul__li eee" v-for="(item, index) in bestSelResult" :key="index" to="bookinformation" tag="li">
           <div v-if="index === 0" class="bestSelling__ul__li__block">
             <div class="bestSelling__ul__li__block--left">
               <img class="bestSelling__ul__li__block--left--img" src="" v-lazyLoad="item.imgUrl" :alt="item.bookName" />
@@ -147,7 +147,7 @@
       <h3>{{ list5 }}</h3>
       <div class="new--middle">
         <ul class="new--middle__ul">
-          <router-link class="new--middle__ul__li" to="bookinformation" tag="li" v-for="(item, index) in newResult" :key="index">
+          <router-link @click.native="changeInfoBook" class="new--middle__ul__li bbb" to="bookinformation" tag="li" v-for="(item, index) in newResult" :key="index">
             <img class="new--middle__ul__li--img" src="" v-lazyLoad="item.imgUrl" :alt="item.linkText" />
             <span class="new--middle__ul__li--title">{{ item.linkText }}</span>
           </router-link>
@@ -163,7 +163,7 @@
       <h3>{{ list6 }}</h3>
       <div class="recommend--body">
         <ul class="recommend--body--ul">
-          <router-link class="recommend--body--ul--li" to="bookinformation" tag="li" v-for="(item, index) in recommendResult" :key="index">
+          <router-link @click.native="changeInfoBook" class="recommend--body--ul--li ddd" to="bookinformation" tag="li" v-for="(item, index) in recommendResult" :key="index">
             <div class="recommend--body--ul--li__left">
               <img class="recommend--body--ul--li__left--img" src="" v-lazyLoad="item.imgUrl" :alt="item.bookName">
             </div>
@@ -260,7 +260,7 @@ export default {
         Array.prototype.forEach.call(data.data.module[3].content, (item) => {  
           let obj = {};
           obj.imgUrl = item.book_cover;
-          obj.linkText = item.bookname.length < 5 ? item.bookname : item.bookname.slice(0, 3) + '...';
+          obj.linkText = item.bookname.length < 5 ? item.bookname : item.bookname;
           obj.bid = item.bid;
           this.result1.push(obj);
         })
@@ -272,6 +272,28 @@ export default {
     this.getRecommend();
   },
   methods: {
+    changeInfoBook (e) {
+      let bookName = '';
+      let cla = e.currentTarget.getAttribute('class');
+      if (cla.indexOf('aaa') !== -1) {
+        bookName = e.currentTarget.firstChild.lastChild.innerText;
+      } else if (cla.indexOf('bbb') !== -1) {
+        bookName = e.currentTarget.lastChild.innerText;
+      } else if (cla.indexOf('ccc') !== -1) {
+        bookName = e.currentTarget.firstChild.innerText;
+      } else if (cla.indexOf('ddd') !== -1) {
+        bookName = e.currentTarget.children[1].firstChild.innerText;
+      } else if (cla.indexOf('eee') !== -1) {
+        bookName = e.currentTarget.children[1].innerText;
+        if (bookName == 1) {
+          bookName = e.currentTarget.children[0].children[1].firstChild.innerText;
+        }
+      }
+      this.$store.dispatch({
+        type: 'triggerInfoData',
+        info: bookName
+      })
+    },
     changeProp (e) {
       // console.log(document.documentElement.scrollTop, document.body.scrollTop)
       switch (e.currentTarget.getAttribute('class')) {
@@ -320,7 +342,7 @@ export default {
             let obj = {};
             obj.bid = item.bid;
             obj.imgUrl = item.book_cover;
-            obj.linkText = item.bookname.slice(0, 3) + '...';
+            obj.linkText = item.bookname;
             this.result1.push(obj);
           })
           callback();
@@ -420,7 +442,7 @@ export default {
             obj.bid = item.bid;
             if (index < 4) {
               obj.imgUrl = item.book_cover;
-              obj.linkText = item.bookname.length < 5 ? item.bookname : item.bookname.slice(0, 3) + '...';
+              obj.linkText = item.bookname;
               this.boyResult.push(obj);
             } else {
               obj.linkText = item.bookname;
@@ -435,7 +457,7 @@ export default {
             obj.bid = item.bid;
             if (index < 4) {
               obj.imgUrl = item.book_cover;
-              obj.linkText = item.bookname.length < 5 ? item.bookname : item.bookname.slice(0, 3) + '...';
+              obj.linkText = item.bookname;
               this.girlResult.push(obj);
             } else {
               obj.linkText = item.bookname;
@@ -448,7 +470,7 @@ export default {
           Array.prototype.forEach.call(data.data.module[9].content, (item) => {  
             let obj = {};
             obj.imgUrl = item.book_cover;
-            obj.linkText = item.bookname.length < 5 ? item.bookname : item.bookname.slice(0, 3) + '...';
+            obj.linkText = item.bookname;
             obj.bid = item.bid;
             this.doneResult.push(obj);
           })
@@ -497,7 +519,7 @@ export default {
           Array.prototype.forEach.call(data.data.module[8].content, (item) => {  
             let obj = {};
             obj.imgUrl = item.book_cover;
-            obj.linkText = item.bookname.length < 5 ? item.bookname : item.bookname.slice(0, 3) + '...';
+            obj.linkText = item.bookname.length < 5 ? item.bookname : item.bookname;
             obj.bid = item.bid;
             this.newResult.push(obj);
           })

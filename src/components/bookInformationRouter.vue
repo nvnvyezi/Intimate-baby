@@ -7,12 +7,7 @@
       </div>
       <router-link to="/" tag="div">H</router-link>
     </nav>
-      <!-- <transition-group>     -->
-        <keep-alive>
-          <router-view v-if="$route.meta.keepAlive"></router-view>
-        </keep-alive>
-        <router-view v-if="!$route.meta.keepAlive"></router-view>
-      <!-- </transition-group> -->
+    <router-view></router-view>
   </div>
 </template>
 
@@ -30,24 +25,6 @@ export default {
   methods: {
     back () {
       this.$router.go(-1);
-    },
-    getSearchData (e) {
-      this.q = e.target.value;
-      if (window.fetch) {
-        fetchGet('http://read.xiaoshuo1-sm.com/novel/i.php?do=is_pay_sugs&q', {q: e.target.value}, 'get', (data) => {
-          // console.log(data);
-          if (data.status === 1) {
-            this.searchJudge = true;
-            if (data.data.length > 4) {
-              this.searchData1 = data.data.slice(0,4);
-            } else {
-              this.searchData1 = data.data;
-            }
-          } else {
-            this.searchJudge = false;
-          }
-        })
-      }
     }
   }
 }

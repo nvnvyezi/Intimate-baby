@@ -3,7 +3,7 @@
     
     <div class="recommend" style="border-bottom: 0.7rem solid rgb(243, 243, 243);">
       <ul class="recommend--ul">
-        <router-link to="bookinformation" class="recommend--ul--li" v-for="(item, index) in recommendData" :key="index">{{ item }}</router-link>
+        <router-link tag="li" @click.native="changeInfoBook" to="bookinformation" class="recommend--ul--li" v-for="(item, index) in recommendData" :key="index">{{ item }}</router-link>
       </ul>
       <div class="refresh__box" @click="addrefresh1">
         <span class="refresh__box--text">换一换</span>
@@ -49,6 +49,13 @@ export default {
     }
   },
   methods: {
+    changeInfoBook (e) {
+      let bookName = e.currentTarget.innerText;
+      this.$store.dispatch({
+        type: 'triggerInfoData',
+        info: bookName
+      })
+    },
     changeProp (e) {
       this.$store.dispatch({
         type: 'triggerSearchData',
@@ -85,7 +92,7 @@ export default {
         this.recommendData = [];
         fetchGet('http://read.xiaoshuo1-sm.com/novel/i.php', options, 'get', (data) => {
           Array.prototype.forEach.call(data.data, (item) => {
-            this.recommendData.push(item.title.length > 4 ? `${item.title.slice(0, 3)}...` : item.title);
+            this.recommendData.push(item.title.length > 4 ? `${item.title}` : item.title);
           })
         })
       }
@@ -128,6 +135,8 @@ export default {
           text-align: center;
           color: rgb(63, 57, 57);
           text-decoration: none;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
       .refresh__box {

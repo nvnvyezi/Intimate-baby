@@ -31,7 +31,7 @@ const bookSearch = () => import ( /*webpackChunkName: "bookSearch"*/'@/component
 const bookSearchData = () => import ( /*webpackChunkName: "bookSearchData"*/'@/components/bookSearchData');
 
 const bookInformationRouter = () => import ( /*webpackChunkName: "bookInformationRouter"*/'@/components/bookInformationRouter');
-
+const bookInformation = () => import ( /*webpackChunkName: "bookInformation"*/'@/components/bookInformation');
 
 export default new Router({
   base: 'intimate-baby',
@@ -55,6 +55,9 @@ export default new Router({
           path: '/',
           name: 'book',
           component: book,
+          meta: {
+            keepAlive: true
+          },
           children: [
             {
               path: '/',
@@ -72,6 +75,9 @@ export default new Router({
           path: '/cate',
           name: 'book',
           component: book,
+          meta: {
+            keepAlive: true
+          },
           children: [
             {
               path: '/',
@@ -102,6 +108,9 @@ export default new Router({
           path: '/seniority',
           name: 'book',
           component: book,
+          meta: {
+            keepAlive: true
+          },
           children: [
             {
               path: '/',
@@ -132,6 +141,9 @@ export default new Router({
           path: '/booksearch',
           name: 'bookSearchRouter',
           component: bookSearchRouter,
+          meta: {
+            keepAlive: true
+          },
           children: [
             {
               path: '/',
@@ -154,7 +166,17 @@ export default new Router({
         {
           path: '/bookinformation',
           name: 'bookInformationRouter',
-          component: bookInformationRouter
+          component: bookInformationRouter,
+          meta: {
+            keepAlive: false
+          },
+          children: [
+            {
+              path: '/',
+              name: 'bookInformation',
+              component: bookInformation
+            }
+          ]
         }
       ]
     }

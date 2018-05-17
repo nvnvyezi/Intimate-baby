@@ -4,11 +4,13 @@
     <header>
       <img src="../assets/logo1.png" alt="">
     </header>
-    <transition name="" mode="">
+    <!-- <transition name="" mode=""> -->
       <keep-alive>
-        <router-view/>
+        <router-view v-if="$route.meta.keepAlive"></router-view>
       </keep-alive>
-    </transition>
+      <router-view v-if="!$route.meta.keepAlive"></router-view>
+    <!-- </transition> -->
+
     <nav id="nav1">
       <!-- <router-link to="book"><div class="footer__box"></div></router-link>
       <router-link to="book"><div class="footer__box"></div></router-link>
