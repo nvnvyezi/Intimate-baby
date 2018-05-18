@@ -23,7 +23,7 @@
         <span class="cover--info--text--icon"><i class="ir" @click="showP"></i></span>
       </div>
       <router-link class="cover--info--text--new" to="" tag="div"><i class="li"></i><span class="ltext">最新</span><span class="ctext">{{ bookData.lastet_chapter }}</span><i class="ri"></i></router-link>
-      <router-link class="cover--info--text--new" to="" tag="div"><i class="li2"></i><span class="ltext">目录</span><span class="ctext">点一下</span><i class="ri"></i></router-link>
+      <router-link class="cover--info--text--new" @click.native="propCatelog" to="bookinformatecatelog" tag="div"><i class="li2"></i><span class="ltext">目录</span><span class="ctext">点一下</span><i class="ri"></i></router-link>
     </section>
     <section class="comments">
       <h3 class="comments--header">精华评论</h3>
@@ -63,6 +63,7 @@
       </div>
     </section>
     <section class="otherBooks">
+      <h3>作者的所有作品</h3>
       <ul class="box__ul">
         <router-link class="box__ul__li" to="bookinformation" tag="li" v-for="(item, index) in arrResult" :key="index">
           <div class="box__ul__li--imgBox">
@@ -91,6 +92,7 @@
 <script>
 import fetchGet from '../wheel/fetchGet'
 import $ from 'jquery'
+import md5 from '../encryption/md5'
 export default {
   name: 'bookInformation',
   data () {
@@ -101,7 +103,9 @@ export default {
       arrResult: [],
       refreshJudge: true,
       authorName: '',
-      authorId: ''
+      authorId: '',
+      user_id: 8000000,
+      encryptKey: '37e81a9d8f02596e1b895d07c171d5c9'
     }
   },
   computed: {
@@ -112,9 +116,21 @@ export default {
       set () {
         location.reload();
       }
+    },
+    bookId () {
+      return this.$store.state.bookInfo.bookId;
+    },
+    timestamp () {
+      return Date.now();
     }
   },
   methods: {
+    propCatelog () {
+      this.$store.dispatch({
+        type: 'triggerBookId',
+        id: this.bookId
+      })
+    },
     changeInfoBook (e) {
       let bookName = e.currentTarget.firstChild.lastChild.innerText;
       this.bookName = bookName;
@@ -127,41 +143,50 @@ export default {
     },
     getBookInfo () {
       if (window.fetch) {
-        const options = {
-          do: 'is_serchpay',
-          page: 1,
-          size: 10,
-          q: this.bookName || '元尊',
-          filterMigu: 1,
-          p: 3,
-          shuqi_h5: '', 
-          _: '1526463476183'
-        }
-        fetchGet('http://read.xiaoshuo1-sm.com/novel/i.php', options, 'get', (data) => {
-          // console.log(data)
-          let item = data.aladdin;
-          let obj = {};
-          obj.imgUrl = item.cover;
-          obj.title = item.title;
-          obj.author = item.author;
-          this.authorName = item.author;
-          obj.authorId = item.authorid;
-          this.authorId = item.authorid;
-          obj.category = item.category;
-          obj.words = (item.words/10000).toFixed(1) + '万字';
-          obj.status = item.status;
-          obj.info = item.desc;
-          obj.lastet_chapter = item.latest_chapter.cname.replace('"', '');
-          this.bookData = obj;
-          this.getRecom();
+        let sign = md5(this.bookId + "" + this.timestamp + this.user_id + this.encryptKey);
+        fetch('http://walden1.shuqireader.com/qswebapi/book/info/?_=1526653320306', {
+          method: 'post',
+          mode: 'cors',
+          body: `bookId=${ this.bookId}&user_id=${ this.user_id}&sign=${ sign }&timestamp=${ this.timestamp}&shuqi_h5=`,
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        }).then((res) => {
+          if (res.status === 200 && res.ok) {
+            res.json().then((data) => {
+              data = data;
+              // console.log('post', data);
+              let item = data.data;
+              let obj = {};
+              obj.imgUrl = item.imgUrl;
+              obj.title = item.bookName;
+              obj.author = item.authorName;
+              this.authorName = item.authorName;
+              obj.authorId = item.authorId;
+              this.authorId = item.authorId;
+              obj.category = item.className;
+              obj.words = item.wordCount+ '万字';
+              obj.status = item.state;
+              obj.info = item.desc;
+              obj.lastet_chapter = item.lastChapter.chapterName;
+              this.bookData = obj;
+              this.getComments();
+              this.getRecom();
+              this.getData();
+            })
+          } else {
+            console.error('Error', res);
+          }
+        }).catch((error) => {
+          console.error('Error: ', error)
         })
       }
     },
     getComments () {
       const options = {
         do: 'sp_get',
-        authorId: '25671',
-        bookId: '7483221',
+        authorId: this.authorId,
+        bookId: this.bookId,
         fetch: 'merge',
         sqUid: 8000000,
         source: 'store',
@@ -171,7 +196,6 @@ export default {
         _: 1526543880837
       }
       fetchGet('http://read.xiaoshuo1-sm.com/novel/i.php', options, 'get', (data) => {
-        // conso?le.log(data)
         Array.prototype.forEach.call(data.data, (item) => {
           let obj = {};
           obj.userPhoto = item.userPhoto;
@@ -226,32 +250,27 @@ export default {
     getData (index) {
       if (window.fetch) {
         const options = {
-          bamp: 'sqat',
-          authorname: this.authorName,
-          authorid: this.authorId,
-          limit: 4,
-          atType: 'click',
-          fr_pr_id: 10001,
-          tk: 'MjU2NzE0MTdhYzU5ZTlm',
-          shuqi_h5: '',
-          _: 1526546099262
+          do: 'is_pay_author',
+          authorId: this.authorId,
+          p: 3,
+          size: 100,
+          page: 1,
+          _: 1526566584638
         }
-        console.log(options)
+        // console.log(options)
         this.arrResult = [];
-        fetchGet('http://bookapi.shuqiapi.com/', options, 'get', (data) => {
-          console.log(data)
-          Array.prototype.forEach.call(data.data.at.bookinfo, (item, index) => {
-            if (index !== 0) {
+        fetchGet('http://read.xiaoshuo1-sm.com/novel/i.php', options, 'get', (data) => {
+          // console.log(data)
+          Array.prototype.forEach.call(data.data, (item) => {
               let obj = {};
               obj.imgUrl = item.cover;
-              obj.title = item.bookname;
-              obj.author = data.data.at.author_name;
-              obj.bid = item.id;
-              obj.status = item.state;
-              obj.words = (item.size/10000).toFixed(1) + '万字';
-              obj.tags = item.tag[0].tag_name;
+              obj.title = item.title;
+              obj.author = item.author;
+              obj.bid = item.bid;
+              obj.status = item.status;
+              obj.words = (item.words/10000).toFixed(1) + '万字';
+              obj.tags = item.category;
               this.arrResult.push(obj);
-            }
           })
         })
       }
@@ -259,7 +278,6 @@ export default {
   },
   mounted () {
     this.getBookInfo();
-    this.getComments();
   },
 }
 </script>

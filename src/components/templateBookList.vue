@@ -7,7 +7,7 @@
         </div>
         <div class="box__ul__li--right">
           <div class="box__ul__li--right--title">
-            <h3 class="box__ul__li--right--title--h3">{{ item.title}}</h3>
+            <h3 class="box__ul__li--right--title--h3" :bid="item.bid">{{ item.title}}</h3>
           </div>
           <div class="box__ul__li--right--author">
             <p class="box__ul__li--right--author--author">{{ item.author}}</p>
@@ -63,10 +63,11 @@ export default {
   },
   methods: {
     changeInfoBook (e) {
-      let bookName = e.currentTarget.children[1].firstChild.firstChild.innerText;
+      let bookName = e.currentTarget.children[1].firstChild.firstChild.getAttribute('bid');
+      // console.log(bookName)
       this.$store.dispatch({
-        type: 'triggerInfoData',
-        info: bookName
+        type: 'triggerBookId',
+        id: bookName
       })
     },
     getData (index) {

@@ -3,7 +3,7 @@
     
     <div class="recommend" style="border-bottom: 0.7rem solid rgb(243, 243, 243);">
       <ul class="recommend--ul">
-        <router-link tag="li" @click.native="changeInfoBook" to="bookinformation" class="recommend--ul--li" v-for="(item, index) in recommendData" :key="index">{{ item }}</router-link>
+        <router-link tag="li" @click.native="changeInfoBook" to="bookinformation" class="recommend--ul--li" v-for="(item, index) in recommendData" :bid="item.bid" :key="index">{{ item.title }}</router-link>
       </ul>
       <div class="refresh__box" @click="addrefresh1">
         <span class="refresh__box--text">换一换</span>
@@ -50,10 +50,11 @@ export default {
   },
   methods: {
     changeInfoBook (e) {
-      let bookName = e.currentTarget.innerText;
+      let bookName = e.currentTarget.getAttribute('bid');
+      // console.log(bookName)
       this.$store.dispatch({
-        type: 'triggerInfoData',
-        info: bookName
+        type: 'triggerBookId',
+        id: bookName
       })
     },
     changeProp (e) {
@@ -92,7 +93,10 @@ export default {
         this.recommendData = [];
         fetchGet('http://read.xiaoshuo1-sm.com/novel/i.php', options, 'get', (data) => {
           Array.prototype.forEach.call(data.data, (item) => {
-            this.recommendData.push(item.title.length > 4 ? `${item.title}` : item.title);
+            let obj = {};
+            obj.bid = item.bookid;
+            obj.title = item.title;
+            this.recommendData.push(obj);
           })
         })
       }

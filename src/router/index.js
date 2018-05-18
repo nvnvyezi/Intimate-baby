@@ -32,6 +32,7 @@ const bookSearchData = () => import ( /*webpackChunkName: "bookSearchData"*/'@/c
 
 const bookInformationRouter = () => import ( /*webpackChunkName: "bookInformationRouter"*/'@/components/bookInformationRouter');
 const bookInformation = () => import ( /*webpackChunkName: "bookInformation"*/'@/components/bookInformation');
+const bookInformationCatelog = () => import ( /*webpackChunkName: "bookInformationCatelog"*/'@/components/bookInformationCatelog');
 
 export default new Router({
   base: 'intimate-baby',
@@ -175,6 +176,11 @@ export default new Router({
               path: '/',
               name: 'bookInformation',
               component: bookInformation
+            },
+            {
+              path:'/bookinformatecatelog',
+              name: 'bookinformationcatelog',
+              component: bookInformationCatelog
             }
           ]
         }

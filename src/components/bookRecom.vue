@@ -22,7 +22,7 @@
               <li @click="changeInfoBook" class="aaa" v-for="(item, index) in result1" :key="index">
                 <router-link to="bookinformation">
                   <img src="" v-lazyLoad="item.imgUrl" :alt="item.linkText">
-                  <span>{{ item.linkText }}</span>
+                  <span :bid="item.bid">{{ item.linkText }}</span>
                 </router-link>
               </li>
             </ul>
@@ -43,14 +43,14 @@
         <ul class="boy__box--img__ul">
           <router-link @click.native="changeInfoBook" class="boy__box--img__ul--li  bbb" v-for="(item, index) in boyResult" :key="index" to="bookinformation" tag="li">
             <img src="" v-lazyLoad="item.imgUrl" :alt="item.linkText">
-            <span>{{ item.linkText }}</span>
+            <span :bid="item.bid">{{ item.linkText }}</span>
           </router-link>
         </ul>
       </div>
       <div class="boy__box--text">
         <ul class="boy__box--text__ul">
           <router-link @click.native="changeInfoBook" class="boy__box--text__ul--li ccc" v-for="(item, index) in boyResult1" :key="index" to="bookinformation" tag="li">
-            <div class="boy__box--text__ul--li--h3">{{ item.linkText}}</div>
+            <div class="boy__box--text__ul--li--h3" :bid="item.bid">{{ item.linkText}}</div>
             <div class="boy__box--text__ul--li--tags">
               <span v-if="item.stat_name == '连载'" class="statNameblue">{{ item.stat_name }}</span>
               <span v-else class="statNamered">{{ item.stat_name }}</span>
@@ -69,14 +69,14 @@
         <ul class="boy__box--img__ul">
           <router-link @click.native="changeInfoBook" class="boy__box--img__ul--li bbb" v-for="(item, index) in girlResult" :key="index" to="bookinformation" tag="li">
             <img src="" v-lazyLoad="item.imgUrl" :alt="item.linkText">
-            <span>{{ item.linkText }}</span>
+            <span :bid="item.bid">{{ item.linkText }}</span>
           </router-link>
         </ul>
       </div>
       <div class="boy__box--text">
         <ul class="boy__box--text__ul">
           <router-link @click.native="changeInfoBook" class="boy__box--text__ul--li ccc" v-for="(item, index) in girlResult1" :key="index" to="bookinformation" tag="li">
-            <div class="boy__box--text__ul--li--h3">{{ item.linkText}}</div>
+            <div class="boy__box--text__ul--li--h3" :bid="item.bid">{{ item.linkText}}</div>
             <div class="boy__box--text__ul--li--tags">
               <span v-if="item.stat_name == '连载'" class="statNameblue">{{ item.stat_name }}</span>
               <span v-else class="statNamered">{{ item.stat_name }}</span>
@@ -98,7 +98,7 @@
               <li @click="changeInfoBook" class="aaa" v-for="(item, index) in doneResult" :key="index">
                 <router-link to="bookinformation">
                   <img src="" v-lazyLoad="item.imgUrl" :alt="item.linkText">
-                  <span>{{ item.linkText }}</span>
+                  <span :bid="item.bid">{{ item.linkText }}</span>
                 </router-link>
               </li>
             </ul>
@@ -123,7 +123,7 @@
               <i class="bestSelling__ul__li__block--left--icon"></i>
             </div>
             <div class="bestSelling__ul__li__block--right">
-              <h3 class="bestSelling__ul__li__block--right--title">{{ item.bookName }}</h3>
+              <h3 class="bestSelling__ul__li__block--right--title" :bid="item.bid">{{ item.bookName }}</h3>
               <p class="bestSelling__ul__li__block--right--author">{{ item.authorName }}</p>
               <p class="bestSelling__ul__li__block--right--info">{{ item.introduction }}</p>
               <div class="bestSelling__ul__li__block--right--tag">
@@ -134,7 +134,7 @@
             </div>
           </div>
           <i v-show="index !== 0" class="bestSelling__ul__li--list">{{ index + 1 }}</i>
-          <h3 class="bestSelling__ul__li--title" v-show="index !== 0">{{ item.bookName }}</h3>
+          <h3 class="bestSelling__ul__li--title" :bid="item.bid" v-show="index !== 0">{{ item.bookName }}</h3>
           <span class="bestSelling__ul__li--stat" v-show="index !== 0">{{ item.stat_name }}</span>
           <span class="bestSelling__ul__li--type" v-show="index !== 0">{{ item.class_name }}</span>
         </router-link>
@@ -149,7 +149,7 @@
         <ul class="new--middle__ul">
           <router-link @click.native="changeInfoBook" class="new--middle__ul__li bbb" to="bookinformation" tag="li" v-for="(item, index) in newResult" :key="index">
             <img class="new--middle__ul__li--img" src="" v-lazyLoad="item.imgUrl" :alt="item.linkText" />
-            <span class="new--middle__ul__li--title">{{ item.linkText }}</span>
+            <span class="new--middle__ul__li--title" :bid="item.bid">{{ item.linkText }}</span>
           </router-link>
         </ul>
       </div>
@@ -168,7 +168,7 @@
               <img class="recommend--body--ul--li__left--img" src="" v-lazyLoad="item.imgUrl" :alt="item.bookName">
             </div>
             <div class="recommend--body--ul--li__right">
-              <h3 class="recommend--body--ul--li__right--title">{{ item.bookName }}</h3>
+              <h3 class="recommend--body--ul--li__right--title" :bid="item.bid">{{ item.bookName }}</h3>
               <p class="recommend--body--ul--li__right--author">{{ item.authorName }}</p>
               <p class="recommend--body--ul--li__right--info">{{ item.introduction }}</p>
               <div class="recommend--body--ul--li__right--tags">
@@ -276,22 +276,23 @@ export default {
       let bookName = '';
       let cla = e.currentTarget.getAttribute('class');
       if (cla.indexOf('aaa') !== -1) {
-        bookName = e.currentTarget.firstChild.lastChild.innerText;
+        bookName = e.currentTarget.firstChild.lastChild.getAttribute('bid');
       } else if (cla.indexOf('bbb') !== -1) {
-        bookName = e.currentTarget.lastChild.innerText;
+        bookName = e.currentTarget.lastChild.getAttribute('bid');
       } else if (cla.indexOf('ccc') !== -1) {
-        bookName = e.currentTarget.firstChild.innerText;
+        bookName = e.currentTarget.firstChild.getAttribute('bid');
       } else if (cla.indexOf('ddd') !== -1) {
-        bookName = e.currentTarget.children[1].firstChild.innerText;
+        bookName = e.currentTarget.children[1].firstChild.getAttribute('bid');
       } else if (cla.indexOf('eee') !== -1) {
-        bookName = e.currentTarget.children[1].innerText;
-        if (bookName == 1) {
-          bookName = e.currentTarget.children[0].children[1].firstChild.innerText;
+        bookName = e.currentTarget.children[1].getAttribute('bid');
+        if (bookName == null) {
+          bookName = e.currentTarget.children[0].children[1].firstChild.getAttribute('bid');
         }
       }
+      // console.log(bookName)
       this.$store.dispatch({
-        type: 'triggerInfoData',
-        info: bookName
+        type: 'triggerBookId',
+        id: bookName
       })
     },
     changeProp (e) {
