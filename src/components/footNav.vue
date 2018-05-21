@@ -1,9 +1,9 @@
 //  　底部导航栏
 <template>
   <div class="box">
-    <header>
+    <!-- <header>
       <img src="../assets/logo1.png" alt="">
-    </header>
+    </header> -->
     <!-- <transition name="" mode=""> -->
       <keep-alive>
         <router-view v-if="$route.meta.keepAlive"></router-view>

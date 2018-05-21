@@ -27,13 +27,6 @@
         <loading class="loading_P"></loading>
     </div> -->
     <loading v-else></loading>
-    <div v-if="judge" class="button__box">
-      <button v-if="page !== 1" @click="adcPage">{{ up }}</button>
-      <button v-else disabled="disabled">第一页</button>
-      <span>{{ page }}</span>
-      <button v-if="page !== 100" @click="addPage">{{ down }}</button>
-      <button v-else disabled="disabled">最后一页</button>
-    </div>
   </div>
 </template>
 
@@ -55,24 +48,6 @@ export default {
     }
   },
   methods: {
-    adcPage () {
-      setTimeout(() => {
-        document.documentElement.scrollTop = 0;
-      },200);
-      this.$store.dispatch({
-        type: 'changePage',
-        page: --this.page
-      })
-    },
-    addPage () {
-      setTimeout(() => {
-        document.documentElement.scrollTop = 0;
-      },200);
-      this.$store.dispatch({
-        type: 'changePage',
-        page: ++this.page
-      })
-    },
     getList () {
       this.judge = false;
       if (window.fetch) {

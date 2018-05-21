@@ -13,7 +13,7 @@
       </div>
     </section>
     <section class="cover--buttons">
-      <router-link class="cover--buttons--button" to="" tag="button">开始阅读</router-link>
+      <router-link class="cover--buttons--button" to="bookChapter" tag="button">开始阅读</router-link>
       <button class="cover--buttons--button">加书架</button>
       <button class="cover--buttons--button">离线下载</button>
     </section>
@@ -47,11 +47,9 @@
         <div class="li__box">
           <div class="li__box--ul">
             <ul>
-              <li @click="changeInfoBook" v-for="(item, index) in result1" :key="index">
-                <router-link to="bookinformation">
+              <li @click="changeInfoBook" v-for="(item, index) in result1" :key="index" :bid="item.bid">
                   <img src="" v-lazyLoad="item.imgUrl" :alt="item.linkText">
                   <span>{{ item.linkText }}</span>
-                </router-link>
               </li>
             </ul>
           </div>
@@ -93,6 +91,7 @@
 import fetchGet from '../wheel/fetchGet'
 import $ from 'jquery'
 import md5 from '../encryption/md5'
+import bookChapterVue from './bookChapter.vue';
 export default {
   name: 'bookInformation',
   data () {
@@ -102,23 +101,42 @@ export default {
       result1: [],
       arrResult: [],
       refreshJudge: true,
-      authorName: '',
-      authorId: '',
       user_id: 8000000,
       encryptKey: '37e81a9d8f02596e1b895d07c171d5c9'
     }
   },
   computed: {
-    bookName: {
+    bookId () {
+      let id = this.$store.state.bookInfo.bookId;
+      if (!id) {
+        id = localStorage.getItem('bookId');
+      }
+      return id;
+    },
+    bookName () {
+      let name = this.$store.state.bookInfo.bookName;
+      if (!name) {
+        name = localStorage.getItem('bookName');
+      }
+      return name;
+    },
+    authorId: {
       get () {
-        return this.$store.state.bookSearch.infoBookName;
-      },
-      set () {
-        location.reload();
+        let id = this.$store.state.bookInfo.authorId;
+        if (!id) {
+          id = localStorage.getItem('authorId');
+        }
+        return id;
       }
     },
-    bookId () {
-      return this.$store.state.bookInfo.bookId;
+    authorName: {
+      get () {
+        let name = this.$store.state.bookInfo.authorName;
+        if (!name) {
+          name = localStorage.getItem('authorName');
+        }
+        return name;
+      }
     },
     timestamp () {
       return Date.now();
@@ -132,8 +150,9 @@ export default {
       })
     },
     changeInfoBook (e) {
-      let bookName = e.currentTarget.firstChild.lastChild.innerText;
-      this.bookName = bookName;
+      let bookId = e.currentTarget.getAttribute('bid');
+      localStorage.setItem('bookId', bookId);
+      location.reload();
     },
     showP (e) {
       e.currentTarget.parentNode.parentNode.firstChild.classList.toggle('poff');
@@ -154,21 +173,31 @@ export default {
         }).then((res) => {
           if (res.status === 200 && res.ok) {
             res.json().then((data) => {
-              data = data;
-              // console.log('post', data);
               let item = data.data;
               let obj = {};
               obj.imgUrl = item.imgUrl;
               obj.title = item.bookName;
               obj.author = item.authorName;
-              this.authorName = item.authorName;
               obj.authorId = item.authorId;
-              this.authorId = item.authorId;
               obj.category = item.className;
               obj.words = item.wordCount+ '万字';
+              obj.chapterId = item.firstChapter.chapterId;
               obj.status = item.state;
               obj.info = item.desc;
               obj.lastet_chapter = item.lastChapter.chapterName;
+
+              localStorage.setItem('authorId', item.authorId);
+              localStorage.setItem('authorName', item.authorName);
+              localStorage.setItem('bookName', item.bookName);
+              this.$store.dispatch({
+                type: 'triggerAuthor',
+                id: item.authorId,
+                name: item.authorName
+              })
+              this.$store.dispatch({
+                type: 'triggerBookName',
+                name: item.bookName
+              })
               this.bookData = obj;
               this.getComments();
               this.getRecom();
@@ -257,10 +286,8 @@ export default {
           page: 1,
           _: 1526566584638
         }
-        // console.log(options)
         this.arrResult = [];
         fetchGet('http://read.xiaoshuo1-sm.com/novel/i.php', options, 'get', (data) => {
-          // console.log(data)
           Array.prototype.forEach.call(data.data, (item) => {
               let obj = {};
               obj.imgUrl = item.cover;
@@ -277,6 +304,10 @@ export default {
     },
   },
   mounted () {
+    this.$store.dispatch({
+      type: 'hideFalse',
+      bool: false
+    })
     this.getBookInfo();
   },
 }

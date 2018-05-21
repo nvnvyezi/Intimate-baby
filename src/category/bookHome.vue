@@ -1,10 +1,27 @@
 //小说分类
 <template>
-  <div class="box">
+  <div class="bookHome">
     <p class="refresh"></p>
-    <div ref="aaa" v-if="judge" class="list seniority__list">
-      <ul>
-        <li v-for="(item, index) in list" :key="index"><i></i><router-link @click.native="urlList" :to="userRouter" tag="span">{{ item }}</router-link></li>
+    <div v-if="judge" class="list seniority__list">
+      <div class="boy--title">男生分类</div>
+      <ul class="list__ul">
+        <router-link class="list__ul__li" :to="userRouter" @click.native="changeProp" v-for="(item, index) in boyList" :list="item.list" :key="index" tag="li">
+          <!-- <i></i> -->
+          <div class="list__ul__li__middle">
+            <div class="list__ul__li__middle--top">{{ item.list }}</div>
+            <div class="list__ul__li__middle--bottom">{{ item.text }}</div>
+          </div>
+        </router-link>
+      </ul>
+      <div class="boy--title">女生分类</div>
+      <ul class="list__ul">
+        <router-link class="list__ul__li" :to="userRouter" @click.native="changeProp" v-for="(item, index) in girlList" :list="item.list" :key="index" tag="li">
+          <!-- <i></i> -->
+          <div class="list__ul__li__middle">
+            <div class="list__ul__li__middle--top">{{ item.list }}</div>
+            <div class="list__ul__li__middle--bottom">{{ item.text }}</div>
+          </div>
+        </router-link>
       </ul>
     </div>
     <div v-else class="loading__box">
@@ -15,7 +32,7 @@
 </template>
 
 <script>
-import fetchGet from '../wheel/fetchGet'
+import { categoryHome } from '../api/api'
 import loading from '../components/loadingImg'
 export default {
   components: {
@@ -24,7 +41,8 @@ export default {
   name: 'cateHome',
   data () {
     return {
-      list: [],
+      boyList: [],
+      girlList: [],
       judge: true,
       refreshJudge: false,
       userRouter: 'cater'
@@ -77,51 +95,42 @@ export default {
       this.userRouter = 'seniorityList';
     }
     if (window.fetch) {
-      fetchGet('http://'+ window.location.hostname +':3000/bookList', {}, 'get', (data) => {
-        this.list = data.result;
+      categoryHome(data => {
+        let boy= data.boy;
+        for (let i = 0; i < boy.length-1; i++) {
+          for (const key in boy[i]) {
+            if (boy[i].hasOwnProperty(key)) {
+              let obj = {};
+              obj.list = key;
+              obj.text = boy[i][key].list.join(' | ');
+              this.boyList.push(obj);
+            }
+          }
+        }
+        let girl= data.girl;
+        for (let i = 0; i < girl.length; i++) {
+          for (const key in girl[i]) {
+            if (girl[i].hasOwnProperty(key)) {
+              let obj = {};
+              obj.list = key;
+              obj.text = girl[i][key].list.join(' | ');
+              this.girlList.push(obj);
+            }
+          }
+        }
         this.judge = true;
       })
     }
   },
   methods: {
-    urlList (e) {
-      switch (e.target.innerText) {
-        case this.list[0]:
-          this.sendIndex(0);
-          break;
-        case this.list[1]:
-          this.sendIndex(1);
-          break;
-        case this.list[2]:
-          this.sendIndex(2);
-          break;
-        case this.list[3]:
-          this.sendIndex(3);
-          break;
-        case this.list[4]:
-          this.sendIndex(4);
-          break;
-        case this.list[5]:
-          this.sendIndex(5);
-          break;
-        case this.list[6]:
-          this.sendIndex(6);
-          break;
-        case this.list[7]:
-          this.sendIndex(7);
-          break;
-        default:
-          break;
-      }
-    },
-    sendIndex (num) {
-      if (this.$route.path === '/cate') {
-        this.$emit('changeList', this.list[num]);
-      }
+    changeProp (e) {
+      let list = e.currentTarget.getAttribute('list');
       this.$store.dispatch({
-        type: 'changeNum',
-        num: num
+        type: 'triggerFirst',
+        firstCate: list
       })
+      this.$emit('changeList', list);
+      localStorage.setItem('firstCate', list);
     }
   },
 }
@@ -133,11 +142,24 @@ export default {
     margin: 0;
     padding: 0;
   }
-  .box {
+  .iconG {
+    content: '';
+    width: 40/12rem;
+    height: 40/12rem;
+    display: block;
+    background-size: 3rem 3rem;
+    border-left: 10px solid transparent;
+    border-radius: 50%;
+    background-repeat: no-repeat;
+    background-position: center 70%;
+  }
+  .bookHome {
     width: 100vw;
     height: auto;
-    // margin-top: 10px;
+    margin-top: 45/12rem;
     background-color: rgb(255, 255, 255);
+    position: relative;
+    top: 0;
     .refresh {
       text-align: center;
     }
@@ -147,70 +169,77 @@ export default {
     .list {
       width: 100vw;
       height: auto;
-      ul {
-        li {
+      .boy--title {
+        width: 100%;
+        height: auto;
+        background-color: #fafafa;
+        color: #999;
+        padding: 0.8rem 0 1rem .8rem;
+      }
+      .list__ul {
+        list-style: none;
+        .list__ul__li {
           width: 100vw;
           line-height: 20px;
           list-style-type: none;
-          display: inline-block;
+          display: block;
           border-bottom: 1px solid rgb(236, 236, 236);
-          i {
-            width: 40px;
-            height: 40px;
-            border-left: 10px solid transparent;
-            display: inline-block;
-            background-image: url('../assets/all.png');
-            border-radius: 50%;
-            background-size: 30px 30px;
-            background-repeat: no-repeat;
-            background-position: center 70%;
-          }
-          span {
-            // background-color: red;
+          display: flex;
+          align-items: center;
+          padding: 0.8rem 0;
+          .list__ul__li__middle {
             width: 80vw;
-            // height: auto;
-            line-height: 40px;
-            vertical-align: text-bottom;
-            // padding-left: 10px;
+            height: auto;
             border-left: 15px solid transparent;
-            font-size: 0.5rem;
+            .list__ul__li__middle--top {
+              font-size: 1.35rem;
+              overflow-x: hidden;
+            }
+            .list__ul__li__middle--bottom {
+              font-size: 0.7rem;
+              color: #999;
+            }
           }
-        }
-        li:nth-child(2) {
-          i {
+          &:nth-child(1)::before {
+            .iconG;
+            background-image: url('../assets/all.png');
+          }
+          &:nth-child(2)::before {
+            .iconG;
             background-image: url('../assets/xuanhuan.png');
           }
-        }
-        li:nth-child(3) {
-          i {
+          &:nth-child(3)::before {
+            .iconG;
             background-image: url('../assets/wuxia.png');
           }
-        }
-        li:nth-child(4) {
-          i {
+          &:nth-child(4)::before {
+            .iconG;
             background-image: url('../assets/kehuan.png');
           }
         }
-        li:nth-child(5) {
-          i {
-            background-image: url('../assets/lishi.png');
-          }
+        li:nth-child(5)::before {
+          .iconG;
+          background-image: url('../assets/lishi.png');
         }
-        li:nth-child(6) {
-          i {
-            background-image: url('../assets/dushi.png');
-          }
+        li:nth-child(6)::before {
+          .iconG;
+          background-image: url('../assets/dushi.png');
         }
-        li:nth-child(7) {
-          i {
-            background-image: url('../assets/wangyou.png');
-          }
+        li:nth-child(7)::before {
+          .iconG;
+          background-image: url('../assets/wangyou.png');
         }
-        li:nth-child(8) {
-          border-bottom: none;
-          i {
-            background-image: url('../assets/nvsheng.png');
-          }
+        li:nth-child(8)::before {
+          .iconG;
+          background-image: url('../assets/nvsheng.png');
+        }
+        li:nth-child(9)::before {
+          .iconG;
+          background-image: url('../assets/wangyou.png');
+        }
+        li:nth-child(10)::before {
+          .iconG;
+          background-image: url('../assets/nvsheng.png');
         }
       }
     }

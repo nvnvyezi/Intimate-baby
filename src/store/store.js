@@ -5,11 +5,14 @@ Vue.use(Vuex)
 import homeHide from './home-hide'
 import bookSearch from './book-search'
 import bookInfo from './book-info'
+import bookCategory from './book-category'
+
 const store = new Vuex.Store({
   modules: {
       a: homeHide,
       bookSearch,
-      bookInfo
+      bookInfo,
+      bookCategory
   }
 })
 

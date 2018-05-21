@@ -7,7 +7,7 @@
         </div>
         <div class="box__ul__li--right">
           <div class="box__ul__li--right--title">
-            <h3 class="box__ul__li--right--title--h3" :bid="item.bid">{{ item.title}}</h3>
+            <h3 class="box__ul__li--right--title--h3" :bid="item.bid">{{ item.title.length > 4 ? item.title.slice(0, 3) + '...' : item.title}}</h3>
           </div>
           <div class="box__ul__li--right--author">
             <p class="box__ul__li--right--author--author">{{ item.author}}</p>

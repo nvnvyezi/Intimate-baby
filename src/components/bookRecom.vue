@@ -20,9 +20,9 @@
           <div class="li__box--ul">
             <ul>
               <li @click="changeInfoBook" class="aaa" v-for="(item, index) in result1" :key="index">
-                <router-link to="bookinformation">
+                <router-link to="bookinformation" tag="div">
                   <img src="" v-lazyLoad="item.imgUrl" :alt="item.linkText">
-                  <span :bid="item.bid">{{ item.linkText }}</span>
+                  <span :bid="item.bid">{{ item.linkText.length > 4 ? item.linkText.slice(0, 3) + '...' : item.linkText }}</span>
                 </router-link>
               </li>
             </ul>
@@ -43,7 +43,7 @@
         <ul class="boy__box--img__ul">
           <router-link @click.native="changeInfoBook" class="boy__box--img__ul--li  bbb" v-for="(item, index) in boyResult" :key="index" to="bookinformation" tag="li">
             <img src="" v-lazyLoad="item.imgUrl" :alt="item.linkText">
-            <span :bid="item.bid">{{ item.linkText }}</span>
+            <span :bid="item.bid">{{ item.linkText.length > 4 ? item.linkText.slice(0, 3) + '...' : item.linkText }}</span>
           </router-link>
         </ul>
       </div>
@@ -69,7 +69,7 @@
         <ul class="boy__box--img__ul">
           <router-link @click.native="changeInfoBook" class="boy__box--img__ul--li bbb" v-for="(item, index) in girlResult" :key="index" to="bookinformation" tag="li">
             <img src="" v-lazyLoad="item.imgUrl" :alt="item.linkText">
-            <span :bid="item.bid">{{ item.linkText }}</span>
+            <span :bid="item.bid">{{ item.linkText.length > 4 ? item.linkText.slice(0, 3) + '...' : item.linkText }}</span>
           </router-link>
         </ul>
       </div>
@@ -96,9 +96,9 @@
           <div class="li__box--ul">
             <ul>
               <li @click="changeInfoBook" class="aaa" v-for="(item, index) in doneResult" :key="index">
-                <router-link to="bookinformation">
+                <router-link to="bookinformation" tag="div">
                   <img src="" v-lazyLoad="item.imgUrl" :alt="item.linkText">
-                  <span :bid="item.bid">{{ item.linkText }}</span>
+                  <span :bid="item.bid">{{ item.linkText.length > 4 ? item.linkText.slice(0, 3) + '...' : item.linkText }}</span>
                 </router-link>
               </li>
             </ul>
@@ -149,7 +149,7 @@
         <ul class="new--middle__ul">
           <router-link @click.native="changeInfoBook" class="new--middle__ul__li bbb" to="bookinformation" tag="li" v-for="(item, index) in newResult" :key="index">
             <img class="new--middle__ul__li--img" src="" v-lazyLoad="item.imgUrl" :alt="item.linkText" />
-            <span class="new--middle__ul__li--title" :bid="item.bid">{{ item.linkText }}</span>
+            <span class="new--middle__ul__li--title" :bid="item.bid">{{ item.linkText.length > 4 ? item.linkText.slice(0, 3) + '...' : item.linkText }}</span>
           </router-link>
         </ul>
       </div>
@@ -294,6 +294,9 @@ export default {
         type: 'triggerBookId',
         id: bookName
       })
+      localStorage.setItem('bookId', bookName);
+      // localStorage.setItem('authorId', '');
+      // localStorage.setItem('authorName', '');
     },
     changeProp (e) {
       // console.log(document.documentElement.scrollTop, document.body.scrollTop)
@@ -768,30 +771,30 @@ export default {
               display: grid;
               grid-template-columns: repeat(4, 25%);
               justify-items: center;
-              grid-row-gap: 40px;
+              grid-row-gap: 20px;
               width: 100%;
               height: auto;
               li {
-                width: 4rem;
-                height: 6rem;
+                width: 4.5rem;
+                height: 8rem;
                 display: inline-block;
-                box-shadow: -5px 4px 2px 0px rgb(223, 220, 220);
-                transform: skewY(-4deg);
                 img {
+                  box-shadow: -5px 4px 2px 0px rgb(223, 220, 220);
+                  transform: skewY(-4deg);
                   width: 100%;
-                  height: 100%;
+                  height: auto;
                 }
-                a {
+                span {
+                  width: 70px;
+                  height: 2rem;
+                  overflow: hidden;
+                  display: block;
+                  margin-top: 8px;
+                  font-size: 0.4rem;
+                  font-weight: 400;
+                  // transform: scale3d(0.9,0.9,0.9);
                   text-decoration: none;
-                  span {
-                    margin-top: 20px;
-                    padding-top: 20px;
-                    font-size: 0.4rem;
-                    font-weight: 400;
-                    color: rgb(155, 155, 160);
-                    transform: scale3d(0.5,0.5,0.5);
-                    width: 70px;
-                  }
+                  -webkit-font-smoothing: antialiased;
                 }
               }
             }
