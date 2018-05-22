@@ -4,7 +4,7 @@ let bookCategory = {
     secondCate: '',
     words: '',
     sort: '' || 'monthHot',
-    page: 1
+    cid: 1
   },
   mutations: {        //变化
     changeFirst (state, data) {
@@ -19,8 +19,8 @@ let bookCategory = {
     changeSort (state, data) {
       state.sort = data.sort;
     },
-    changePage (state, data) {
-      state.page = data.firstCate;
+    changeCid (state, data) {
+      state.cid = data.cid;
     }
   },
   actions: {
@@ -36,8 +36,8 @@ let bookCategory = {
     triggerSort ({commit}, data) {
       commit('changeSort', data);
     },
-    triggerPage ({commit}, data) {
-      commit('changePage', data);
+    triggerCid ({commit}, data) {
+      commit('changeCid', data);
     },
   }
 }

@@ -23,8 +23,8 @@ const list = () => import ( /*webpackChunkName: "bookList"*/'@/category/bookList
 const cateHome = () => import ( /*webpackChunkName: "bookHome"*/'@/category/bookHome');
 
 const bookSeniorityRouter = () => import ( /*webpackChunkName: "bookSeniorityRouter"*/'@/components/bookSeniorityRouter');
-// const bookSeniorityHome = () => import ( /*webpackChunkName: "bookSeniorityHome"*/'@/components/bookSeniorityHome');
-const bookSeniorityList = () => import ( /*webpackChunkName: "bookSeniorityList"*/'@/components/bookSeniorityList');
+const bookSeniorityHome = () => import ( /*webpackChunkName: "bookSeniorityHome"*/'@/components/bookSeniorityHome');
+// const bookSeniorityList = () => import ( /*webpackChunkName: "bookSeniorityList"*/'@/components/bookSeniorityList');
 
 const bookSearchRouter = () => import ( /*webpackChunkName: "bookSearchRouter"*/'@/components/bookSearchRouter');
 const bookSearch = () => import ( /*webpackChunkName: "bookSearch"*/'@/components/bookSearch');
@@ -37,7 +37,7 @@ const bookInformationCatelog = () => import ( /*webpackChunkName: "bookInformati
 const bookChapter = () => import ( /*webpackChunkName: "bookChapter"*/'@/components/bookChapter');
 
 export default new Router({
-  base: 'intimate-baby',
+  base: '/intimateBaby/',
   routes: [
     {
       path: '/login',
@@ -65,12 +65,18 @@ export default new Router({
             {
               path: '/',
               name: 'recom',
-              component: recom
+              component: recom,
+              meta: {
+                keepAlive: true
+              },
             },
             {
               path: '/moreBook',
               name: 'moreBook',
-              component: moreBook
+              component: moreBook,
+              meta: {
+                keepAlive: false
+              },
             }
           ]
         },
@@ -119,19 +125,22 @@ export default new Router({
               path: '/',
               name: 'bookSeniorityRouter',
               component: bookSeniorityRouter,
+              meta: {
+                keepAlive: true
+              },
               children: [
                 {
                   path: '/',
-                  name: 'cateHome',
-                  component: cateHome,
+                  name: 'bookSeniorityHome',
+                  component: bookSeniorityHome,
                   meta: {
                     keepAlive: true
                   }
                 },
                 {
                   path: '/seniorityList',
-                  name: 'bookSeniorityList',
-                  component: bookSeniorityList,
+                  name: 'moreBook',
+                  component: moreBook,
                   meta: {
                     keepAlive: false
                   }

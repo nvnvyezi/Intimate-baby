@@ -306,12 +306,14 @@ export default {
             type: 'changeMoreBookTitle',
             title: '精品畅销'
           })
+          localStorage.getItem('MoreBookTitle', '精品畅销');
           break;
         case 'new--foot':
           this.$store.commit({
             type: 'changeMoreBookTitle',
             title: '新书潜力'
           })
+          localStorage.getItem('MoreBookTitle', '新书潜力');
           break;
         default:
           break;

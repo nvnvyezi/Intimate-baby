@@ -56,15 +56,6 @@ export default {
           this.list = data.result.listArr;
           this.judge = true;
         });
-        $.ajax({
-          type: "get",
-          url: "http://g.hongshu.com/bookajax/search.do?keyword=一",
-          // data: "data",
-          dataType: "jsonp",
-          success: function (response) {
-            console.log(response)
-          }
-        });
       }
     }
   },

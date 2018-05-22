@@ -38,7 +38,7 @@ export default {
   },
   computed: {
     hide () {
-      return this.$store.state.a.hide;
+      return this.$store.state.home.hide;
     }
     // ...mapState([
     //   'hide'

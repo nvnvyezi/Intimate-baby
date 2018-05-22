@@ -1,11 +1,12 @@
 //书本主路由
 <template>
   <div class="box">
-      <transition>
+      <!-- <transition> -->
         <keep-alive>
-          <router-view></router-view>
+          <router-view v-if="$route.meta.keepAlive"></router-view>
         </keep-alive>
-      </transition>
+        <router-view v-if="!$route.meta.keepAlive"></router-view>
+      <!-- </transition> -->
   </div>
 </template>
 

@@ -33,13 +33,11 @@ export default {
   },
   computed: {
     title () {
-      return this.$store.state.a.moreBookTitle;
-    }
-  },
-  created () {
-    if (window.fetch) {     
-      if (this.title === '畅销榜' || this.title === '精品畅销') {
+      let name = this.$store.state.home.moreBookTitle;
+      if (!name) {
+        name = localStorage.getItem('MoreBookTitle');
       }
+      return name;
     }
   },
   methods: {

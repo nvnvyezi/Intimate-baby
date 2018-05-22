@@ -45,16 +45,16 @@ module.exports = {
 
   build: {
     // Template for index.html
-    //index: path.resolve(__dirname, '../intimate-baby/index.html'),
+    index: path.resolve(__dirname, '../intimateBaby/index.html'),
 
     // Paths
-    //assetsRoot: path.resolve(__dirname, '../intimate-baby'),
-    index: '/usr/local/nginx/html/intimate-baby/index.html',
+    assetsRoot: path.resolve(__dirname, '../intimateBaby'),
+    // index: '/usr/local/nginx/html/intimateBaby/index.html',
 
-    // Paths
-    assetsRoot: '/usr/local/nginx/html/intimate-baby',
+    // // Paths
+    // assetsRoot: '/usr/local/nginx/html/intimateBaby',
     assetsSubDirectory: 'static',
-    assetsPublicPath: './',
+    assetsPublicPath: '/intimateBaby/',
 
     /**
      * Source Maps

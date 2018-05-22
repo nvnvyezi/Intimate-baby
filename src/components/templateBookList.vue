@@ -1,5 +1,5 @@
 <template>
-  <div class="box">
+  <div class="templateBox">
     <ul class="box__ul">
       <router-link @click.native="changeInfoBook" class="box__ul__li" to="bookinformation" tag="li" v-for="(item, index) in arrResult" :key="index">
         <div class="box__ul__li--imgBox">
@@ -7,7 +7,7 @@
         </div>
         <div class="box__ul__li--right">
           <div class="box__ul__li--right--title">
-            <h3 class="box__ul__li--right--title--h3" :bid="item.bid">{{ item.title.length > 4 ? item.title.slice(0, 3) + '...' : item.title}}</h3>
+            <h3 class="box__ul__li--right--title--h3" :bid="item.bid">{{ item.title }}</h3>
           </div>
           <div class="box__ul__li--right--author">
             <p class="box__ul__li--right--author--author">{{ item.author}}</p>
@@ -23,11 +23,19 @@
         </div>
       </router-link>
     </ul>
+    <footer class="templateBox--footer">
+      <div v-if="loadJudge" class="bookList--footer--text">
+        加载更多
+      </div>
+      <div v-else class="bookList--footer--textend">
+        没有更多
+      </div>
+    </footer>
   </div>
 </template>
 
 <script>
-import fetchGet from '../wheel/fetchGet';
+import { seniorityList } from "../api/api";
 export default {
   name: 'bookList',
   props: {
@@ -40,20 +48,9 @@ export default {
     return {
       arrResult: [],
       flag: 2,
-      arrParams: [
-        {
-          type: 1,
-          page: 1,
-          gender: 1,
-          _: '1526130774446'
-        },
-        {
-          type: 1,
-          page: 1,
-          gender: 2,
-          _: '1526211470093'
-        }
-      ]
+      gender: 1,
+      loadJudge: true,
+      page: 1
     }
   },
   watch: {
@@ -61,7 +58,36 @@ export default {
       this.switchData();
     }
   },
+  computed: {
+    type () {
+      let type = this.$store.state.home.type;
+      if (!type) {
+        type = localStorage.getItem('seniorityType');
+      }
+      return type;
+    }
+  },
+  mounted () {
+    this.getData();
+    let templateBox = document.getElementsByClassName('templateBox');
+    templateBox[0].addEventListener('touchstart', this.showFooter, false);
+    templateBox[0].addEventListener('touchmove', this.showFooter, false);
+    templateBox[0].addEventListener('touchend', this.showFooter, false);
+  },
   methods: {
+    showFooter () {
+      let footer = document.getElementsByClassName('templateBox--footer');
+      let li = document.getElementsByTagName('li');
+      let liBottom = li[li.length-1].getBoundingClientRect().bottom
+      let screenHeight = document.documentElement.clientHeight;
+      if (liBottom - screenHeight < 120) {
+        footer[0].scrollIntoView(true);
+        setTimeout(() => {
+          this.page++;
+          this.getData();
+        }, 300); 
+      }
+    },
     changeInfoBook (e) {
       let bookName = e.currentTarget.children[1].firstChild.firstChild.getAttribute('bid');
       // console.log(bookName)
@@ -70,23 +96,14 @@ export default {
         id: bookName
       })
     },
-    getData (index) {
+    getData () {
       if (window.fetch) {
-        const options = {
-          do: 'is_novelrank',
-          p: 1,
-          page: this.arrParams[index].page,
-          size: 10,
-          onlyCpBooks: 1,
-          gender: this.arrParams[index].gender,
-          type: this.arrParams[index].type,
-          shuqi_h5: '',
-          _: this.arrParams[index]._
-        }
-        this.arrResult = [];
-        fetchGet('http://read.xiaoshuo1-sm.com/novel/i.php', options, 'get', (data) => {
-          // console.log(data)
-          Array.prototype.forEach.call(data.data, (item) => {
+        seniorityList(this.page, this.gender, this.type, data => {
+          if (data.length == 0) {
+            this.loadJudge = false;
+            return ;
+          }
+          data.forEach(item => {
             let obj = {};
             obj.imgUrl = item.cover;
             obj.title = item.title;
@@ -104,30 +121,15 @@ export default {
     switchData () {
       switch (this.sex) {
         case 'man':
-          this.getData(0);
+          this.gender = 1;
+          this.getData();
           break;
         case 'woman':
-          this.getData(1);
-          break;
-        default:
+          this.gender = 2;
+          this.getData();
           break;
       }
     }
-  },
-  mounted () {
-    switch (this.$store.state.a.moreBookTitle) {
-      case '精品畅销':
-        this.arrParams[0].type = 1;
-        this.arrParams[1].type = 1;
-        break;
-      case '新书潜力':
-        this.arrParams[0].type = 6;
-        this.arrParams[1].type = 6;
-        break; 
-      default:
-        break;
-    }
-    this.switchData();
   }
 }
 </script>
@@ -173,7 +175,7 @@ export default {
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  .box {
+  .templateBox {
     width: 100vw;
     height: auto;
     background-color: white;
@@ -278,6 +280,28 @@ export default {
         }
       }
     }
+    .templateBox--footer {
+        width: 100%;
+        line-height: 50/12rem;
+        transform: height 1s ease;
+        .bookList--footer--text {
+          font-size: 1.4rem;
+          text-align: center;
+          &::before {
+            content: '';
+            width: 2rem;
+            height: 1.2rem;
+            display: inline-block;
+            vertical-align: middle;
+            background: url('../assets/load.gif') center center no-repeat;
+            background-size: 1.4rem 1.4rem;
+          }
+        }
+        .bookList--footer--textend {
+          font-size: 1.4rem;
+          text-align: center;
+        }
+      }
   }
 }
 </style>

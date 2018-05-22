@@ -1,44 +1,68 @@
 /**排行主界面 */
 
 <template>
-  <div class="box">
-    <!-- <p class="refresh"></p> -->
+  <div class="seniority">
+    <nav class="seniority--nav">
+      <div @click="back">↤</div>
+      <div>
+        <span>{{ listName }}</span>
+      </div>
+      <router-link to="/" tag="div">H</router-link>
+    </nav>
     <div class="seniority__list">
-      <ul>
-        <router-link to="senioritylist" tag="li" v-for="(item, index) in data" :key="index"><i></i><div class="seniority__list--section"><h3>{{ item.title }}</h3><p>{{ item.text }}</p></div></router-link>
+      <ul class="seniority__list__ul">
+        <router-link @click.native="changeProp" class="seniority__list__ul__li" to="senioritylist" tag="li" :data-title="item.title" :type="item.type" v-for="(item, index) in data" :key="index">
+          <i></i>
+          <div class="seniority__list--section">
+            <h3 class="seniority__list--section--h3">{{ item.title }}</h3>
+            <p class="seniority__list--section--p">{{ item.text }}</p>
+          </div>
+        </router-link>
       </ul>
     </div>
   </div>
 </template>
 
 <script>
+import { seniorityHome } from '../api/api'
 export default {
   name: 'bookSeniorityHome',
   data () {
     return {
       listName: '排行',
-      data: [
-        {
-          title: '精品畅销榜',
-          text: '全站最畅销，内容丰富超有料'
-        },
-        {
-          title: '狂热点击榜',
-          text: '最最受小伙伴钟爱的就在这了'
-        },
-        {
-          title: '新书潜力榜',
-          text: '你想要的这里都有哦'
-        },
-        {
-          title: '大婶力作榜',
-          text: '最热爽文这边看'
-        },
-        {
-          title: '经典完结榜',
-          text: '红文热文，本本超神'
-        },
-      ]
+      data: []
+    }
+  },
+  created () {
+    seniorityHome(data => {
+      data.forEach((item, index) => {
+        if (index % 2 === 0) {
+          let obj = {};
+          obj.title = item.content.title;
+          obj.text = item.content.desc;
+          obj.type = item.content.url.replace('#!/cid/', '')[0];
+          this.data.push(obj);
+        }
+      });
+    })
+  },
+  methods: {
+    back () {
+      this.$router.go(-1);
+    },
+    changeProp (e) {
+      let typ = e.currentTarget.getAttribute('type');
+      let title = e.currentTarget.getAttribute('data-title');
+      this.$store.dispatch({
+        type: 'triggerType',
+        typ
+      })
+      this.$store.commit({
+        type: 'changeMoreBookTitle',
+        moreBookTitle: title
+      })
+      localStorage.setItem('seniorityType', typ);
+      localStorage.setItem('MoreBookTitle', title);
     }
   }
 }
@@ -50,23 +74,36 @@ export default {
     margin: 0;
     padding: 0;
   }
-  .box {
+  .seniority {
     width: 100vw;
     height: auto;
-    // overflow: hidden;
-    // margin-top: 10px;
     position: relative;
     background-color: rgb(241, 240, 240);
+    .seniority--nav {
+      width: 100%;
+      line-height: 45px;
+      background-color: rgb(241, 157, 60);
+      display: grid;
+      grid-template-columns: 50px auto 50px;
+      color: white;
+      text-align: center;
+      font-size: 1.5rem;
+      div > span {
+        text-align: center;
+        width: 25%;
+        display: inline-block;
+      }
+    }
     .seniority__list {
       width: 100vw;
       height: auto;
-      ul {
+      .seniority__list__ul {
         list-style-type: none;
-        li {
+        .seniority__list__ul__li {
           display: inline-block;
           width: 100%;
           height: 80px;
-          border-bottom: 5px solid rgb(241, 240, 240);
+          border-bottom: 0.7rem solid rgb(241, 240, 240);
           background-color: white;
           i {
             width: 40px;
@@ -85,14 +122,15 @@ export default {
             height: 50px;
             border-left: 60px solid transparent;
             border-top: 20px solid transparent;
-            h3 {
+            .seniority__list--section--h3 {
               display: block;
-              font-size: .9rem;
+              font-size: 1.5rem;
               font-weight: 400;
             }
-            p {
+            .seniority__list--section--p {
               font-size: 0.7rem;
               font-weight: 300;
+              color: rgb(92, 92, 92);
             }
           }
         }

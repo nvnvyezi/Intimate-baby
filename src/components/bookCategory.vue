@@ -28,21 +28,15 @@ export default {
   // },
   data () {
     return {
-      list: []
+      list: [],
+      listName: '分类'
     }
   },
   computed: {
-    listName () {
-      if (localStorage['firstCate']) {
-        return localStorage['firstCate'];
-      }
-    }
   },
   methods: {
     changeList (str) {
-      console.log(1, str)
       this.listName = str;
-      console.log(this.listName)
     },
     back () {
       this.$router.go(-1);

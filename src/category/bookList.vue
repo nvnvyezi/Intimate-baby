@@ -56,7 +56,6 @@
 </template>
 
 <script>
-import fetchGet from '../wheel/fetchGet'
 import { categoryList, categoryContent } from '../api/api'
 import loading from '../components/loadingImg'
 export default {
@@ -105,7 +104,8 @@ export default {
       ],
       page: 1,
       judge: false,
-      loadJudge: true
+      loadJudge: true,
+      listJudge: true
     }
   },
   computed: {
@@ -116,6 +116,15 @@ export default {
           firstCate = localStorage.getItem('firstCate');
         }
         return firstCate;
+      }
+    },
+    cid: {
+      get: function () {
+        let cid = this.$store.state.bookCategory.cid;
+        if (!cid) {
+          cid = localStorage.getItem('cid');
+        }
+        return cid;
       }
     },
     secondCate: {
@@ -275,8 +284,22 @@ export default {
       this.getList();
     },
     getList () {
+      let first = this.firstCate;
+      let second = this.secondCate;
+      switch (first) {
+        case '现言':
+        case '古言':
+        case '幻言':
+        case '校园':
+          first = localStorage.getItem('firstCate1');
+          if (second == '') {
+            second = localStorage.getItem('secondCate1');
+          }
+          break;
+      }
       if (window.fetch) {
-        categoryContent(this.page, this.words, this.firstCate, this.secondCate, this.sort, data => {
+        categoryContent(this.page, this.words, first, second, this.sort, data => {
+          this.judge = true;
           if (data.length == 0) {
             this.loadJudge = false;
             return ;
@@ -293,12 +316,12 @@ export default {
             obj.class_name = item.category;
             this.list.push(obj);
           })
-          this.judge = true;
         })
       }
     },
     getHeader () {
-      categoryList((data) => {
+      let cid = this.cid;
+      categoryList(cid, (data) => {
         this.headerList.push({
           name: '全部',
           relatedName: ''

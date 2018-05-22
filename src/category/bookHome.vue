@@ -5,7 +5,7 @@
     <div v-if="judge" class="list seniority__list">
       <div class="boy--title">男生分类</div>
       <ul class="list__ul">
-        <router-link class="list__ul__li" :to="userRouter" @click.native="changeProp" v-for="(item, index) in boyList" :list="item.list" :key="index" tag="li">
+        <router-link class="list__ul__li" :to="userRouter" @click.native="changeProp" v-for="(item, index) in boyList" :cid="item.cid" :name="item.relatedName" :list="item.list" :key="index" tag="li">
           <!-- <i></i> -->
           <div class="list__ul__li__middle">
             <div class="list__ul__li__middle--top">{{ item.list }}</div>
@@ -15,7 +15,7 @@
       </ul>
       <div class="boy--title">女生分类</div>
       <ul class="list__ul">
-        <router-link class="list__ul__li" :to="userRouter" @click.native="changeProp" v-for="(item, index) in girlList" :list="item.list" :key="index" tag="li">
+        <router-link class="list__ul__li" :to="userRouter" @click.native="changeProp" v-for="(item, index) in girlList" :cid="item.cid" :name="item.relatedName" :list="item.list" :key="index" tag="li">
           <!-- <i></i> -->
           <div class="list__ul__li__middle">
             <div class="list__ul__li__middle--top">{{ item.list }}</div>
@@ -103,6 +103,8 @@ export default {
               let obj = {};
               obj.list = key;
               obj.text = boy[i][key].list.join(' | ');
+              obj.relatedName = boy[i][key].relatedName;
+              obj.cid = boy[i][key].cid;
               this.boyList.push(obj);
             }
           }
@@ -114,6 +116,8 @@ export default {
               let obj = {};
               obj.list = key;
               obj.text = girl[i][key].list.join(' | ');
+              obj.relatedName = girl[i][key].relatedName;
+              obj.cid = girl[i][key].cid;
               this.girlList.push(obj);
             }
           }
@@ -125,12 +129,28 @@ export default {
   methods: {
     changeProp (e) {
       let list = e.currentTarget.getAttribute('list');
+      let name = e.currentTarget.getAttribute('name');
+      let cid = e.currentTarget.getAttribute('cid');
+      this.$emit('changeList', list);
+      switch (list) {
+        case '现言':
+        case '古言':
+        case '幻言':
+        case '校园':
+          localStorage.setItem('firstCate1', '');
+          break;
+      }
       this.$store.dispatch({
         type: 'triggerFirst',
         firstCate: list
       })
-      this.$emit('changeList', list);
+      this.$store.dispatch({
+        type: 'triggerCid',
+        secondCate: cid
+      })
       localStorage.setItem('firstCate', list);
+      localStorage.setItem('secondCate1', name);
+      localStorage.setItem('cid', cid);
     }
   },
 }
