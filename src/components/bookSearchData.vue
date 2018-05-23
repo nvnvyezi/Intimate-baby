@@ -1,5 +1,5 @@
 <template>
-  <div class="box">
+  <div class="searchBox">
     <ul class="box__ul">
       <router-link @click.native="changeInfoBook" class="box__ul__li" to="bookinformation" tag="li" v-for="(item, index) in searchResult" :key="index">
         <div class="box__ul__li--imgBox">
@@ -23,42 +23,56 @@
         </div>
       </router-link>
     </ul>
+    <footer class="searchBox--footer">
+      <div v-if="loadJudge" class="bookList--footer--text">
+        加载更多
+      </div>
+      <div v-else class="bookList--footer--textend">
+        没有更多
+      </div>
+    </footer>
   </div>
 </template>
 
 <script>
-import fetchGet from '../wheel/fetchGet'
+import { getBookSearchData } from "../api/api";
 export default {
   name: 'bookSearchData',
   data () {
     return {
-      searchResult: []
+      searchResult: [],
+      page: 1,
+      loadJudge: true
     }
   },
   methods: {
     changeInfoBook (e) {
       let bookName = e.currentTarget.children[1].firstChild.firstChild.getAttribute('bid');
-      // consll/ole.log(bookName)
       this.$store.dispatch({
         type: 'triggerBookId',
         id: bookName
       })
     },
-  },
-  mounted () {
-    if (window.fetch) {
-      const options = {
-        do: 'is_serchpay',
-        page: 1,
-        size: 10,
-        q: this.searchData || '元尊',
-        filterMigu: 1,
-        p: 3,
-        shuqi_h5: '', 
-        _: '1526385291046'
+    showFooter () {
+      let footer = document.getElementsByClassName('searchBox--footer');
+      let li = document.getElementsByTagName('li');
+      let liBottom = li[li.length-1].getBoundingClientRect().bottom
+      let screenHeight = document.documentElement.clientHeight;
+      if (liBottom - screenHeight < 120) {
+        footer[0].scrollIntoView(true);
+        setTimeout(() => {
+          this.page++;
+          this.getSearchData();
+        }, 300); 
       }
-      fetchGet('http://read.xiaoshuo1-sm.com/novel/i.php', options, 'get', (data) => {
-        Array.prototype.forEach.call(data.data, (item) => {
+    },
+    getSearchData () {
+      getBookSearchData (this.searchData, this.page, data => {
+        if (data.length == 0) {
+          this.loadJudge = false;
+          return ;
+        }
+        data.forEach(item => {
           let obj = {};
           obj.imgUrl = item.cover;
           obj.title = item.title;
@@ -75,8 +89,19 @@ export default {
   },
   computed: {
     searchData () {
-      return this.$store.state.bookSearch.searchData;
+      let data = this.$store.state.bookSearch.searchData
+      if (!data) {
+        data = localStorage.getItem('searchData');
+      }
+      return data;
     }
+  },
+  mounted () {
+    this.getSearchData();
+    let searchBox = document.getElementsByClassName('searchBox');
+    searchBox[0].addEventListener('touchstart', this.showFooter, false);
+    searchBox[0].addEventListener('touchmove', this.showFooter, false);
+    searchBox[0].addEventListener('touchend', this.showFooter, false);
   }
 }
 </script>
@@ -225,6 +250,28 @@ export default {
             }
           }
         }
+      }
+    }
+    .searchBox--footer {
+      width: 100%;
+      line-height: 50/12rem;
+      transform: height 1s ease;
+      .bookList--footer--text {
+        font-size: 1.4rem;
+        text-align: center;
+        &::before {
+          content: '';
+          width: 2rem;
+          height: 1.2rem;
+          display: inline-block;
+          vertical-align: middle;
+          background: url('../assets/load.gif') center center no-repeat;
+          background-size: 1.4rem 1.4rem;
+        }
+      }
+      .bookList--footer--textend {
+        font-size: 1.4rem;
+        text-align: center;
       }
     }
   }

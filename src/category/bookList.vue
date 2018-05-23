@@ -198,7 +198,6 @@ export default {
       let screenHeight = document.documentElement.clientHeight;
       if (liBottom - screenHeight < 120 && (footer[0].style.display == '' || footer[0].style.display == 'none')) {
         footer[0].style.display = 'block';
-        // console.log(1)
         footer[0].scrollIntoView(true);
         setTimeout(() => {
           this.page++;

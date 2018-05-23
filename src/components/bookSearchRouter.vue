@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import fetchGet from '../wheel/fetchGet';
+import { getBookSearch } from "../api/api";
 export default {
   name: 'bookSearch',
   data () {
@@ -37,6 +37,7 @@ export default {
       listName: '搜索',
       searchJudge: false,
       searchData1: [],
+      flag: true
     }
   },
   methods: {
@@ -45,23 +46,19 @@ export default {
     },
     getSearchData (e) {
       this.q = e.target.value;
-      if (window.fetch) {
-        fetchGet('http://read.xiaoshuo1-sm.com/novel/i.php?do=is_pay_sugs&q', {q: e.target.value}, 'get', (data) => {
-          // console.log(data);
-          if (data.status === 1) {
-            this.searchJudge = true;
-            if (data.data.length > 4) {
-              this.searchData1 = data.data.slice(0,4);
-            } else {
-              this.searchData1 = data.data;
-            }
-          } else {
-            this.searchJudge = false;
-          }
-        })
-      }
+      getBookSearch (e.target.value, data => {
+        if (data.status === 1) {
+          this.searchJudge = true;
+          data.data.length > 4 ? this.searchData1 = data.data.slice(0,4) : this.searchData1 = data.data;
+        } else {
+          this.searchJudge = false;
+        }
+      })
     },
     saveHistory (e) {
+      e.stopPropagation();
+      location.reload();
+      this.flag = false;
       let str =  e.target.innerText;
       if (str!== '') {        
         let data = [];
@@ -76,9 +73,7 @@ export default {
           type: 'triggerSearchData',
           data: str
         })
-        const input = document.getElementsByClassName('form__search__content--input')[0];
-        input.value = '';
-        this.searchJudge = false;
+        localStorage.setItem('searchData', str);
       }
     }
   }
@@ -103,6 +98,7 @@ export default {
       grid-template-columns: 50px auto 50px;
       color: white;
       text-align: center;
+      font-size: 1.5rem;
     }
     .form__search {
       width: 100vw;

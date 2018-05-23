@@ -190,7 +190,7 @@ import { Swipe, SwipeItem } from 'mint-ui';
 import Vue from 'vue'
 Vue.component(Swipe.name, Swipe);
 Vue.component(SwipeItem.name, SwipeItem);
-import fetchGet from '../wheel/fetchGet'
+import { getBookData, getBookRecom, getBookBoyGirl, getBookDone, getBookBestSell, getBookInterest } from "../api/api";
 import loading from './loadingImg'
 export default {
   name: 'recom',
@@ -226,47 +226,26 @@ export default {
     this.judge = false;
     this.judge1 = false;
     let that = this;
-    const options = {
-      appId: '11',
-      pageId: '93',
-      channelId: '',
-      versionId: '',
-      ver: '',
-      shuqi_h5: '', 
-      md5key: '',
-      userId: '8000000',
-      timestamp: '1525940277',
-      type: '2',
-      resetcache: '', 
-      func_id: '20,24,11,19,33',
-      orderid: '1,2,3,4,5',
-      sign: '9B93AB56366DAE9AED3D183070247587',
-      key: 'shuqiapi',
-      _: '1525940277318'
-    }
-    if (window.fetch) {
-      fetchGet('http://novelapi.sm.cn/eva_bookstore/v1/module/query', options, 'get', (data) => {
-        // console.log(data, '')
-        this.list = data.data.module[3].m_s_name;
-        Array.prototype.forEach.call(data.data.module[0].content, (item) => {  
-          let obj = {};
-          obj.imgUrl = item.image_url;
-          obj.linkText = item.link_text;
-          let len = item.link_url.indexOf('bid:');
-          let len1 = item.link_url.indexOf('});');
-          obj.bid = item.link_url.slice(len + 4, len1);
-          this.swipeData.push(obj);
-        })
-        Array.prototype.forEach.call(data.data.module[3].content, (item) => {  
-          let obj = {};
-          obj.imgUrl = item.book_cover;
-          obj.linkText = item.bookname.length < 5 ? item.bookname : item.bookname;
-          obj.bid = item.bid;
-          this.result1.push(obj);
-        })
-        this.judge = true;
+    getBookData (data => {
+      this.list = data.module[3].m_s_name;
+      data.module[0].content.forEach(item => {  
+        let obj = {};
+        obj.imgUrl = item.image_url;
+        obj.linkText = item.link_text;
+        let len = item.link_url.indexOf('bid:');
+        let len1 = item.link_url.indexOf('});');
+        obj.bid = item.link_url.slice(len + 4, len1);
+        this.swipeData.push(obj);
       })
-    }
+      data.module[3].content.forEach(item => {  
+        let obj = {};
+        obj.imgUrl = item.book_cover;
+        obj.linkText = item.bookname.length < 5 ? item.bookname : item.bookname;
+        obj.bid = item.bid;
+        this.result1.push(obj);
+      })
+      this.judge = true;
+    })
     this.getBoyGirl(function (param) {  });
     this.getBestSelling();
     this.getRecommend();
@@ -289,17 +268,13 @@ export default {
           bookName = e.currentTarget.children[0].children[1].firstChild.getAttribute('bid');
         }
       }
-      // console.log(bookName)
       this.$store.dispatch({
         type: 'triggerBookId',
         id: bookName
       })
       localStorage.setItem('bookId', bookName);
-      // localStorage.setItem('authorId', '');
-      // localStorage.setItem('authorName', '');
     },
     changeProp (e) {
-      // console.log(document.documentElement.scrollTop, document.body.scrollTop)
       switch (e.currentTarget.getAttribute('class')) {
         case 'bestSelling__foot':
           this.$store.commit({
@@ -320,40 +295,17 @@ export default {
       }
     },
     getRecom (callback) {
-      const options = {
-        appId: '11',
-        pageId: '93',
-        channelId: '',
-        versionId: '',
-        ver: '',
-        shuqi_h5: '', 
-        md5key: '',
-        userId: '8000000',
-        timestamp: '1525944067',
-        type: '2',
-        resetcache: '', 
-        func_id: '19',
-        orderid: '4',
-        mid: '1388',
-        lmkTxt: 'index',
-        sign: 'C6FDEED1E0EC0DAD42F1BB3D660783DF',
-        key: 'shuqiapi',
-        _: '1525944067034'
-      }
       this.result1 = [];
-      if (window.fetch) {        
-        fetchGet('http://novelapi.sm.cn/eva_bookstore/v1/module/query', options, 'get', (data) => {
-          // console.log(data, '')
-          Array.prototype.forEach.call(data.data.module[0].content, (item) => {  
-            let obj = {};
-            obj.bid = item.bid;
-            obj.imgUrl = item.book_cover;
-            obj.linkText = item.bookname;
-            this.result1.push(obj);
-          })
-          callback();
+      getBookRecom (data => {
+        data.forEach(item => {  
+          let obj = {};
+          obj.bid = item.bid;
+          obj.imgUrl = item.book_cover;
+          obj.linkText = item.bookname;
+          this.result1.push(obj);
         })
-      }
+        callback();
+      })
     },
     addrefresh () {
       if (this.refreshJudge) {
@@ -369,40 +321,17 @@ export default {
       }
     },
     getDoneBook (callback) {
-      const options = {
-        appId: '11',
-        pageId: '93',
-        channelId: '',
-        versionId: '',
-        ver: '',
-        shuqi_h5: '', 
-        md5key: '',
-        userId: '8000000',
-        timestamp: '1526044743',
-        type: '2',
-        resetcache: '', 
-        func_id: '19',
-        orderid: '22',
-        mid: '4188',
-        lmkTxt: 'index',
-        sign: '143E4F7C7E1421BF11E9B6A6543E2E54',
-        key: 'shuqiapi',
-        _: '1526044743832'
-      }
       this.doneResult = [];
-      if (window.fetch) {        
-        fetchGet('http://novelapi.sm.cn/eva_bookstore/v1/module/query', options, 'get', (data) => {
-          // console.log(data, '')
-          Array.prototype.forEach.call(data.data.module[0].content, (item) => {  
-            let obj = {};
-            obj.bid = item.bid;
-            obj.imgUrl = item.book_cover;
-            obj.linkText = item.bookname.slice(0, 3) + '...';
-            this.doneResult.push(obj);
-          })
-          callback();
+      getBookDone (data => {
+        data.forEach(item => {  
+          let obj = {};
+          obj.bid = item.bid;
+          obj.imgUrl = item.book_cover;
+          obj.linkText = item.bookname.slice(0, 3) + '...';
+          this.doneResult.push(obj);
         })
-      }
+        callback();
+      })
     },
     addrefresh1 () {
       if (this.refreshJudge1) {
@@ -419,156 +348,93 @@ export default {
     },
     getBoyGirl (callback) {
       this.doneJudge = false;
-      const options = {
-        appId: '11',
-        pageId: '93',
-        channelId: '',
-        versionId: '',
-        ver: '',
-        shuqi_h5: '', 
-        md5key: '',
-        userId: '8000000',
-        timestamp: '1525953643',
-        type: '2',
-        resetcache: '', 
-        func_id: '11,33,11,19,33,11,19,33,11,19',
-        orderid: '6,7,8,9,12,14,15,18,21,22',
-        sign: '37A3933CC42B68590B8E534EBF7B2283',
-        key: 'shuqiapi',
-        _: '1525953643514'
-      }
-      if (window.fetch) {        
-        fetchGet('http://novelapi.sm.cn/eva_bookstore/v1/module/query', options, 'get', (data) => {
-          // console.log(data, data.data.module[3].m_s_name)
-          this.list2 = data.data.module[6].m_s_name;
-          this.list1 = data.data.module[3].m_s_name;
-          this.list3 = data.data.module[9].m_s_name;
-          Array.prototype.forEach.call(data.data.module[3].content, (item, index) => { 
-            let obj = {};
-            obj.bid = item.bid;
-            if (index < 4) {
-              obj.imgUrl = item.book_cover;
-              obj.linkText = item.bookname;
-              this.boyResult.push(obj);
-            } else {
-              obj.linkText = item.bookname;
-              obj.stat_name = item.stat_name;
-              obj.class_name = item.class_name;
-              obj.introduction = item.introduction;
-              this.boyResult1.push(obj);
-            }
-          })
-          Array.prototype.forEach.call(data.data.module[6].content, (item, index) => { 
-            let obj = {};
-            obj.bid = item.bid;
-            if (index < 4) {
-              obj.imgUrl = item.book_cover;
-              obj.linkText = item.bookname;
-              this.girlResult.push(obj);
-            } else {
-              obj.linkText = item.bookname;
-              obj.stat_name = item.stat_name;
-              obj.class_name = item.class_name;
-              obj.introduction = item.introduction;
-              this.girlResult1.push(obj);
-            }
-          })
-          Array.prototype.forEach.call(data.data.module[9].content, (item) => {  
-            let obj = {};
+      getBookBoyGirl (data => {
+        this.list2 = data.module[6].m_s_name;
+        this.list1 = data.module[3].m_s_name;
+        this.list3 = data.module[9].m_s_name;
+        data.module[3].content.forEach((item, index) => { 
+          let obj = {};
+          obj.bid = item.bid;
+          if (index < 4) {
             obj.imgUrl = item.book_cover;
             obj.linkText = item.bookname;
-            obj.bid = item.bid;
-            this.doneResult.push(obj);
-          })
-          this.doneJudge = true;
-          callback();
+            this.boyResult.push(obj);
+          } else {
+            obj.linkText = item.bookname;
+            obj.stat_name = item.stat_name;
+            obj.class_name = item.class_name;
+            obj.introduction = item.introduction;
+            this.boyResult1.push(obj);
+          }
         })
-      }
+        data.module[6].content.forEach((item, index) => { 
+          let obj = {};
+          obj.bid = item.bid;
+          if (index < 4) {
+            obj.imgUrl = item.book_cover;
+            obj.linkText = item.bookname;
+            this.girlResult.push(obj);
+          } else {
+            obj.linkText = item.bookname;
+            obj.stat_name = item.stat_name;
+            obj.class_name = item.class_name;
+            obj.introduction = item.introduction;
+            this.girlResult1.push(obj);
+          }
+        })
+        data.module[9].content.forEach((item) => {  
+          let obj = {};
+          obj.imgUrl = item.book_cover;
+          obj.linkText = item.bookname;
+          obj.bid = item.bid;
+          this.doneResult.push(obj);
+        })
+        this.doneJudge = true;
+        callback();
+      })
     },
     getBestSelling () {
-      const options = {
-        appId: '11',
-        pageId: '93',
-        channelId: '',
-        versionId: '',
-        ver: '',
-        shuqi_h5: '', 
-        md5key: '',
-        userId: '8000000',
-        timestamp: '1526043109',
-        type: '2',
-        resetcache: '', 
-        func_id: '33,11,33,11,19,12,33,11,19,12',
-        orderid: '23,24,25,26,27,28,29,30,31,32',
-        sign: '5C251E0B84037646C22B8CCE2FEEE6B0',
-        key: 'shuqiapi',
-        _: '1526043109522'
-      }
-      if (window.fetch) {        
-        fetchGet('http://novelapi.sm.cn/eva_bookstore/v1/module/query', options, 'get', (data) => {
-          // console.log(data, data.data.module[3].m_s_name)
-          this.list4 = data.data.module[4].m_s_name;
-          this.list5 = data.data.module[8].m_s_name;
-          Array.prototype.forEach.call(data.data.module[4].content, (item, index) => { 
-            let obj = {};
-            obj.bid = item.bid;
-            obj.bookName = item.bookname;
-            obj.authorName = item.author_name;
-            obj.size = item.size.slice(0, 3) + '万字';
-            obj.stat_name = item.stat_name;
-            obj.class_name = item.class_name;
-            obj.introduction = item.introduction;
-            obj.tag = item.tag[0];
-            obj.imgUrl = item.book_cover;
-            this.bestSelResult.push(obj);
-          })
-          Array.prototype.forEach.call(data.data.module[8].content, (item) => {  
-            let obj = {};
-            obj.imgUrl = item.book_cover;
-            obj.linkText = item.bookname.length < 5 ? item.bookname : item.bookname;
-            obj.bid = item.bid;
-            this.newResult.push(obj);
-          })
+      getBookBestSell (data => {
+        this.list4 = data.module[4].m_s_name;
+        this.list5 = data.module[8].m_s_name;
+        data.module[4].content.forEach((item, index) => { 
+          let obj = {};
+          obj.bid = item.bid;
+          obj.bookName = item.bookname;
+          obj.authorName = item.author_name;
+          obj.size = item.size.slice(0, 3) + '万字';
+          obj.stat_name = item.stat_name;
+          obj.class_name = item.class_name;
+          obj.introduction = item.introduction;
+          obj.tag = item.tag[0];
+          obj.imgUrl = item.book_cover;
+          this.bestSelResult.push(obj);
         })
-      }
+        data.module[8].content.forEach((item) => {  
+          let obj = {};
+          obj.imgUrl = item.book_cover;
+          obj.linkText = item.bookname.length < 5 ? item.bookname : item.bookname;
+          obj.bid = item.bid;
+          this.newResult.push(obj);
+        })
+      })
     },
     getRecommend () {
-      const options = {
-        appId: '11',
-        pageId: '93',
-        channelId: '',
-        versionId: '',
-        ver: '',
-        shuqi_h5: '', 
-        md5key: '',
-        userId: '8000000',
-        timestamp: '1526290238',
-        type: '2',
-        resetcache: '', 
-        func_id: '33,11,28,33,12,33,11,19,33',
-        orderid: '35,36,37,38,39,40,41,42,43',
-        sign: '3E26701E27A6ABD551FAE9A643AF4906',
-        key: 'shuqiapi',
-        _: '1526290238825'
-      }
-      if (window.fetch) {        
-        fetchGet('http://novelapi.sm.cn/eva_bookstore/v1/module/query', options, 'get', (data) => {
-          // console.log(data, data.data.module[6].m_s_name)
-          this.list6 = data.data.module[6].content.title;
-          Array.prototype.forEach.call(data.data.module[7].content, (item, index) => { 
-            let obj = {};
-            obj.bid = item.bid;
-            obj.bookName = item.bookname;
-            obj.authorName = item.author_name;
-            obj.size = item.size.slice(0, 3) + '万字';
-            obj.stat_name = item.stat_name;
-            obj.class_name = item.class_name;
-            obj.introduction = item.introduction;
-            obj.imgUrl = item.book_cover;
-            this.recommendResult.push(obj);
-          })
+      getBookInterest (data => {
+        this.list6 = data.module[6].content.title;
+        data.module[7].content.forEach((item, index) => { 
+          let obj = {};
+          obj.bid = item.bid;
+          obj.bookName = item.bookname;
+          obj.authorName = item.author_name;
+          obj.size = item.size.slice(0, 3) + '万字';
+          obj.stat_name = item.stat_name;
+          obj.class_name = item.class_name;
+          obj.introduction = item.introduction;
+          obj.imgUrl = item.book_cover;
+          this.recommendResult.push(obj);
         })
-      }
+      })
     }
   }
 }

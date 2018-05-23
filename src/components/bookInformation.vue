@@ -88,10 +88,8 @@
 </template>
 
 <script>
-import fetchGet from '../wheel/fetchGet'
-import $ from 'jquery'
+import { bookInfo, bookComments, bookRecom, otherBooks } from "../api/api";
 import md5 from '../encryption/md5'
-import bookChapterVue from './bookChapter.vue';
 export default {
   name: 'bookInformation',
   data () {
@@ -163,69 +161,41 @@ export default {
     getBookInfo () {
       if (window.fetch) {
         let sign = md5(this.bookId + "" + this.timestamp + this.user_id + this.encryptKey);
-        fetch('http://walden1.shuqireader.com/qswebapi/book/info/?_=1526653320306', {
-          method: 'post',
-          mode: 'cors',
-          body: `bookId=${ this.bookId}&user_id=${ this.user_id}&sign=${ sign }&timestamp=${ this.timestamp}&shuqi_h5=`,
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
-        }).then((res) => {
-          if (res.status === 200 && res.ok) {
-            res.json().then((data) => {
-              let item = data.data;
-              let obj = {};
-              obj.imgUrl = item.imgUrl;
-              obj.title = item.bookName;
-              obj.author = item.authorName;
-              obj.authorId = item.authorId;
-              obj.category = item.className;
-              obj.words = item.wordCount+ '万字';
-              obj.chapterId = item.firstChapter.chapterId;
-              obj.status = item.state;
-              obj.info = item.desc;
-              obj.lastet_chapter = item.lastChapter.chapterName;
+        bookInfo (this.bookId, this.user_id, sign, this.timestamp, item => {
+          let obj = {};
+          obj.imgUrl = item.imgUrl;
+          obj.title = item.bookName;
+          obj.author = item.authorName;
+          obj.authorId = item.authorId;
+          obj.category = item.className;
+          obj.words = item.wordCount+ '万字';
+          obj.chapterId = item.firstChapter.chapterId;
+          obj.status = item.state;
+          obj.info = item.desc;
+          obj.lastet_chapter = item.lastChapter.chapterName;
 
-              localStorage.setItem('authorId', item.authorId);
-              localStorage.setItem('authorName', item.authorName);
-              localStorage.setItem('bookName', item.bookName);
-              this.$store.dispatch({
-                type: 'triggerAuthor',
-                id: item.authorId,
-                name: item.authorName
-              })
-              this.$store.dispatch({
-                type: 'triggerBookName',
-                name: item.bookName
-              })
-              this.bookData = obj;
-              this.getComments();
-              this.getRecom();
-              this.getData();
-            })
-          } else {
-            console.error('Error', res);
-          }
-        }).catch((error) => {
-          console.error('Error: ', error)
+          localStorage.setItem('authorId', item.authorId);
+          localStorage.setItem('authorName', item.authorName);
+          localStorage.setItem('bookName', item.bookName);
+          this.$store.dispatch({
+            type: 'triggerAuthor',
+            id: item.authorId,
+            name: item.authorName
+          })
+          this.$store.dispatch({
+            type: 'triggerBookName',
+            name: item.bookName
+          })
+          this.bookData = obj;
+          this.getComments();
+          this.getRecom();
+          this.getData();
         })
       }
     },
     getComments () {
-      const options = {
-        do: 'sp_get',
-        authorId: this.authorId,
-        bookId: this.bookId,
-        fetch: 'merge',
-        sqUid: 8000000,
-        source: 'store',
-        size: 3,
-        page: 1,
-        shuqi_h5: '', 
-        _: 1526543880837
-      }
-      fetchGet('http://read.xiaoshuo1-sm.com/novel/i.php', options, 'get', (data) => {
-        Array.prototype.forEach.call(data.data, (item) => {
+      bookComments (this.authorId, this.bookId, data =>  {
+        data.forEach(item => {
           let obj = {};
           obj.userPhoto = item.userPhoto;
           obj.nickName = item.nickName;
@@ -248,25 +218,10 @@ export default {
       }
     },
     getRecom () {
-      const options = {
-        bamp: 'sqdk',
-        dataFrom: 'sm',
-        bid: 7483221,
-        bkName: this.bookName,
-        authName: this.authorName,
-        authorid: 25671,
-        limit: 8,
-        ver: 201802091823,
-        fr_pr_id: 10002,
-        tk: 'NzQ4MzIyMTQxN2FjNTllOWYyNTY3MQ%3D%3D',
-        shuqi_h5: '',
-        _: 1526546099262
-      }
       this.result1 = [];
-      if (window.fetch) {        
-        fetchGet('http://bookapi.shuqiapi.com/', options, 'get', (data) => {
-          // console.log(data, '')
-          Array.prototype.forEach.call(data.data.dk.bookinfo, (item) => {  
+      if (window.fetch) {
+        bookRecom(this.bookName, this.authorName, data => {
+          data.forEach((item) => {  
             let obj = {};
             obj.bid = item.id;
             obj.imgUrl = item.cover;
@@ -276,32 +231,22 @@ export default {
         })
       }
     },
-    getData (index) {
-      if (window.fetch) {
-        const options = {
-          do: 'is_pay_author',
-          authorId: this.authorId,
-          p: 3,
-          size: 100,
-          page: 1,
-          _: 1526566584638
-        }
-        this.arrResult = [];
-        fetchGet('http://read.xiaoshuo1-sm.com/novel/i.php', options, 'get', (data) => {
-          Array.prototype.forEach.call(data.data, (item) => {
-              let obj = {};
-              obj.imgUrl = item.cover;
-              obj.title = item.title;
-              obj.author = item.author;
-              obj.bid = item.bid;
-              obj.status = item.status;
-              obj.words = (item.words/10000).toFixed(1) + '万字';
-              obj.tags = item.category;
-              this.arrResult.push(obj);
-          })
+    getData () {
+      this.arrResult = [];
+      otherBooks(this.authorId, data => {
+        data.forEach(item => {
+            let obj = {};
+            obj.imgUrl = item.cover;
+            obj.title = item.title;
+            obj.author = item.author;
+            obj.bid = item.bid;
+            obj.status = item.status;
+            obj.words = (item.words/10000).toFixed(1) + '万字';
+            obj.tags = item.category;
+            this.arrResult.push(obj);
         })
-      }
-    },
+      })
+    }
   },
   mounted () {
     this.$store.dispatch({

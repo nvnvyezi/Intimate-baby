@@ -20,6 +20,7 @@
 
 <script>
 import md5 from '../encryption/md5'
+import { bookCatelog } from "../api/api";
 export default {
   name: 'bookInformationCatelog',
   data () {
@@ -90,34 +91,17 @@ export default {
       this.maskJudge = false;
     },
     getCatelog () {
-      if (window.fetch) {
-        let sign = md5(this.bookId + "" + this.timestamp + this.user_id + this.encryptKey);
-        fetch('http://walden1.shuqireader.com/qswebapi/book/chapterlist?_=1526644058478', {
-          method: 'post',
-          mode: 'cors',
-          body: `bookId=${ this.bookId }&user_id=${ this.user_id }&sign=${ sign }&timestamp=${ this.timestamp}`,
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
-        }).then((res) => {
-          if (res.status === 200 && res.ok) {
-            res.json().then((data) => {
-              Array.prototype.forEach.call(data.data.chapterList, (item) => {
-                Array.prototype.forEach.call(item.volumeList, (item) => {
-                  let obj = {};
-                  obj.chapterName = item.chapterName;
-                  obj.contUrlSuffix = item.contUrlSuffix;
-                  this.catelogResult.push(obj);
-                })
-              })
-            })
-          } else {
-            console.error('Error', res);
-          }
-        }).catch((error) => {
-          console.error('Error: ', error)
+      let sign = md5(this.bookId + "" + this.timestamp + this.user_id + this.encryptKey);
+      bookCatelog (this.bookId, this.user_id, sign, this.timestamp, data => {
+        data.forEach(item => {
+          item.volumeList.forEach(item => {
+            let obj = {};
+            obj.chapterName = item.chapterName;
+            obj.contUrlSuffix = item.contUrlSuffix;
+            this.catelogResult.push(obj);
+          })
         })
-      }
+      })
     }
   }
 }

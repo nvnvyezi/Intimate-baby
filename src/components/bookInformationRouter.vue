@@ -12,14 +12,11 @@
 </template>
 
 <script>
-import fetchGet from '../wheel/fetchGet';
 export default {
   name: 'bookSearch',
   data () {
     return {
       listName: '书籍详情',
-      searchJudge: false,
-      searchData1: [],
     }
   },
   methods: {

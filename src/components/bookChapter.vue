@@ -5,13 +5,16 @@
 </template>
 
 <script>
-import fetchGet from '../wheel/fetchGet'
+import { getBookChapter } from "../api/api";
 export default {
   name: 'bookChapter',
   data () {
     return {
       chapterName: '',
-      text: ''  
+      text: '',
+      page: 9,
+      startX: 0,
+      startY: 0
     }
   },
   computed: {
@@ -22,20 +25,24 @@ export default {
       }
       return name;
     },
+    authorName () {
+      let name = this.$store.state.bookInfo.authorName;
+      if (!name) {
+        name = localStorage.getItem('authorName');
+      }
+      return name;
+    },
   },
   mounted () {
     this.getChapter();
+    let chapter = document.getElementsByClassName('chapter')[0];
+    chapter.addEventListener('touchstart', this.handleStart, false);
+    chapter.addEventListener('touchmove', this.stopEvent, false);
+    chapter.addEventListener('touchend', this.handleEnd, false);
   },
   methods: {
     getChapter () {
-      console.log(this.bookName)
-      const options = {
-        bookName: this.bookName,
-        page: ''
-      }
-      console.log(options)
-      fetchGet(`http://${window.location.hostname}:3000/chapter`, options, 'get', (data) => {
-        console.log(data)
+      getBookChapter (this.bookName, this.authorName, this.page, data => {
         this.chapterName = data.bookName;
         this.handleText(data.text);
       })
@@ -50,6 +57,18 @@ export default {
           fragement.appendChild(p);
       }
       box[0].appendChild(fragement);
+    },
+    handleStart (e) {
+      this.startX = e.changedTouches[0].pageX;
+      this.startY = e.changedTouches[0].pageY;
+      // console.log(this.startX, this.startY)
+    },
+    handleEnd (e) {
+      let endX = e.changedTouches[0].pageX;
+      let endY = e.changedTouches[0].pageY;
+      let screenH = document.documentElement.clientHeight;
+      let screenW = document.documentElement.clientWidth;
+      console.log(screenH, screenW)
     }
   }
 }
@@ -60,7 +79,7 @@ export default {
   .chapter {
     width: 100vw;
     height: 100vh;
-    // overflow: hidden;
+    overflow-x: hidden;
     .h3 {
       font-size: 2rem;
     }

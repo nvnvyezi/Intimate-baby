@@ -281,27 +281,27 @@ export default {
       }
     }
     .templateBox--footer {
-        width: 100%;
-        line-height: 50/12rem;
-        transform: height 1s ease;
-        .bookList--footer--text {
-          font-size: 1.4rem;
-          text-align: center;
-          &::before {
-            content: '';
-            width: 2rem;
-            height: 1.2rem;
-            display: inline-block;
-            vertical-align: middle;
-            background: url('../assets/load.gif') center center no-repeat;
-            background-size: 1.4rem 1.4rem;
-          }
-        }
-        .bookList--footer--textend {
-          font-size: 1.4rem;
-          text-align: center;
+      width: 100%;
+      line-height: 50/12rem;
+      transform: height 1s ease;
+      .bookList--footer--text {
+        font-size: 1.4rem;
+        text-align: center;
+        &::before {
+          content: '';
+          width: 2rem;
+          height: 1.2rem;
+          display: inline-block;
+          vertical-align: middle;
+          background: url('../assets/load.gif') center center no-repeat;
+          background-size: 1.4rem 1.4rem;
         }
       }
+      .bookList--footer--textend {
+        font-size: 1.4rem;
+        text-align: center;
+      }
+    }
   }
 }
 </style>

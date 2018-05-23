@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import fetchGet from '../wheel/fetchGet'
+import { getBookSearchRecom } from "../api/api";
 export default {
   name: 'bookSearch',
   data () {
@@ -80,26 +80,15 @@ export default {
       }
     },
     getrecomData () {
-      if (window.fetch) {
-        const options = {
-          do: 'is_payreco',
-          id: '8000000',
-          qtf: 'shuqiApp',
-          qtn: 'cpSearchReplace_sug',
-          nums: 9,
-          shuqi_h5: '',
-          _: '1526306009274'
-        }
-        this.recommendData = [];
-        fetchGet('http://read.xiaoshuo1-sm.com/novel/i.php', options, 'get', (data) => {
-          Array.prototype.forEach.call(data.data, (item) => {
-            let obj = {};
-            obj.bid = item.bookid;
-            obj.title = item.title;
-            this.recommendData.push(obj);
-          })
+      this.recommendData = [];
+      getBookSearchRecom (data => {
+        data.forEach(item => {
+          let obj = {};
+          obj.bid = item.bookid;
+          obj.title = item.title;
+          this.recommendData.push(obj);
         })
-      }
+      })
     }
   }
 }
@@ -127,7 +116,6 @@ export default {
         justify-content: space-around;
         align-items: center;
         list-style: none;
-        // padding: 1.2rem 0;
         border-bottom: 0.1rem solid rgb(241, 240, 240);
         .recommend--ul--li {
           width: 72.66/12rem;
