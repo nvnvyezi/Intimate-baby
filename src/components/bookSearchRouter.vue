@@ -56,8 +56,6 @@ export default {
       })
     },
     saveHistory (e) {
-      e.stopPropagation();
-      location.reload();
       this.flag = false;
       let str =  e.target.innerText;
       if (str!== '') {        

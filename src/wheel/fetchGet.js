@@ -45,6 +45,7 @@ let fetchGet = (url, params, method, callback) => {
       }).then((res) => {
         // console.log(res, '')
         if (res.status === 200 && res.ok) {
+          // console.log(res)
           res.json().then((data) => {
             data = data;
             callback(data);

@@ -96,6 +96,12 @@ export default {
       return data;
     }
   },
+  watch: {
+    searchData () {
+      this.searchResult = [];
+      this.getSearchData();
+    }
+  },
   mounted () {
     this.getSearchData();
     let searchBox = document.getElementsByClassName('searchBox');

@@ -9,7 +9,12 @@ import store from './store/store'
 Vue.config.productionTip = false
 
 // router.beforeEach((to, from, next) => {
-
+//   let showFooter = to.meta.showFooter;
+//   console.log(showFooter)
+//   if (showFooter) {
+//     console.log(this.$store)
+//     next();
+//   }
 // })
 
 /* eslint-disable no-new */

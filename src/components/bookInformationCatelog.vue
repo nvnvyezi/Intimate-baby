@@ -2,11 +2,11 @@
   <div class="box">
     <header class="catelog--header">
       <div class="catelog--header--list" @click="show">{{ cateList}}</div>
-      <i class="catelog--header--icon"></i>
+      <i class="catelog--header--icon" @click="reversal"></i>
     </header>
     <div class="catelog--list">
       <ul class="catelog--list__ul">
-        <router-link class="catelog--list__ul__li" to="bookchapter" tag="li" v-for="(item, index) in catelogResult" :key="index" v-if="rangeJudge(index)">{{ item.chapterName }}</router-link>
+        <router-link class="catelog--list__ul__li" to="bookchapter" tag="li" v-for="(item, index) in catelogResult" @click.native="showChapter" :index="index" :key="index" v-if="rangeJudge(index)">{{ item.chapterName }}</router-link>
       </ul>
     </div>
     <section class="catelogBox" id="maskList" v-show="maskJudge">
@@ -65,6 +65,17 @@ export default {
     this.getCatelog();
   },
   methods: {
+    reversal () {
+      // this.catelogResult.reverse();
+    },
+    showChapter (e) {
+      let index = parseInt(e.currentTarget.getAttribute('index'));
+      this.$store.dispatch({
+        type: 'triggerPage',
+        page: index + 9
+      })
+      localStorage.setItem('chapterPage', index + 9);
+    },
     rangeJudge (index) {
       if (index >= this.range * 100 && index < (this.range + 1) * 100) {
         return true;

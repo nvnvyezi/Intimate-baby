@@ -1,6 +1,6 @@
 //推荐主页面
 <template>
-  <div class="box">
+  <div class="recomBox">
     <!-- <h3>强推</h3> -->
     <mt-swipe :auto="4000" class="swipe__box">
         <mt-swipe-item v-for="(item, index) in swipeData" :key="index"><img :src="item.imgUrl" :alt="item.linkText" srcset=""></mt-swipe-item>
@@ -182,6 +182,12 @@
         </ul>
       </div>
     </section>
+    <nav class="footerNav" id="nav1">
+      <router-link class="footerNav--div" to="/" tag="div"></router-link>
+      <router-link class="footerNav--div" to="" tag="div"></router-link>
+      <router-link class="footerNav--div" to="" tag="div"></router-link>
+      <router-link class="footerNav--div" to="" tag="div"></router-link>
+    </nav>
   </div>
 </template>
 
@@ -191,7 +197,6 @@ import Vue from 'vue'
 Vue.component(Swipe.name, Swipe);
 Vue.component(SwipeItem.name, SwipeItem);
 import { getBookData, getBookRecom, getBookBoyGirl, getBookDone, getBookBestSell, getBookInterest } from "../api/api";
-import loading from './loadingImg'
 export default {
   name: 'recom',
   data () {
@@ -249,6 +254,31 @@ export default {
     this.getBoyGirl(function (param) {  });
     this.getBestSelling();
     this.getRecommend();
+  },
+  computed: {
+    hide () {
+      return this.$store.state.home.hide;
+    }
+  },
+  watch: {
+    hide (params) {
+      if (!params) {
+        let nav1 = document.getElementById('nav1');
+        nav1.classList.remove('aniContrary');
+        nav1.classList.add('ani');
+      } else {
+        let nav1 = document.getElementById('nav1');
+        nav1.classList.add('aniContrary');
+        nav1.classList.remove('ani');
+      }
+    }
+  },
+  mounted () {
+    if (this.$route.path === '/') {
+      let recomBox = document.getElementsByClassName('recomBox')[0];
+      recomBox.addEventListener('touchstart', this.start, false);
+      recomBox.addEventListener('touchend', this.end, false);
+    }
   },
   methods: {
     changeInfoBook (e) {
@@ -435,6 +465,70 @@ export default {
           this.recommendResult.push(obj);
         })
       })
+    },
+    start (e) {
+      this.startx = e.touches[0].pageX;
+      this.starty = e.touches[0].pageY;
+    },
+    end (e) {
+      let endx, endy;
+      endx = e.changedTouches[0].pageX;
+      endy = e.changedTouches[0].pageY;
+      let direction = this.getDirection(this.startx, this.starty, endx, endy);
+      switch (direction) {
+        case 0:
+          // console.log('为华东');
+          break;
+        case 1:
+          // console.log('向上');
+          this.hideChange(1);
+          break;
+        case 2:
+          // console.log('下');
+          this.hideChange(2);
+          break;
+        case 3:
+          // console.log('坐');
+          break;
+        case 4:
+          // console.log('有');
+          break;
+        default:
+          break;
+      }
+    },
+    hideChange (num) {
+      // console.log(1);
+      let bool;
+      if (num === 2) {
+        bool = true;
+      }
+      if (num === 1) {
+        bool = false;
+      }
+      this.$store.dispatch({
+        type: 'hideFalse',
+        bool: bool
+      })
+    },
+    getAngle (angx, angy) {                               //获得角度
+      return Math.atan2(angy, angx) * 180 / Math.PI;
+    },
+    getDirection (startx, starty, endx, endy) {                                       //返回方向
+      let angx = endx - startx;
+      let angy = endy - starty;
+      let res = 0;
+      let angle = this.getAngle(angx, angy);
+      if (angle >= -170 && angle <= -10) {
+        res = 1;
+      } else if (angle > 10 && angle < 170) {
+        res = 2;
+      } else if ((angle >= 170 && angle <= 180) || (angle >= -180 && angle < -170)) {
+        res = 3;
+      } else if (angle >= -10 && angle <= 10) {
+        res = 4;
+      }
+      return res;
     }
   }
 }
@@ -443,7 +537,15 @@ export default {
 <style lang="less" scoped>
 @media screen and(max-width: 720px){
   @graycolor:rgb(155, 155, 160);
-  .box {
+  .ani {
+    transition: all 1s ease 0s;
+    transform: translateY(9vh);
+  }
+  .aniContrary {
+    transition: all 1s ease 0s;
+    transform: translateY(0vh);
+  }
+  .recomBox {
     width: 100vw;
     height: auto;
     background-color: rgb(238, 237, 237);
@@ -974,6 +1076,32 @@ export default {
               }
             }
           }
+        }
+      }
+    }
+    .footerNav {
+      width: 100vw;
+      height: 9vh;
+      background-color: rgb(153, 161, 158);
+      // background-color: paleturquoise;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      .footerNav--div{
+        width: 23.8%;
+        height: 100%;
+        display: inline-block;
+        &:nth-child(1) {
+          background: url('../assets/小说.png') no-repeat center;
+        }
+        &:nth-child(2) {
+          background: url('../assets/电影.png') no-repeat center;
+        }
+        &:nth-child(3) {
+          background: url('../assets/社区.png') no-repeat center;
+        }
+        &:nth-child(4) {
+          background: url('../assets/我的.png') no-repeat center;
         }
       }
     }

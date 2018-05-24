@@ -34,6 +34,7 @@ const bookInformationRouter = () => import ( /*webpackChunkName: "bookInformatio
 const bookInformation = () => import ( /*webpackChunkName: "bookInformation"*/'@/components/bookInformation');
 const bookInformationCatelog = () => import ( /*webpackChunkName: "bookInformationCatelog"*/'@/components/bookInformationCatelog');
 
+const bookChapterRouter = () => import ( /*webpackChunkName: "bookChapterRouter"*/'@/components/bookChapterRouter');
 const bookChapter = () => import ( /*webpackChunkName: "bookChapter"*/'@/components/bookChapter');
 
 export default new Router({
@@ -67,7 +68,8 @@ export default new Router({
               name: 'recom',
               component: recom,
               meta: {
-                keepAlive: true
+                keepAlive: true,
+                showFooter: true
               },
             },
             {
@@ -197,11 +199,18 @@ export default new Router({
         },
         {
           path: '/bookchapter',
-          name: 'bookChapter',
-          component: bookChapter,
+          name: 'bookChapterRouter',
+          component: bookChapterRouter,
           meta: {
             keepAlive: false
-          }
+          },
+          children: [
+            {
+              path: '/',
+              name: 'bookChapter',
+              component: bookChapter
+            }
+          ]
         }
       ]
     }

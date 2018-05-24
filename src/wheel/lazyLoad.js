@@ -54,23 +54,8 @@ export default (Vue, options = {}) => {
     for (let i = 0, len = listenList.length; i < len; i++) {
       isCanShow(listenList[i], screenHeight);
     }
-      // window.onscroll = onListenScroll;
-    // window.addEventListener('scroll', function () {
-    //   let screenHeight = window.innerHeight;
-    //   for (let i = 0, len = listenList.length; i < len; i++) {
-    //     isCanShow(listenList[i], screenHeight);
-    //   }
-    // }, true)
+      window.onscroll = onListenScroll;
   }
-  // document.addEventListener('touchmove', function() {
-  //   onListenScroll();
-  // })
-  // document.addEventListener('touchstart', function() {
-  //   onListenScroll();
-  // })
-  // document.addEventListener('touchend', function() {
-  //   onListenScroll();
-  // })
 
   const addListener = (el, binding) => {
     let imgUrl = binding.value;

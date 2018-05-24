@@ -424,6 +424,7 @@ export function getBookChapter (bookName, author, page, cb) {
     page
   }
   fetchGet(`https://127.0.0.1:3000/chapter`, options, 'get', (data) => {
+    // console.log(data)
     cb(data);
   })
 }
