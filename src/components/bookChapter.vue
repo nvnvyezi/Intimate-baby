@@ -1,7 +1,9 @@
 <template>
-  <div class="chapter">
-    <h3 class="h3">{{ chapterName }}</h3>
-    <p v-for="(item, index) in text" :key="index">{{ item }}</p>
+  <div class="chapterBox">
+    <!-- <h3 class="h3">{{ chapterName }}</h3>  -->
+    <div @click="test" class="chapter">
+      <div class="chapter--content"></div>
+    </div>
   </div>
 </template>
 
@@ -19,22 +21,32 @@ export default {
   data () {
     return {
       chapterName: '',
-      text: [],
       startX: 0,
-      startY: 0
+      startY: 0,
+      flag: 500
     }
   },
   computed: {
-    page () {
-      let page = this.$store.state.bookInfo.page;
-      if (!page) {
-        page = localStorage.getItem('chapterPage');
+    page: {
+      get: function () {
+        let page = this.$store.state.bookInfo.page;
+        if (!page) {
+          page = localStorage.getItem('chapterPage');
+          this.$store.dispatch({
+            type: 'triggerPage',
+            page
+          })
+        }
+        return page;
+      },
+      set: function (newVal) {
+        console.log(newVal)
         this.$store.dispatch({
           type: 'triggerPage',
-          page
+          page: newVal
         })
+        localStorage.setItem('chapterPage', newVal);
       }
-      return page;
     },
     bookName () {
       let name = this.$store.state.bookInfo.bookName;
@@ -55,30 +67,97 @@ export default {
     this.getChapter();
   },
   methods: {
+    test (e) {
+      e.stopPropagation();
+      let screenW = document.documentElement.offsetWidth;
+      let x = e.clientX;
+      if (e.target === e.currentTarget.firstChild && x <= 100) {
+        console.log('别殿了')
+        this.page--;
+      } else if (e.target != e.currentTarget.firstChild && x <= 100) {
+        if (e.target.nextSibling) {
+          if (e.target.nextSibling.nextSibling) {
+            e.target.nextSibling.nextSibling.style.display = 'none';
+          }
+        }
+        e.target.previousSibling.style.transform = `translate(0px, 0px)`;
+        e.target.previousSibling.style.display = 'block';
+      }
+      if (e.target === e.currentTarget.lastChild && x >= screenW/2 + 60) {
+        console.log('别了准备下一张')
+        this.page++;
+      } else if (e.target != e.currentTarget.lastChild && x >= screenW/2 + 60) {
+        if (e.target.previousSibling) {
+          if (e.target.previousSibling.previousSibling) {
+            e.target.previousSibling.previousSibling.style.display = 'none';
+          }
+        }    
+        e.target.style.transform = `translate(${ -screenW }px, 0px)`;
+        e.target.nextSibling.style.display = 'block';
+      }
+    },
     getChapter () {
-      // getBookChapter (this.bookName, this.authorName, this.page, data => {
-        // console.log(this.page)
         getBookChapter ('元尊', this.authorName, this.page, data => {
         this.chapterName = data.bookName;
         this.$emit('changeCatelog', this.chapterName);
-        // this.handleText(data.text);
-        this.text = data.text;
+        this.handleText(data.text);
       })
     },
-    // handleText (str) {
-    //   let box = document.getElementsByClassName('chapter');
-    //   let fragement = document.createDocumentFragment();
-    //   for (let i = 0, len = str.length; i < len; i++) {
-    //       let p = document.createElement('p');
-    //       p.innerText = str[i];
-    //       p.className = 'chapter--p';
-    //       fragement.appendChild(p);
-    //   }
-    //   box[0].appendChild(fragement);
-    // }
+    handleText (text) {
+      let chapter = document.getElementsByClassName('chapter')[0];
+      let chapterContent = document.getElementsByClassName('chapter--content')[0];
+      let newDiv = document.createElement('div');
+      let screenH = document.documentElement.offsetHeight || document.body.offsetHeight;
+      chapterContent.style.zIndex = this.flag;
+      chapterContent.style.backgroundColor = `#${ this.color }`;
+      this.flag--;
+      chapter.appendChild(newDiv);
+      for (let i = 0, len = text.length; i < len; i++) {
+        newDiv.innerHTML = text.substring(0, i);
+        if (newDiv.offsetHeight <= screenH - 10) {
+          chapterContent.innerHTML = text.substring(0, i);
+          if (i == len - 1) {
+            chapter.removeChild(newDiv);
+          }
+        } else {
+          chapter.removeChild(newDiv);
+          this.handleTextOver(text, i - 1, len, screenH);
+          break;
+        }
+      }
+    },
+    handleTextOver (text, start, len, screenH) {
+      let newDiv = document.createElement('div');
+      let chapter = document.getElementsByClassName('chapter')[0];
+      newDiv.setAttribute('data-flag', this.flag);
+      newDiv.style.zIndex = this.flag;
+      newDiv.style.position = 'absolute';
+      newDiv.style.width = `95vw`;
+      newDiv.style.left = `50%`;
+      newDiv.style.marginLeft =  `-47.5vw`;
+      newDiv.style.backgroundColor = `#${ this.color }`;
+      newDiv.style.transition = 'transform .5s ease';
+      newDiv.className = 'chapter--content';
+      this.flag--;
+      chapter.appendChild(newDiv);
+      for (let i = start; i < len; i++) {
+        newDiv.innerHTML = text.substring(start, i);
+        if (newDiv.offsetHeight <= screenH - 10) {
+          if (i == len -1) {
+            newDiv.style.height = `${ screenH }px`;
+          }
+        } else {
+          newDiv.innerHTML = text.substring(start, i - 1);
+          newDiv.style.height = `${ screenH }px`;
+          this.handleTextOver(text, i - 1, len, screenH);
+          break;
+        }
+      }
+    }
   },
   watch: {
     page () {
+      location.reload();
       this.getChapter();
     },
     color (str) {
@@ -91,20 +170,31 @@ export default {
 
 <style lang="less" scoped>
 @media screen and(max-width: 720px){
-  .chapter {
+  .chapterAni {
+    transition: transform .5s ease;
+    transform: translate(-100vw, 0);
+  }
+  .chapterBox {
     width: 100vw;
     height: 100vh;
     overflow-x: hidden;
     background-color: #D5EFD2;
     color: #494949;
+    font-size: 2.5rem;
     .h3 {
       font-size: 2rem;
     }
-    p {
-      font-size: 1.8rem;
-      font-weight: 400;
-      letter-spacing: 0.1rem;
-      text-align: left;
+    .chapter {
+      width: 100%;
+      height: 100%;
+      .chapter--content {
+        position: absolute;
+        width: 95vw;
+        left: 50%;
+        margin-left: -47.5vw;
+        transition: transform .5s ease;
+        // .chapterAni;
+      }
     }
   }
 }

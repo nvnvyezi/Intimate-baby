@@ -1,13 +1,9 @@
 const homeHide = {
   state: {
-    hide: true,
     type: 1,
     moreBookTitle: '精品畅销'
   },
   mutations: {
-    changeHide (state, data) {
-      state.hide = data.bool;
-    },
     changeType (state, data) {
       state.type = data.typ;
     },
@@ -16,9 +12,6 @@ const homeHide = {
     }
   },
   actions: {
-    hideFalse ({ commit }, data) {
-      commit('changeHide', data);
-    },
     triggerType ({commit}, data) {
       commit('changeType', data);
     }

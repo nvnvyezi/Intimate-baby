@@ -58,10 +58,6 @@ export default {
     }
   },
   mounted () {
-    this.$store.dispatch({
-      type: 'hideFalse',
-      bool: false
-    })
     this.getCatelog();
   },
   methods: {

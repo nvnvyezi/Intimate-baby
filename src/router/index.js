@@ -182,7 +182,7 @@ export default new Router({
           name: 'bookInformationRouter',
           component: bookInformationRouter,
           meta: {
-            keepAlive: false
+            keepAlive: true
           },
           children: [
             {

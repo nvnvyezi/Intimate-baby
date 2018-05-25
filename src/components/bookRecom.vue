@@ -260,19 +260,22 @@ export default {
       return this.$store.state.home.hide;
     }
   },
-  watch: {
-    hide (params) {
-      if (!params) {
-        let nav1 = document.getElementById('nav1');
-        nav1.classList.remove('aniContrary');
-        nav1.classList.add('ani');
-      } else {
-        let nav1 = document.getElementById('nav1');
-        nav1.classList.add('aniContrary');
-        nav1.classList.remove('ani');
-      }
-    }
-  },
+  // watch: {
+  //   hide (params) {
+  //     console.log(params)
+  //     if (!params) {
+  //       let nav1 = document.getElementById('nav1');
+  //       nav1.classList.remove('aniContrary');
+  //       nav1.classList.add('ani');
+  //       // nav1.classList.toggle('aniContrary');
+  //       // nav1.classList.toggle('ani');
+  //     } else {
+  //       let nav1 = document.getElementById('nav1');
+  //       nav1.classList.add('aniContrary');
+  //       nav1.classList.remove('ani');
+  //     }
+  //   }
+  // },
   mounted () {
     if (this.$route.path === '/') {
       let recomBox = document.getElementsByClassName('recomBox')[0];
@@ -498,18 +501,14 @@ export default {
       }
     },
     hideChange (num) {
-      // console.log(1);
-      let bool;
       if (num === 2) {
-        bool = true;
+        nav1.classList.add('aniContrary');
+        nav1.classList.remove('ani');
       }
       if (num === 1) {
-        bool = false;
+        nav1.classList.remove('aniContrary');
+        nav1.classList.add('ani');
       }
-      this.$store.dispatch({
-        type: 'hideFalse',
-        bool: bool
-      })
     },
     getAngle (angx, angy) {                               //获得角度
       return Math.atan2(angy, angx) * 180 / Math.PI;

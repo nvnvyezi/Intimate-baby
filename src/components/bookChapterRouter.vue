@@ -1,7 +1,7 @@
 <template>
   <div class="chapterR">
     <section class="chapterR--hint" v-show="hintJudge">{{ hint }}</section>
-    <header class="chapterR--header">
+    <header class="chapterR--header topAni">
       <nav>
         <ul class="chapterR--header__ul">
           <router-link to="bookinformatecatelog" tag="li" class="chapterR--header__ul--left"><span class="chapterR--header__ul--Lspan">目录</span></router-link>
@@ -34,7 +34,7 @@
         </div>
       </div>
     </section>
-    <footer class="chapterR--footer">
+    <footer class="chapterR--footer bottomAni">
       <nav>
         <ul class="chapterR--footer__ul">
           <li @click="left" class="chapterR--footer__ul--li"><span class="chapterR--footer__ul--span">上章</span></li>
@@ -279,6 +279,7 @@ export default {
       background-color: #333;
       position: fixed;
       top: 0;
+      z-index: 1000;
       .chapterR--header__ul {
         display: flex;
         color: @wordColor;
@@ -329,6 +330,7 @@ export default {
       position: fixed;
       left: 0;
       bottom: 0;
+      z-index: 1000;
       background-color: #333;
       .chapterR--footer__ul {
         width: 100%;
