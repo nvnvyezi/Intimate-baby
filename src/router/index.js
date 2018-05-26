@@ -94,6 +94,9 @@ export default new Router({
               path: '/',
               name: 'category',
               component: category,
+              meta: {
+                keepAlive: true
+              },
               children: [
                 {
                   path: '/',

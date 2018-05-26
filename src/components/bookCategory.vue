@@ -8,36 +8,28 @@
       </div>
       <router-link to="/" tag="div">H</router-link>
     </nav>
-    <!-- <div v-else>
-      <list></list>
-    </div> -->
     <keep-alive>
-      <router-view v-if="$route.meta.keepAlive" @changeList="changeList"></router-view>
+      <router-view v-if="$route.meta.keepAlive"></router-view>
     </keep-alive>
-    <router-view v-if="!$route.meta.keepAlive" @changeList="changeList"></router-view>
+    <router-view v-if="!$route.meta.keepAlive"></router-view>
   </div>
 </template>
 
 <script>
-// import list from "./list";
 import fetchGet from '../wheel/fetchGet'
 export default {
   name: 'category',
-  // components: {
-  //   list
-  // },
-  data () {
-    return {
-      list: [],
-      listName: '分类'
+  computed: {
+    listName: {
+      get: function () {
+        return localStorage.getItem('listName') || '分类';
+      },
+      set: function (newVal) {
+        console.log(newVal)
+      }
     }
   },
-  computed: {
-  },
   methods: {
-    changeList (str) {
-      this.listName = str;
-    },
     back () {
       this.$router.go(-1);
     }
@@ -45,7 +37,7 @@ export default {
   watch: {
     '$route': function (param) {
       if (param.path === '/cate') {
-        this.listName = '分类';
+        localStorage.setItem('listName', '分类');
       }
     }
   }
@@ -61,8 +53,6 @@ export default {
   .box {
     width: 100vw;
     height: auto;
-    // overflow: hidden;
-    // margin-top: 10px;
     background-color: rgb(255, 255, 255);
     nav {
       width: 100%;

@@ -68,9 +68,9 @@ export default {
       let index = parseInt(e.currentTarget.getAttribute('index'));
       this.$store.dispatch({
         type: 'triggerPage',
-        page: index + 9
+        page: index
       })
-      localStorage.setItem('chapterPage', index + 9);
+      localStorage.setItem('chapterPage', index);
     },
     rangeJudge (index) {
       if (index >= this.range * 100 && index < (this.range + 1) * 100) {
@@ -155,6 +155,8 @@ export default {
           background: url('../assets/dayu.png') no-repeat center center;
           background-size: .65rem 1rem;
           transform: rotateZ(90deg);
+          position: absolute;
+          margin-top: 1.5rem;
           // background-repeat: no-repeat;
 
         }

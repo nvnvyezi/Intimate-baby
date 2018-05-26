@@ -11,21 +11,21 @@
       </nav>
     </header>
     <transition>
-      <router-view @changeCatelog="changeCatelog" :color="color"></router-view>
+      <router-view @changeCatelog="changeCatelog" @showWrong="showWrong" :sizeFont="fontSize" :color="color"></router-view>
     </transition>
     <section v-show="colorJudge" class="chapterR--setUp">
       <div class="chapterR--setUp__content">
         <div class="chapterR--setUp__content--font">
           <ul class="chapterR--setUp__content--font__ul">
-            <li>Aa-</li>
-            <li>Aa+</li>
+            <li @click="subFont">Aa-</li>
+            <li @click="addFont">Aa+</li>
             <li>左右翻页</li>
             <li>上下翻页</li>
           </ul>
         </div>
         <div class="chapterR--setUp__content--color">
           <ul class="chapterR--setUp__content--color__ul">
-            <li class="chapterR--setUp__content--color__ul__li" @click="changeColor" data-color="D5EFD2"></li>
+            <li class="chapterR--setUp__content--color__ul__li selectColor" @click="changeColor" data-color="D5EFD2"></li>
             <li class="chapterR--setUp__content--color__ul__li" @click="changeColor" data-color="F5E6CE"></li>
             <li class="chapterR--setUp__content--color__ul__li" @click="changeColor" data-color="F4F4F4"></li>
             <li class="chapterR--setUp__content--color__ul__li" @click="changeColor" data-color="CDE4FD"></li>
@@ -48,6 +48,8 @@
 </template>
 
 <script>
+import { bookCatelog } from "../api/api";
+import md5 from '../encryption/md5';
 export default {
   name: 'chapterRouter',
   data () {
@@ -55,18 +57,55 @@ export default {
       chapterName: '',
       hint: '',
       hintJudge: false,
-      timeId: false,
+      timeId: null,
       color: 'D5EFD2',
-      colorJudge: false
+      colorJudge: false,
+      fontSize: 2,
+      user_id: 8000000,
+      encryptKey: '37e81a9d8f02596e1b895d07c171d5c9',
     }
+  },
+  computed: {
+    bookId () {
+      let id = this.$store.state.bookInfo.bookId
+      if (!id) {
+        id = localStorage.getItem('bookId');
+      }
+      return id;
+    },
+    timestamp () {
+      return Date.now();
+    },
   },
   mounted () {
     let chapter = document.getElementsByClassName('chapterR')[0];
     chapter.addEventListener('touchstart', this.handleStart, false);
     chapter.addEventListener('touchmove', this.stopEvent, false);
     chapter.addEventListener('touchend', this.handleEnd, false);
+
+    let sign = md5(this.bookId + "" + this.timestamp + this.user_id + this.encryptKey);
+    bookCatelog (this.bookId, this.user_id, sign, this.timestamp, data => {
+      this.len = data[0].volumeList.length;
+      localStorage.setItem('chapterSize', this.len);
+    })
   },
   methods: {
+    subFont () {
+      if (this.fontSize.toFixed(1) == 1) {
+        let str = "当前已经是最小字体";
+        this.showWrong(str);
+      } else {
+        this.fontSize -= 0.2;
+      }
+    },
+    addFont () {
+      if (this.fontSize.toFixed(1)== 2) {
+        let str = "当前已经是最大字体";
+        this.showWrong(str);
+      } else {
+        this.fontSize += 0.2;
+      }
+    },
     changeColor (e) {
       let li = document.getElementsByClassName('chapterR--setUp__content--color__ul__li');
       for (let i = 0, len = li.length; i < len; i++) {
@@ -84,17 +123,27 @@ export default {
     changeCatelog (str) {
       this.chapterName = str;
     },
+    showWrong (str) {
+      this.hintJudge = true;
+      this.hint = str;
+      clearTimeout(this.timeId);
+      this.timeId = setTimeout(() => {
+        this.hintJudge = false;
+        this.timeId = null;
+      }, 1000);
+    },
     left () {
       if (!this.timeId) {
         let page = this.$store.state.bookInfo.page;
-        if (page === 9) {
-          this.timeId = true;
-          this.hint = '当前已经是第一章';
-          this.hintJudge = true;
-          setTimeout(() => {
-            this.hintJudge = false;
-            this.timeId = false;
-          }, 1000);
+        if (page <= 0) {
+          page = 0;
+          this.$store.dispatch({
+            type: 'triggerPage',
+            page
+          })
+          localStorage.setItem('chapterPage', page);
+          let str = '当前已经是第一章';
+          this.showWrong(str);
         } else {
           page--;
           this.$store.dispatch({
@@ -108,16 +157,16 @@ export default {
     right () {
       if (!this.timeId) {
         let page = this.$store.state.bookInfo.page;
-        if (page === 12) {
-          this.timeId = true;
-          this.hint = '当前已经是最后一章';
-          this.hintJudge = true;
-          setTimeout(() => {
-            this.hintJudge = false;
-            this.timeId = false;
-          }, 1000);
+        if (page >= this.len) {
+          page = this.len;
+          this.$store.dispatch({
+            type: 'triggerPage',
+            page
+          })
+          localStorage.setItem('chapterPage', page);
+          let str = '当前已经是最后一章';
+          this.showWrong(str);
         } else {
-          console.log(page)
           page++;
           this.$store.dispatch({
             type: 'triggerPage',
@@ -187,6 +236,7 @@ export default {
       height: 95/12rem;
       position: fixed;
       bottom: 65/12rem;
+      z-index: 1000;
       .chapterR--setUp__content {
         width: 95%;
         height: 100%;
@@ -272,6 +322,7 @@ export default {
       background-color: rgba(0,0,0,.75);
       color: white;
       text-align: center;
+      z-index: 1000;
     }
     .chapterR--header {
       width: 100%;

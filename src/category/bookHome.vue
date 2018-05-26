@@ -5,7 +5,7 @@
     <div v-if="judge" class="list seniority__list">
       <div class="boy--title">男生分类</div>
       <ul class="list__ul">
-        <router-link class="list__ul__li" :to="userRouter" @click.native="changeProp" v-for="(item, index) in boyList" :cid="item.cid" :name="item.relatedName" :list="item.list" :key="index" tag="li">
+        <router-link class="list__ul__li" :to="userRouter" :sex="item.sex" @click.native="changeProp" v-for="(item, index) in boyList" :cid="item.cid" :name="item.relatedName" :list="item.list" :key="index" tag="li">
           <!-- <i></i> -->
           <div class="list__ul__li__middle">
             <div class="list__ul__li__middle--top">{{ item.list }}</div>
@@ -15,7 +15,7 @@
       </ul>
       <div class="boy--title">女生分类</div>
       <ul class="list__ul">
-        <router-link class="list__ul__li" :to="userRouter" @click.native="changeProp" v-for="(item, index) in girlList" :cid="item.cid" :name="item.relatedName" :list="item.list" :key="index" tag="li">
+        <router-link class="list__ul__li" :to="userRouter" :sex="item.sex" @click.native="changeProp" v-for="(item, index) in girlList" :cid="item.cid" :name="item.relatedName" :list="item.list" :key="index" tag="li">
           <!-- <i></i> -->
           <div class="list__ul__li__middle">
             <div class="list__ul__li__middle--top">{{ item.list }}</div>
@@ -94,52 +94,46 @@ export default {
     if (this.$route.path === '/seniority') {
       this.userRouter = 'seniorityList';
     }
-    if (window.fetch) {
-      categoryHome(data => {
-        let boy= data.boy;
-        for (let i = 0; i < boy.length-1; i++) {
-          for (const key in boy[i]) {
-            if (boy[i].hasOwnProperty(key)) {
-              let obj = {};
-              obj.list = key;
-              obj.text = boy[i][key].list.join(' | ');
-              obj.relatedName = boy[i][key].relatedName;
-              obj.cid = boy[i][key].cid;
-              this.boyList.push(obj);
-            }
+    categoryHome(data => {
+      // console.log(data)
+      let boy= data.boy;
+      for (let i = 0; i < boy.length-1; i++) {
+        for (const key in boy[i]) {
+          if (boy[i].hasOwnProperty(key)) {
+            let obj = {};
+            obj.list = key;
+            obj.sex = 0;
+            obj.text = boy[i][key].list.join(' | ');
+            obj.relatedName = boy[i][key].relatedName;
+            obj.cid = boy[i][key].cid;
+            this.boyList.push(obj);
           }
         }
-        let girl= data.girl;
-        for (let i = 0; i < girl.length; i++) {
-          for (const key in girl[i]) {
-            if (girl[i].hasOwnProperty(key)) {
-              let obj = {};
-              obj.list = key;
-              obj.text = girl[i][key].list.join(' | ');
-              obj.relatedName = girl[i][key].relatedName;
-              obj.cid = girl[i][key].cid;
-              this.girlList.push(obj);
-            }
+      }
+      let girl= data.girl;
+      for (let i = 0; i < girl.length-1; i++) {
+        for (const key in girl[i]) {
+          if (girl[i].hasOwnProperty(key)) {
+            let obj = {};
+            obj.list = key;
+            obj.sex = 1;
+            obj.text = girl[i][key].list.join(' | ');
+            obj.relatedName = girl[i][key].relatedName;
+            obj.cid = girl[i][key].cid;
+            this.girlList.push(obj);
           }
         }
-        this.judge = true;
-      })
-    }
+      }
+      this.judge = true;
+    })
   },
   methods: {
     changeProp (e) {
       let list = e.currentTarget.getAttribute('list');
       let name = e.currentTarget.getAttribute('name');
       let cid = e.currentTarget.getAttribute('cid');
-      this.$emit('changeList', list);
-      switch (list) {
-        case '现言':
-        case '古言':
-        case '幻言':
-        case '校园':
-          localStorage.setItem('firstCate1', '');
-          break;
-      }
+      let sex = e.currentTarget.getAttribute('sex');
+      localStorage.setItem('listName', list);
       this.$store.dispatch({
         type: 'triggerFirst',
         firstCate: list
@@ -148,9 +142,9 @@ export default {
         type: 'triggerCid',
         secondCate: cid
       })
-      localStorage.setItem('firstCate', list);
-      localStorage.setItem('secondCate1', name);
+      localStorage.setItem('firstCate', name);
       localStorage.setItem('cid', cid);
+      localStorage.setItem('sex', sex);
     }
   },
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="chapterBox">
+  <div class="chapterBox" :style="{fontSize: `${sizeFont}rem`}">
     <!-- <h3 class="h3">{{ chapterName }}</h3>  -->
     <div @click="test" class="chapter">
       <div class="chapter--content"></div>
@@ -16,6 +16,11 @@ export default {
       type: String,
       required: true,
       default: '#D5EFD2'
+    },
+    sizeFont: {
+      type: Number,
+      required: true,
+      default: 2
     }
   },
   data () {
@@ -40,7 +45,7 @@ export default {
         return page;
       },
       set: function (newVal) {
-        console.log(newVal)
+        // console.log(newVal)
         this.$store.dispatch({
           type: 'triggerPage',
           page: newVal
@@ -64,6 +69,7 @@ export default {
     },
   },
   mounted () {
+    this.page = 0;
     this.getChapter();
   },
   methods: {
@@ -72,8 +78,13 @@ export default {
       let screenW = document.documentElement.offsetWidth;
       let x = e.clientX;
       if (e.target === e.currentTarget.firstChild && x <= 100) {
-        console.log('别殿了')
-        this.page--;
+        // console.log('别殿了')
+        if (this.page > 0) {
+          this.page--;
+        } else {
+          this.$emit('showWrong', '当前已经是第一章');
+          this.page = 0;
+        }
       } else if (e.target != e.currentTarget.firstChild && x <= 100) {
         if (e.target.nextSibling) {
           if (e.target.nextSibling.nextSibling) {
@@ -84,8 +95,13 @@ export default {
         e.target.previousSibling.style.display = 'block';
       }
       if (e.target === e.currentTarget.lastChild && x >= screenW/2 + 60) {
-        console.log('别了准备下一张')
-        this.page++;
+        // console.log('别了准备下一张')
+        if (this.page < localStorage.getItem('chapterSize')) {
+          this.page++;
+        } else {
+          this.$emit('showWrong', '当前已经是最后一章');
+          this.page = localStorage.getItem('chapterSize');
+        }
       } else if (e.target != e.currentTarget.lastChild && x >= screenW/2 + 60) {
         if (e.target.previousSibling) {
           if (e.target.previousSibling.previousSibling) {
@@ -97,8 +113,8 @@ export default {
       }
     },
     getChapter () {
-        getBookChapter ('元尊', this.authorName, this.page, data => {
-        this.chapterName = data.bookName;
+        getBookChapter (this.bookName, this.authorName, this.page, data => {
+        this.chapterName = data.chapter;
         this.$emit('changeCatelog', this.chapterName);
         this.handleText(data.text);
       })
@@ -114,7 +130,7 @@ export default {
       chapter.appendChild(newDiv);
       for (let i = 0, len = text.length; i < len; i++) {
         newDiv.innerHTML = text.substring(0, i);
-        if (newDiv.offsetHeight <= screenH - 10) {
+        if (newDiv.offsetHeight <= screenH - 50) {
           chapterContent.innerHTML = text.substring(0, i);
           if (i == len - 1) {
             chapter.removeChild(newDiv);
@@ -157,12 +173,16 @@ export default {
   },
   watch: {
     page () {
-      location.reload();
       this.getChapter();
     },
+
     color (str) {
       let chapter = document.getElementsByClassName('chapter');
+      let chapterContent = document.getElementsByClassName('chapter--content');
       chapter[0].style.backgroundColor = `#${ this.color }`;
+      for (let i = 0; i < chapterContent.length; i++) {
+        chapterContent[i].style.backgroundColor = `#${ this.color }`;
+      }
     }
   }
 }
@@ -180,13 +200,14 @@ export default {
     overflow-x: hidden;
     background-color: #D5EFD2;
     color: #494949;
-    font-size: 2.5rem;
+    overflow: hidden;
     .h3 {
       font-size: 2rem;
     }
     .chapter {
       width: 100%;
       height: 100%;
+      overflow: hidden;
       .chapter--content {
         position: absolute;
         width: 95vw;

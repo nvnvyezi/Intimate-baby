@@ -4,8 +4,8 @@
     <header class="header">
       <section class="header--list">
         <ul class="header--list__ul">
-          <li v-if="index === 0" class="header--list__ul__li hoverG" @click="changeProp" v-for="(item, index) in headerList" :key="index" :name="item.relatedName">{{ item.name }}</li>
-          <li v-if="index !== 0" class="header--list__ul__li" @click="changeProp" v-for="(item, index) in headerList" :key="index" :name="item.relatedName">{{ item.name }}</li>
+          <li v-if="index === 0" :tag="item.tag" class="header--list__ul__li hoverG" @click="changeProp" v-for="(item, index) in headerList" :key="index" :name="item.relatedName">{{ item.name }}</li>
+          <li v-if="index !== 0" :tag="item.tag" class="header--list__ul__li" @click="changeProp" v-for="(item, index) in headerList" :key="index" :name="item.relatedName">{{ item.name }}</li>
         </ul>
       </section>
       <section class="header--list">
@@ -21,7 +21,7 @@
         </ul>
       </section>
     </header>
-    <section v-if="judge" class="recommend">
+    <section class="recommend">
       <div class="recommend--body">
         <ul class="recommend--body--ul">
           <router-link @click.native="changeInfoBook" class="recommend--body--ul--li ddd" to="bookinformation" tag="li" v-for="(item, index) in list" :key="index">
@@ -43,7 +43,6 @@
         </ul>
       </div>
     </section>
-    <loading v-else></loading>
     <footer class="bookList--footer">
       <div v-if="loadJudge" class="bookList--footer--text">
         加载更多
@@ -103,9 +102,10 @@ export default {
         }
       ],
       page: 1,
-      judge: false,
       loadJudge: true,
-      listJudge: true
+      listJudge: true,
+      flag: 0,
+      name: ''
     }
   },
   computed: {
@@ -116,13 +116,20 @@ export default {
           firstCate = localStorage.getItem('firstCate');
         }
         return firstCate;
+      },
+      set: function (newVal) {
+        this.$store.dispatch({
+          type: 'triggerSecond',
+          firstCate: newVal
+        })
+        localStorage['firstCate'] = newVal;
       }
     },
     cid: {
       get: function () {
-        let cid = this.$store.state.bookCategory.cid;
+        let cid = localStorage.getItem('cid');
         if (!cid) {
-          cid = localStorage.getItem('cid');
+          cid = this.$store.state.bookCategory.cid;
         }
         return cid;
       }
@@ -180,41 +187,42 @@ export default {
     localStorage.setItem('secondCate', '');
     localStorage.setItem('words', '');
     localStorage.setItem('sort', 'monthHot');
+    let sex = localStorage.getItem('sex');
+    if (sex == 0) {     
+      this.firstCate = localStorage.getItem('listName');
+      this.flag = 2;
+    }
+    if (sex == 1) {
+      this.secondCate = localStorage.getItem('firstCate');
+      this.flag = 3;
+    }
+    this.page = 1;
     this.getHeader();
     this.getList();
   },
   mounted () {
     let bookList = document.getElementsByClassName('bookList');
     bookList[0].addEventListener('touchstart', this.showFooter, false);
-    bookList[0].addEventListener('touchmove', this.showFooter, false);
-    bookList[0].addEventListener('touchend', this.showFooter, false);
   },
   methods: {
     showFooter () {
-      let header = document.getElementsByClassName('header');
-      let footer = document.getElementsByClassName('bookList--footer');
       let li = document.getElementsByTagName('li');
       let liBottom = li[li.length-1].getBoundingClientRect().bottom;
       let screenHeight = document.documentElement.clientHeight;
-      if (liBottom - screenHeight < 120 && (footer[0].style.display == '' || footer[0].style.display == 'none')) {
-        footer[0].style.display = 'block';
-        footer[0].scrollIntoView(true);
+      if (liBottom - screenHeight < 120) {
         setTimeout(() => {
           this.page++;
           this.getList();
         }, 300); 
       }
-      if (liBottom - screenHeight > 150 && footer[0].style.display == 'block') {
-        footer[0].style.display = 'none';
-      }
     },
     changeInfoBook (e) {
-      let bookName = e.currentTarget.children[1].firstChild.getAttribute('bid');
+      let id = e.currentTarget.children[1].firstChild.getAttribute('bid');
       this.$store.dispatch({
         type: 'triggerBookId',
-        id: bookName
+        id: id
       })
-      localStorage.setItem('bookId', bookName);
+      localStorage.setItem('bookId', id);
     },
     selectColor (num, e) {
       let node = null;
@@ -262,13 +270,20 @@ export default {
       }
     },
     changeProp (e) {
-      this.judge = false;
       this.page = 1;
+      this.loadJudge = true;
       let name = e.target.getAttribute('name');
+      this.name = name;
       let words = e.target.getAttribute('words');
       let sort = e.target.getAttribute('sort');
-      if (name || name == '') {
+      this.flag = e.target.getAttribute('tag');
+      if (name ) {
         this.secondCate = name;
+        this.selectColor(0, e);
+      }
+      if (name == '') {
+        this.firstCate = localStorage.getItem('listName');
+        this.flag = 2;
         this.selectColor(0, e);
       }
       if (words || words == '') {
@@ -280,43 +295,36 @@ export default {
         this.selectColor(2, e);
       }
       this.list = [];
-      this.getList();
+      this.page = 1;
+      this.getList(name);
     },
     getList () {
       let first = this.firstCate;
       let second = this.secondCate;
-      switch (first) {
-        case '现言':
-        case '古言':
-        case '幻言':
-        case '校园':
-          first = localStorage.getItem('firstCate1');
-          if (second == '') {
-            second = localStorage.getItem('secondCate1');
-          }
-          break;
+      console.log(second)
+      if (localStorage.getItem('sex') == 1) {
+        if (this.flag != 1) {
+          this.flag = 3;
+        }
       }
-      if (window.fetch) {
-        categoryContent(this.page, this.words, first, second, this.sort, data => {
-          this.judge = true;
-          if (data.length == 0) {
-            this.loadJudge = false;
-            return ;
-          }
-          Array.prototype.forEach.call(data, (item) => {
-            let obj = {};
-            obj.imgUrl = item.cover;
-            obj.bid = item.bid;
-            obj.bookName = item.title;
-            obj.authorName = item.author;
-            obj.introduction = item.desc;
-            obj.status = item.status;
-            obj.size = `${(item.words/1000).toFixed(1)}万字`;
-            obj.class_name = item.category;
-            this.list.push(obj);
-          })
+      categoryContent(this.flag, this.page, this.words, first, second, this.name, this.sort, data => {
+        if (data.length == 0) {
+          this.loadJudge = false;
+          return ;
+        }
+        Array.prototype.forEach.call(data, (item) => {
+          let obj = {};
+          obj.imgUrl = item.cover;
+          obj.bid = item.bid;
+          obj.bookName = item.title;
+          obj.authorName = item.author;
+          obj.introduction = item.desc;
+          obj.status = item.status;
+          obj.size = `${(item.words/1000).toFixed(1)}万字`;
+          obj.class_name = item.category;
+          this.list.push(obj);
         })
-      }
+      })
     },
     getHeader () {
       let cid = this.cid;
@@ -329,6 +337,15 @@ export default {
           let obj = {};
           obj.id = item.id;
           obj.name = item.name;
+          obj.tag = 0;
+          obj.relatedName = item.relatedName;
+          this.headerList.push(obj);
+        });
+        data.tag.forEach(item => {
+          let obj = {};
+          obj.id = item.id;
+          obj.name = item.name;
+          obj.tag = 1;
           obj.relatedName = item.relatedName;
           this.headerList.push(obj);
         });
@@ -466,7 +483,6 @@ export default {
       .bookList--footer {
         width: 100%;
         line-height: 50/12rem;
-        display: none;
         transform: height 1s ease;
         .bookList--footer--text {
           font-size: 1.4rem;

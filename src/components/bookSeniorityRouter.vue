@@ -23,7 +23,7 @@ export default {
   .box {
     width: 100vw;
     height: auto;
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(102, 98, 98);
   }
 }
 </style>

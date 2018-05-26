@@ -72,6 +72,9 @@ export default {
           data: str
         })
         localStorage.setItem('searchData', str);
+        let input = document.getElementsByClassName('form__search__content--input')[0];
+        input.value = str;
+        this.searchJudge = false;
       }
     }
   }

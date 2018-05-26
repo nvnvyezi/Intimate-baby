@@ -50,11 +50,13 @@ export default {
       flag: 2,
       gender: 1,
       loadJudge: true,
-      page: 1
+      page: 1,
+      timeId: null
     }
   },
   watch: {
     sex () {
+      this.arrResult = [];
       this.switchData();
     }
   },
@@ -71,8 +73,6 @@ export default {
     this.getData();
     let templateBox = document.getElementsByClassName('templateBox');
     templateBox[0].addEventListener('touchstart', this.showFooter, false);
-    templateBox[0].addEventListener('touchmove', this.showFooter, false);
-    templateBox[0].addEventListener('touchend', this.showFooter, false);
   },
   methods: {
     showFooter () {
@@ -81,19 +81,18 @@ export default {
       let liBottom = li[li.length-1].getBoundingClientRect().bottom
       let screenHeight = document.documentElement.clientHeight;
       if (liBottom - screenHeight < 120) {
-        footer[0].scrollIntoView(true);
-        setTimeout(() => {
+        clearTimeout(this.timeId);
+        this.timeId = setTimeout(() => {
           this.page++;
           this.getData();
-        }, 300); 
+        }, 300);
       }
     },
     changeInfoBook (e) {
-      let bookName = e.currentTarget.children[1].firstChild.firstChild.getAttribute('bid');
-      // console.log(bookName)
+      let id = e.currentTarget.children[1].firstChild.firstChild.getAttribute('bid');
       this.$store.dispatch({
         type: 'triggerBookId',
-        id: bookName
+        id: id
       })
     },
     getData () {
@@ -122,10 +121,14 @@ export default {
       switch (this.sex) {
         case 'man':
           this.gender = 1;
+          this.page = 0;
+          this.loadJudge = true;
           this.getData();
           break;
         case 'woman':
+          this.page = 0;
           this.gender = 2;
+          this.loadJudge = true;
           this.getData();
           break;
       }
@@ -169,7 +172,7 @@ export default {
     .statName(#499fff);
   }
   .titleH3 {
-    font-size: 1.7rem;
+    font-size: 1.6rem;
     font-weight: 500;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -181,10 +184,10 @@ export default {
     background-color: white;
     .box__ul {
       list-style: none;
-      width: 85%;
+      width: 90%;
       margin: 0 auto;
       .box__ul__li {
-        width: 100%rem;
+        width: 100%;
         height: auto;
         padding: 1.8rem 0;
         display: -webkit-box;
@@ -223,7 +226,7 @@ export default {
           margin: 0 0 0 1.3rem;
           .box__ul__li--right--title {
             width: 100%;
-            line-height: 18/12rem;
+            line-height: 24/12rem;
             .box__ul__li--right--title--h3 {
               .titleH3;
             }
@@ -235,7 +238,7 @@ export default {
             -webkit-box-orient: horizontal;
             -webkit-box-align: center;
             -webkit-box-pack: end;
-            margin: 0.9rem 0;
+            margin: 0.1rem 0 1rem;
             color: @wordColor;
             .box__ul__li--right--author--author {
               display: block;
@@ -261,6 +264,7 @@ export default {
           .box__ul__li--right--tags {
             width: 100%;
             height: 20/12rem;
+            overflow: hidden;
             color: @wordColor;
             text-align: left;
             .box__ul__li--right--tags--words,

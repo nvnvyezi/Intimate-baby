@@ -47,7 +47,7 @@ export function categoryList (body, cb) {
 }
 
 // 获取每个分类的内容都有什么
-export function categoryContent (page, words, firstCate, secondCate, sort, cb) {
+export function categoryContent (flag, page, words, firstCate, secondCate, tag, sort, cb) {
   const options = {
     do: 'is_caterank',
     p: 1,
@@ -60,10 +60,63 @@ export function categoryContent (page, words, firstCate, secondCate, sort, cb) {
     sort,
     _: 1526888329617
   }
-  fetchGet('http://read.xiaoshuo1-sm.com/novel/i.php', options, 'get', (data) => {
-    console.log(data)
-    cb(data.data);
-  });
+  const options1 = {
+    do: 'is_caterank',
+    p: 1,
+    page,
+    words,
+    shuqi_h5: '',
+    onlyCpBooks: 1,
+    tag,
+    sort,
+    _: 1526888329617
+  }
+  const options2 = {
+    do: 'is_caterank',
+    p: 1,
+    page,
+    words,
+    shuqi_h5: '',
+    onlyCpBooks: 1,
+    firstCate,
+    sort,
+    _: 1526888329617
+  }
+  const options3 = {
+    do: 'is_caterank',
+    p: 1,
+    page,
+    words,
+    shuqi_h5: '',
+    onlyCpBooks: 1,
+    secondCate,
+    sort,
+    _: 1526888329617
+  }
+  if (flag == 0) {
+    fetchGet('http://read.xiaoshuo1-sm.com/novel/i.php', options, 'get', (data) => {
+      // console.log(data)
+      cb(data.data);
+    });
+  }
+  if (flag == 1) {
+    fetchGet('http://read.xiaoshuo1-sm.com/novel/i.php', options1, 'get', (data) => {
+      // console.log(data)
+      cb(data.data);
+    });
+  }
+  if (flag == 2) {
+    fetchGet('http://read.xiaoshuo1-sm.com/novel/i.php', options2, 'get', (data) => {
+      // console.log(data)
+      cb(data.data);
+    });
+  }
+  if (flag == 3) {
+    fetchGet('http://read.xiaoshuo1-sm.com/novel/i.php', options3, 'get', (data) => {
+      // console.log(data)
+      cb(data.data);
+    });
+  }
 }
 
 // 获取排行都有什么榜

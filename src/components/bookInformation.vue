@@ -104,12 +104,23 @@ export default {
     }
   },
   computed: {
-    bookId () {
-      let id = this.$store.state.bookInfo.bookId;
-      if (!id) {
-        id = localStorage.getItem('bookId');
+    bookId: {
+      get: function () {        
+        let id = this.$store.state.bookInfo.bookId;
+        if (!id) {
+          id = localStorage.getItem('bookId');
+        }
+        return id;
+      },
+      set: function (newVal) {
+        this.$store.dispatch({
+          type: 'triggerBookId',
+          id: newVal
+        })
+        localStorage.setItem('bookId', newVal);
+        document.documentElement.scrollTop = 0;
+        this.getBookInfo();
       }
-      return id;
     },
     bookName () {
       let name = this.$store.state.bookInfo.bookName;
@@ -149,8 +160,8 @@ export default {
     },
     changeInfoBook (e) {
       let bookId = e.currentTarget.getAttribute('bid');
+      this.bookId = bookId;
       localStorage.setItem('bookId', bookId);
-      location.reload();
     },
     showP (e) {
       e.currentTarget.parentNode.parentNode.firstChild.classList.toggle('poff');
@@ -194,6 +205,7 @@ export default {
       }
     },
     getComments () {
+      this.commentData = [];
       bookComments (this.authorId, this.bookId, data =>  {
         data.forEach(item => {
           let obj = {};
@@ -457,6 +469,11 @@ export default {
         }
         .ctext {
           font-size: 1.2rem;
+          width: 60%;
+          // height: 1rem;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
           padding: 0.2rem 0 0 2rem;
           color: @wordColor;
         }

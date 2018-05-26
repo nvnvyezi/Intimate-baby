@@ -76,7 +76,7 @@ export default {
   }
   .seniority {
     width: 100vw;
-    height: auto;
+    height: 100vh;
     position: relative;
     background-color: rgb(241, 240, 240);
     .seniority--nav {
@@ -102,7 +102,7 @@ export default {
         .seniority__list__ul__li {
           display: inline-block;
           width: 100%;
-          height: 80px;
+          padding: .5rem 0;
           border-bottom: 0.7rem solid rgb(241, 240, 240);
           background-color: white;
           i {
@@ -119,7 +119,7 @@ export default {
           }
           .seniority__list--section {
             width: 200px;
-            height: 50px;
+            // height: 50px;
             border-left: 60px solid transparent;
             border-top: 20px solid transparent;
             .seniority__list--section--h3 {
