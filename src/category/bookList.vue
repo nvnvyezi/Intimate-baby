@@ -361,14 +361,14 @@ export default {
     .statNameG {
       height: 1rem;
       line-height: 1rem;
-      padding: 0.2rem 0.5rem 0.1rem;
+      padding: 0.3rem 0.5rem 0.1rem;
     }
     .statName (@fcolor: #70a7e3) {
       .statNameG;
       color: @fcolor;
       border: 0.005rem solid @fcolor;
       margin-right: 0.3rem;
-      font-size: 0.7rem;
+      font-size: 1rem;
     }
     .statNamered {
       .statName(#f08300)
@@ -399,6 +399,7 @@ export default {
               height: auto;
               display: flex;
               justify-content: space-between;
+              align-items: center;
               padding: 1.3rem 0;
               border-bottom: 0.1rem solid #f0ebeb;
               .recommend--body--ul--li__left {
@@ -412,23 +413,27 @@ export default {
               .recommend--body--ul--li__right {
                 width: 188/12rem;
                 height: 113/12rem;
+                flex: 1 1 auto;
+                margin-top: -.4rem;
+                border-left: 1.4rem solid white;
                 .recommend--body--ul--li__right--title {
                   font-size: 1.5rem;
                   width: 100%;
-                  height: 19/12rem;
+                  height: 24/12rem;
                   overflow: hidden;
                   text-overflow: ellipsis;
                   padding: 0;
                   font-family: "Helvetica Neue",Helvetica,STHeiTi,sans-serif;
                 }
                 .recommend--body--ul--li__right--author {
-                  font-size: 0.7rem;
+                  font-size: 1rem;
                   color: rgb(170, 169, 169);
-                  padding: 0.5rem 0;
+                  padding: 0.3rem 0;
                 }
                 .recommend--body--ul--li__right--info {
                   width: 100%;
                   height: 3rem;
+                  font-size: 1rem;
                   color: rgb(170, 169, 169);
                   overflow: hidden;
                   display: -webkit-box;
@@ -437,11 +442,11 @@ export default {
                   -webkit-box-orient: vertical;
                 }
                 .recommend--body--ul--li__right--tags {
-                  margin-top: 0.7rem;
+                  margin-top: 0.5rem;
                   .recommend--body--ul--li__right--tags--two,
                   .recommend--body--ul--li__right--tags--three {
-                    height: 13/12rem;
-                    padding: 0.2rem 0.4rem 0.1rem;
+                    height: 12/12rem;
+                    padding: 0.3rem 0.4rem 0.1rem;
                     color: rgb(145, 141, 141);
                     border: 0.005rem solid rgb(224, 222, 222);
                   }

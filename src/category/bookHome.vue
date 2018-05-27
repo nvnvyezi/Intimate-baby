@@ -188,6 +188,7 @@ export default {
         height: auto;
         background-color: #fafafa;
         color: #999;
+        font-size: 1.2rem;
         padding: 0.8rem 0 1rem .8rem;
       }
       .list__ul {
@@ -210,7 +211,7 @@ export default {
               overflow-x: hidden;
             }
             .list__ul__li__middle--bottom {
-              font-size: 0.7rem;
+              font-size: 1rem;
               color: #999;
             }
           }

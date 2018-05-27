@@ -128,7 +128,7 @@ export default {
               font-weight: 400;
             }
             .seniority__list--section--p {
-              font-size: 0.7rem;
+              font-size: 1rem;
               font-weight: 300;
               color: rgb(92, 92, 92);
             }

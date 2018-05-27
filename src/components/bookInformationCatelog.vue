@@ -142,11 +142,12 @@ export default {
       height: 48.5/12rem;
       border-bottom: 0.1rem solid @bottomColor;
       .catelog--header--list {
-        width: 80/12rem;
+        width: 150/12rem;
         line-height: 48.5/12rem;
         font-size: 1.4rem;
         margin-left: 1rem;
         color: @wordColor;
+        position: relative;
         &::after {
           content: '';
           width: 2rem;
@@ -155,8 +156,8 @@ export default {
           background: url('../assets/dayu.png') no-repeat center center;
           background-size: .65rem 1rem;
           transform: rotateZ(90deg);
-          position: absolute;
-          margin-top: 1.5rem;
+          // position: absolute;
+          // margin-top: 1.5rem;
           // background-repeat: no-repeat;
 
         }

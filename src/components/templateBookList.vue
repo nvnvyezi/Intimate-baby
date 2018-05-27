@@ -111,7 +111,7 @@ export default {
             obj.status = item.status;
             obj.reads = (item.reads/10000).toFixed(1) + '万';
             obj.words = (item.words/10000).toFixed(1) + '万字';
-            obj.tags = item.tags.split(",").slice(0, 2);
+            obj.tags = item.tags.split(",").slice(0, 3);
             this.arrResult.push(obj);
           })
         })
@@ -156,14 +156,14 @@ export default {
   .statNameG {
     height: 1rem;
     line-height: 1rem;
-    padding: 0.2rem 0.5rem 0.1rem;
+    padding: 0.3rem 0.5rem 0.1rem;
   }
   .statName (@fcolor: #70a7e3) {
     .statNameG;
     color: @fcolor;
     border: 0.005rem solid @fcolor;
     margin-right: 0.3rem;
-    font-size: 0.7rem;
+    font-size: 1rem;
   }
   .statNamered {
     .statName(#f08300)
@@ -172,8 +172,8 @@ export default {
     .statName(#499fff);
   }
   .titleH3 {
-    font-size: 1.6rem;
-    font-weight: 500;
+    font-size: 1.5rem;
+    font-weight: 400;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -223,7 +223,9 @@ export default {
         .box__ul__li--right {
           width: 200/12rem;
           height: 76/12rem;
-          margin: 0 0 0 1.3rem;
+          margin: -0.2rem 0 0 1.5rem;
+          flex: 1 1 auto;
+          position: relative;
           .box__ul__li--right--title {
             width: 100%;
             line-height: 24/12rem;
@@ -233,12 +235,13 @@ export default {
           }
           .box__ul__li--right--author {
             width: 100%;
-            height: 16/12rem;
+            height: 12/12rem;
             display: -webkit-box;
+            font-size: 1.1rem;
             -webkit-box-orient: horizontal;
             -webkit-box-align: center;
             -webkit-box-pack: end;
-            margin: 0.1rem 0 1rem;
+            margin: 0.3rem 0 0 0;
             color: @wordColor;
             .box__ul__li--right--author--author {
               display: block;
@@ -263,14 +266,15 @@ export default {
           }
           .box__ul__li--right--tags {
             width: 100%;
-            height: 20/12rem;
-            overflow: hidden;
+            height: 22/12rem;
             color: @wordColor;
             text-align: left;
+            position: absolute;
+            bottom: 0;
             .box__ul__li--right--tags--words,
             .box__ul__li--right--tags--one,
             .box__ul__li--right--tags--two {
-              border: 1px solid @borderColor;
+              border: 0.1rem solid @borderColor;
               padding: 0.3rem 0.3rem 0.1rem 0.3rem;
               font-size: 1.2rem;
             }

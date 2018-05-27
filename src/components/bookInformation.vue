@@ -7,7 +7,7 @@
       <div class="cover--header--info">
         <h1 class="cover--header--info--title">{{ bookData.title }}</h1>
         <router-link class="cover--header--info--author" to="" >{{ bookData.author }}</router-link>
-        <p class="cover--header--info--tags"><span>{{ bookData.category }}</span><span>{{ bookData.words }}</span></p>
+        <p class="cover--header--info--tags"><span class="tag1">{{ bookData.category }}</span><span>{{ bookData.words }}</span></p>
         <p class="cover--header--info--stat" v-if="bookData.status == 1">已完结</p>
         <p class="cover--header--info--stat" v-else>连载中</p>
       </div>
@@ -43,7 +43,7 @@
     </section>
     <section class="bookBox">
       <div class="book-box">
-        <h3>看过这本书的人还在看</h3>
+        <h3 class="bookBox--h3">看过这本书的人还在看</h3>
         <div class="li__box">
           <div class="li__box--ul">
             <ul>
@@ -61,7 +61,7 @@
       </div>
     </section>
     <section class="otherBooks">
-      <h3>作者的所有作品</h3>
+      <h3 class="otherbooks--h3">作者的所有作品</h3>
       <ul class="box__ul">
         <router-link class="box__ul__li" to="bookinformation" tag="li" v-for="(item, index) in arrResult" :key="index">
           <div class="box__ul__li--imgBox">
@@ -173,6 +173,7 @@ export default {
       if (window.fetch) {
         let sign = md5(this.bookId + "" + this.timestamp + this.user_id + this.encryptKey);
         bookInfo (this.bookId, this.user_id, sign, this.timestamp, item => {
+          console.log(item)
           let obj = {};
           obj.imgUrl = item.imgUrl;
           obj.title = item.bookName;
@@ -237,7 +238,7 @@ export default {
             let obj = {};
             obj.bid = item.id;
             obj.imgUrl = item.cover;
-            obj.linkText = item.bookname.slice(0, 3) + '...';
+            obj.linkText = item.bookname.length > 3 ? item.bookname.slice(0, 3) + '...' : item.bookname;
             this.result1.push(obj);
           })
         })
@@ -294,14 +295,14 @@ export default {
     .statNameG {
       height: 1rem;
       line-height: 1rem;
-      padding: 0.2rem 0.5rem 0.1rem;
+      padding: 0.4rem 0.5rem 0.1rem;
     }
     .statName (@fcolor: #70a7e3) {
       .statNameG;
       color: @fcolor;
       border: 0.005rem solid @fcolor;
       margin-right: 0.3rem;
-      font-size: 0.7rem;
+      font-size: 1.1rem;
     }
     .statNamered {
       .statName(#f08300)
@@ -310,17 +311,28 @@ export default {
       .statName(#499fff);
     }
     .titleH3 {
-      font-size: 1.7rem;
-      font-weight: 500;
+      font-size: 1.5rem;
+      font-weight: 400;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
    .sectionH3 {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      font-size: 0.5rem;
+      font-size: 1.4rem;
       font-weight: 400;
-      padding: 20px 5px;
+      padding: 1rem 0 1.3rem 1rem;
+      color: #333;
+      &::after {
+        content: '';
+        width: .25rem;
+        height: 1.2rem;
+        display: inline-block;
+        background: #f08300;
+        position: absolute;
+        top: 1.3rem;
+        left: 0;
+      }
     }
    .box {
      width: 100vw;
@@ -330,12 +342,13 @@ export default {
       width: 100%;
       height: auto;
       display: flex;
-      padding: 2rem 0.6rem;
+      padding: 2rem 0rem;
       justify-content: space-around;
       align-items: center;
       .cover--header--img {
         width: 98/12rem;
         height: 130/12rem;
+        padding-left: 2rem;
         .cover--header--img--photo {
           width: 100%;
           height: 100%;
@@ -344,22 +357,30 @@ export default {
       .cover--header--info {
         width: 174/12rem;
         height: 130/12rem;
+        flex: 1 1 auto;
+        padding-left: 2rem;
+        position: relative;
         .cover--header--info--title {
           line-height: 23/12rem;
-          font-size: 1.8rem;
+          font-size: 1.6rem;
           font-weight: 400;
         }
         .cover--header--info--author {
           .infoG;
-          padding: 1.3rem 0 0.4rem;
+          padding: 1.3rem 0 0rem;
         }
         .cover--header--info--tags {
           .infoG;
           padding: 0.7rem 0 1rem;
+          .tag1 {
+            padding-right: 1rem;
+          }
         }
         .cover--header--info--stat {
           .infoG;
-          padding: 0 0 0.7rem;
+          position: absolute;
+          left: 2rem;
+          bottom: 0;
         }
       }
     }
@@ -374,12 +395,15 @@ export default {
         width: 27%;
         height: 41/12rem;
         border: 0.1rem solid @borderColor;
-        background-color: @borderColor;
-        color: white;
+        background-color: white;
+        color: @borderColor;
         border-radius: 5px;
-        &:first-child {
-          background-color: white;
-          color: @borderColor;
+        font-size: 1.4rem;
+        font-weight: 400;
+        letter-spacing: 0.1rem;
+        &:last-child {
+          background-color: @borderColor;
+          color: white;
         }
         &:hover {
           outline: none;
@@ -389,11 +413,11 @@ export default {
     .cover--info {
       width: 100%;
       height: auto;
-      position: relative;
       border-bottom: 0.7rem solid @bottomColor;
       .cover--info--text {
         width: 90%;
         margin: 0 auto;
+        position: relative;
         .cover--info--text--p {
           width: 100%;
           font-size: 1.4rem;
@@ -412,15 +436,16 @@ export default {
           width: 73/12rem;
           height: 22/12rem;
           position: absolute;
-          right: 6%;
-          margin-top: -1.7rem;
+          right: 0;
+          margin-top: -2.1rem;
           // background-color: red;
           background: linear-gradient(to right, transparent 0%, white 80%);
           .iG {
             width: 2rem;
             height: 1.8rem;
             display: inline-block;
-            float: right;
+            position: absolute;
+            right: 0;
             background-image: url('../assets/dayu.png');
             background-size: .5rem .8rem;
             background-repeat: no-repeat;
@@ -453,7 +478,7 @@ export default {
           height: 18/12rem;
           display: inline-block;
           background-size: 18/12rem;
-          background-position: 0 0.1rem;
+          background-position: 0 -0.1rem;
           background-repeat: no-repeat;
         }
         .li {
@@ -495,11 +520,9 @@ export default {
       width: 100vw;
       height: auto;
       border-bottom: 0.7rem solid @bottomColor;
+      position: relative;
       .comments--header {
-        font-size: 1.5rem;
-        font-weight: 400;
-        padding: 1rem 0;
-        border-bottom: 0.1rem solid @bottomColor;
+        .sectionH3;
       }
       .comments--ul {
         width: 90%;
@@ -508,7 +531,7 @@ export default {
         .comments--ul__li {
           width: 100%;
           height: auto;
-          padding: 2rem 0 0.5rem;
+          padding: 2rem 0 1rem;
           border-bottom: 0.1rem solid @bottomColor;
           &:last-child {
             border-bottom: none;
@@ -531,7 +554,7 @@ export default {
           }
           .comments--ul__li--text {
             width: 80%;
-            height: 44/12rem;
+            line-height: 24/12rem;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
@@ -539,6 +562,7 @@ export default {
             text-overflow: ellipsis;
             font-size: 1.4rem;
             padding: 0 0 0 3rem;
+            color: #333;
           }
         }
       }
@@ -550,49 +574,59 @@ export default {
       position: relative;
       .book-box {
         width: 100%;
-        height: 28rem;
+        // height: 28rem;
+        height: auto;
         margin: 0 auto;
         border-bottom: 0.7rem solid #f0ebeb;
-        h3 {
+        .bookBox--h3 {
           .sectionH3;
         }
         .li__box {
           width: 100%;
           height: auto;
           .li__box--ul {
-            width: 95%;
-            margin: 0 auto;
-            height: 19rem;
+            // width: 95%;
+            width: 100%;
+            // margin: 0 auto;
+            // height: 19rem;
+            height: auto;
             border-bottom: 0.01rem solid rgb(247, 247, 247);
             ul {
               list-style-type: none;
-              display: grid;
-              grid-template-columns: repeat(4, 25%);
-              justify-items: center;
-              grid-row-gap: 40px;
+              // display: grid;
+              // grid-template-columns: repeat(4, 16%);
+              // justify-content: space-around;
+              // grid-row-gap: 40px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              flex-wrap: wrap;
               width: 100%;
               height: auto;
               li {
-                width: 4rem;
-                height: 6rem;
+                // width: 100%;
+                width: 25%;
+                // height: 6rem;
+                height: auto;
                 display: inline-block;
-                box-shadow: -5px 4px 2px 0px rgb(223, 220, 220);
-                transform: skewY(-4deg);
+                text-align: center;
                 img {
-                  width: 100%;
+                  display: block;
+                  margin: 0 auto;
+                  box-shadow: -5px 4px 2px 0px rgb(223, 220, 220);
+                  transform: skewY(-4deg);
+                  width: 70%;
                   height: 100%;
                 }
-                a {
-                  text-decoration: none;
-                  span {
-                    margin-top: 20px;
-                    padding-top: 20px;
-                    font-size: 0.4rem;
-                    font-weight: 400;
-                    color: rgb(155, 155, 160);
-                    transform: scale3d(0.5,0.5,0.5);
-                    width: 70px;
-                  }
+                span {
+                  // margin-top: 20px;
+                  // padding-top: 20px;
+                  display: inline-block;
+                  padding: 1rem 0;
+                  font-size: 1rem;
+                  font-weight: 400;
+                  // color: rgb(155, 155, 160);
+                  // width: 70px;
                 }
               }
             }
@@ -611,18 +645,6 @@ export default {
             letter-spacing: 1px;
             color: #333;
             display: inline-block;
-            // &::after {
-            //   content: '  ';
-            //   width: 1rem;
-            //   height: 4rem;
-            //   display: block;
-            //   float: right;
-            //   background-image: url('../assets/refresh.png');
-            //   background-size: 1rem 1rem;
-            //   background-repeat: no-repeat;
-            //   background-position: center center;
-            //   margin-left: 0.5rem;
-            // }
           }
           .refresh__box--icon {
             width: 1.5rem;
@@ -644,16 +666,23 @@ export default {
       width: 100vw;
       height: auto;
       background-color: white;
+      position: relative;
+      .otherbooks--h3 {
+        .sectionH3;
+      }
       .box__ul {
         list-style: none;
-        width: 85%;
+        width: 90%;
         margin: 0 auto;
         .box__ul__li {
-          width: 100%rem;
+          width: 100%;
           height: auto;
-          padding: 1.8rem 0;
-          display: -webkit-box;
-          -webkit-box-orient: horizontal;
+          padding: 1rem 0;
+          // display: -webkit-box;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          // -webkit-box-orient: horizontal;
           // border-bottom: 0.08rem solid @borderColor;
           .box__ul__li--imgBox {
             width: 56/12rem;
@@ -666,23 +695,28 @@ export default {
           }
           .box__ul__li--right {
             width: 200/12rem;
-            height: 76/12rem;
-            margin: 0 0 0 1.3rem;
+            height: 74/12rem;
+            flex: 1 1 auto;
+            margin: 0 0 0 1.5rem;
+            position: relative;
             .box__ul__li--right--title {
               width: 100%;
-              line-height: 18/12rem;
+              height: 24/12rem;
+              color: #333;
               .box__ul__li--right--title--h3 {
                 .titleH3;
               }
             }
             .box__ul__li--right--author {
               width: 100%;
-              height: 16/12rem;
+              line-height: 24/12rem;
+              vertical-align: middle;
               display: -webkit-box;
               -webkit-box-orient: horizontal;
               -webkit-box-align: center;
               -webkit-box-pack: end;
-              margin: 0.9rem 0;
+              font-size: 1.1rem;
+              // margin: .2rem 0 0.9rem;
               color: @wordColor;
               .box__ul__li--right--author--author {
                 display: block;
@@ -694,11 +728,16 @@ export default {
               height: 20/12rem;
               color: @wordColor;
               text-align: left;
+              position: absolute;
+              bottom: 0;
               .box__ul__li--right--tags--words,
               .box__ul__li--right--tags--one {
                 border: 1px solid @bottomColor;
-                padding: 0.3rem 0.3rem 0.1rem 0.3rem;
+                padding: 0.4rem 0.5rem 0.1rem 0.5rem;
                 font-size: 1.2rem;
+              }
+              .box__ul__li--right--tags--words {
+                margin-right: .4rem;
               }
             }
           }

@@ -199,9 +199,11 @@ export default {
           width: 200/12rem;
           height: 76/12rem;
           margin: 0 0 0 1.3rem;
+          flex: 1 1 auto;
+          border-left: 0rem solid white;
           .box__ul__li--right--title {
             width: 100%;
-            line-height: 18/12rem;
+            line-height: 24/12rem;
             .box__ul__li--right--title--h3 {
               .titleH3;
             }
@@ -213,7 +215,7 @@ export default {
             -webkit-box-orient: horizontal;
             -webkit-box-align: center;
             -webkit-box-pack: end;
-            margin: 0.9rem 0;
+            margin: 0.3rem 0 0.8rem;
             color: @wordColor;
             .box__ul__li--right--author--author {
               display: block;
