@@ -301,7 +301,7 @@ export default {
     getList () {
       let first = this.firstCate;
       let second = this.secondCate;
-      console.log(second)
+      // console.log(second)
       if (localStorage.getItem('sex') == 1) {
         if (this.flag != 1) {
           this.flag = 3;
@@ -366,7 +366,7 @@ export default {
     .statName (@fcolor: #70a7e3) {
       .statNameG;
       color: @fcolor;
-      border: 0.005rem solid @fcolor;
+      border: 0.1rem solid @fcolor;
       margin-right: 0.3rem;
       font-size: 1rem;
     }
@@ -383,7 +383,6 @@ export default {
       width: 100vw;
       height: 100vh;
       background-color: white;
-      margin-top: 45/12rem;
       .recommend {
         width: 100%;
         height: auto;
@@ -405,17 +404,19 @@ export default {
               .recommend--body--ul--li__left {
                 width: 84/12rem;
                 height: 112/12rem;
+                flex: 0 1 84/12rem;
                 .recommend--body--ul--li__left--img {
                   width: 100%;
                   height: 100%;
                 }
               }
               .recommend--body--ul--li__right {
-                width: 188/12rem;
+                // width: 188/12rem;
+                width: calc(100% - 8.8rem);
                 height: 113/12rem;
-                flex: 1 1 auto;
-                margin-top: -.4rem;
-                border-left: 1.4rem solid white;
+                flex: 0 0 auto;
+                border-left: 0rem solid white;
+                position: relative;
                 .recommend--body--ul--li__right--title {
                   font-size: 1.5rem;
                   width: 100%;
@@ -442,13 +443,16 @@ export default {
                   -webkit-box-orient: vertical;
                 }
                 .recommend--body--ul--li__right--tags {
-                  margin-top: 0.5rem;
+                  // margin-top: 0.5rem;
+                  position: absolute;
+                  bottom: 0;
                   .recommend--body--ul--li__right--tags--two,
                   .recommend--body--ul--li__right--tags--three {
                     height: 12/12rem;
                     padding: 0.3rem 0.4rem 0.1rem;
                     color: rgb(145, 141, 141);
-                    border: 0.005rem solid rgb(224, 222, 222);
+                    border: 0.1rem solid rgb(224, 222, 222);
+                    margin-right: .2rem;
                   }
                 }
               }

@@ -6,32 +6,29 @@
     </header>
     <div class="catelog--list">
       <ul class="catelog--list__ul">
-        <router-link class="catelog--list__ul__li" to="bookchapter" tag="li" v-for="(item, index) in catelogResult" @click.native="showChapter" :index="index" :key="index" v-if="rangeJudge(index)">{{ item.chapterName }}</router-link>
+        <router-link class="catelog--list__ul__li" to="bookchapter" tag="li" v-for="(item, index) in catelogResult1" @click.native="showChapter" :index="item.i" :key="index">{{ item.chapterName }}</router-link>
       </ul>
     </div>
-    <section class="catelogBox" id="maskList" v-show="maskJudge">
+    <section class="catelogBox"  @click="triggerMaskG" id="maskList" v-show="maskJudge">
       <div class="catelogBox--mask"></div>
       <div class="catelogBox--content">
-        <div class="catelogBox--content__list" @click="triggerMaskG" v-for="(item, index) in catelogBox" :key="index" :index="index">{{ item }}<i></i></div>
+        <div class="catelogBox--content__list" v-for="(item, index) in catelogBox" :key="index" :index="index">{{ item }}<i></i></div>
       </div>
     </section>
   </div>
 </template>
 
 <script>
-import md5 from '../encryption/md5'
-import { bookCatelog } from "../api/api";
 export default {
   name: 'bookInformationCatelog',
   data () {
     return {
-      catelogResult: [],
-      user_id: 8000000,
-      encryptKey: '37e81a9d8f02596e1b895d07c171d5c9',
-      catelogList: '',
       cateList: '' || "1~100章",
       maskJudge: false,
-      range: 0
+      range: 0,
+      catelogResult: [],
+      catelogResult1: [],
+      len: 0                  //多少张
     }
   },
   computed: {
@@ -47,9 +44,9 @@ export default {
     },
     catelogBox () {
       let arr = [];
-      for (let i = 0, len = this.catelogResult.length/100; i < len; i++) {
+      for (let i = 0, len = this.catelogResult.length; i < len; i++) {
         if (i === len - 1) {
-          arr.push(`${i * 100 + 1}~${this.catelogResult.length}章`);
+          arr.push(`${i * 100 + 1}~${this.len - 1}章`);
         } else {
           arr.push(`${i * 100 + 1}~${(i + 1) * 100}章`);
         }
@@ -58,58 +55,57 @@ export default {
     }
   },
   mounted () {
-    this.getCatelog();
+    let arr = JSON.parse(localStorage['bookCatelog']);
+    this.len = arr.length;
+    let obj = [];
+    for (let i = 0, len = arr.length; i < len; i++) {
+      if (i != 0 && (i % 100 == 0 || i == len - 1)) {
+        this.catelogResult.push(obj);
+        obj = [];
+      }
+      arr[i].i = i;
+      obj.push(arr[i]);
+    }
+    // console.log(arr, this.catelogResult);
+    this.catelogResult1 = this.catelogResult[0];
+    // console.log(this.catelogResult);
   },
   methods: {
     reversal () {
-      // this.catelogResult.reverse();
+      this.catelogResult1.reverse();
     },
+    // 进入相应章节
     showChapter (e) {
       let index = parseInt(e.currentTarget.getAttribute('index'));
+      console.log(index)
       this.$store.dispatch({
         type: 'triggerPage',
         page: index
       })
       localStorage.setItem('chapterPage', index);
     },
-    rangeJudge (index) {
-      if (index >= this.range * 100 && index < (this.range + 1) * 100) {
-        return true;
-      }
-      return false;
-    },
     show () {
       this.maskJudge = true;
     },
     triggerMaskG (e) {
-      e.target.classList.add('maskG');
-      let node = e.target.parentNode.children;
-      this.cateList = e.currentTarget.innerText;
-      let num = e.currentTarget.getAttribute('index');
-      this.range = Number(num);
-      let mask = document.getElementsByClassName('catelogBox--content__list');
-      for (let i = 0, len = node.length; i < len; i++) {
-        if (i != num) {
-          if (node[i].classList.contains('maskG')) {
-            node[i].classList.remove('maskG');
+      if (e.target.className == "catelogBox--content__list") {
+        e.target.classList.add('maskG');
+        let node = e.target.parentNode.children;
+        this.cateList = e.target.innerText;
+        let num = e.target.getAttribute('index');
+        num = Number(num);
+        this.catelogResult1 = this.catelogResult[num];
+        let mask = document.getElementsByClassName('catelogBox--content__list');
+        for (let i = 0, len = node.length; i < len; i++) {
+          if (i != num) {
+            if (node[i].classList.contains('maskG')) {
+              node[i].classList.remove('maskG');
+            }
           }
         }
       }
       this.maskJudge = false;
     },
-    getCatelog () {
-      let sign = md5(this.bookId + "" + this.timestamp + this.user_id + this.encryptKey);
-      bookCatelog (this.bookId, this.user_id, sign, this.timestamp, data => {
-        data.forEach(item => {
-          item.volumeList.forEach(item => {
-            let obj = {};
-            obj.chapterName = item.chapterName;
-            obj.contUrlSuffix = item.contUrlSuffix;
-            this.catelogResult.push(obj);
-          })
-        })
-      })
-    }
   }
 }
 </script>
@@ -145,7 +141,7 @@ export default {
         width: 150/12rem;
         line-height: 48.5/12rem;
         font-size: 1.4rem;
-        margin-left: 1rem;
+        margin-left: 1.3rem;
         color: @wordColor;
         position: relative;
         &::after {
@@ -213,10 +209,11 @@ export default {
         position: absolute;
         top: 50%;
         left: 50%;
-        margin-top: -30vh;
+        // margin-top: -30vh;
         margin-left: -40%;
         width: 80%;
-        height: 60vh;
+        transform: translateY(-50%);
+        // height: 60vh;
         background-color: white;
         overflow-y: auto;
         overflow-x: hidden;

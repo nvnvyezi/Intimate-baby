@@ -1,12 +1,14 @@
 //分类的主路由
 <template>
   <div class="box">
-    <nav>
-      <div @click="back">↤</div>
-      <div>
-        <span>{{ listName }}</span>
+    <nav class="box--nav">
+      <div class="box--nav--header">
+        <div @click="back">↤</div>
+        <div>
+          <span>{{ listName }}</span>
+        </div>
+        <router-link to="/" tag="div">H</router-link>
       </div>
-      <router-link to="/" tag="div">H</router-link>
     </nav>
     <keep-alive>
       <router-view v-if="$route.meta.keepAlive"></router-view>
@@ -54,18 +56,25 @@ export default {
     width: 100vw;
     height: auto;
     background-color: rgb(255, 255, 255);
-    nav {
+    .box--nav {
       width: 100%;
-      line-height: 45/12rem;
+      height: 45/12rem;
+      display: flex;
+      justify-content: center;
+      // align-items: center;
       background-color: rgb(241, 157, 60);
-      display: grid;
-      grid-template-columns: 50px auto 50px;
-      position: fixed;
-      z-index: 2;
-      top: 0;
-      color: white;
-      text-align: center;
-      font-size: 1.5rem;
+      .box--nav--header {
+        width: 90%;
+        line-height: 45/12rem;
+        // display: grid;
+        // grid-template-columns: 50px auto 50px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: white;
+        text-align: center;
+        font-size: 1.5rem;
+      }
     }
   }
 }

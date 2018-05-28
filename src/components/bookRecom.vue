@@ -21,7 +21,7 @@
         <h3>{{ list }}</h3>
         <div v-if="judge" class="li__box">
           <div class="li__box--ul">
-            <ul>
+            <ul class="bookBox--a">
               <li @click="changeInfoBook" class="aaa" v-for="(item, index) in result1" :key="index">
                 <router-link to="bookinformation" tag="div">
                   <img src="" v-lazyLoad="item.imgUrl" :alt="item.linkText">
@@ -97,7 +97,7 @@
         <h3>{{ list3 }}</h3>
         <div v-if="doneJudge" class="li__box">
           <div class="li__box--ul">
-            <ul>
+            <ul class="bookBox--b">
               <li @click="changeInfoBook" class="aaa" v-for="(item, index) in doneResult" :key="index">
                 <router-link to="bookinformation" tag="div">
                   <img src="" v-lazyLoad="item.imgUrl" :alt="item.linkText">
@@ -117,7 +117,7 @@
       </div>
     </section>
     <section class="bestSelling">
-      <h3>{{ list4 }}</h3>
+      <h3 class="bestSelling--h3">{{ list4 }}</h3>
       <div class="bestSelling__ul">
         <router-link @click.native="changeInfoBook" class="bestSelling__ul__li eee" v-for="(item, index) in bestSelResult" :key="index" to="bookinformation" tag="li">
           <div v-if="index === 0" class="bestSelling__ul__li__block">
@@ -253,10 +253,8 @@ export default {
         this.result1.push(obj);
       })
       this.judge = true;
+      this.getBoyGirl();
     })
-    this.getBoyGirl(function (param) {  });
-    this.getBestSelling();
-    this.getRecommend();
   },
   computed: {
     hide () {
@@ -315,22 +313,24 @@ export default {
       }
     },
     getRecom (callback) {
-      this.result1 = [];
       getBookRecom (data => {
         data.forEach(item => {  
           let obj = {};
           obj.bid = item.bid;
           obj.imgUrl = item.book_cover;
           obj.linkText = item.bookname;
+          this.result1.shift();
           this.result1.push(obj);
         })
-        callback();
+        // callback();
       })
     },
     addrefresh () {
       if (this.refreshJudge) {
+        let h = document.getElementsByClassName('bookBox--a')[0];
+        h.style.height = h.offsetHeight + 'px';
         this.refreshJudge = false;
-        this.judge  = false;
+        // this.judge  = false;
         this.getRecom(() => {this.judge = true;});
         let refresh = document.getElementsByClassName('refresh__box--icon');
         refresh[0].classList.add('refreshing');
@@ -341,22 +341,25 @@ export default {
       }
     },
     getDoneBook (callback) {
-      this.doneResult = [];
       getBookDone (data => {
+        callback();
         data.forEach(item => {  
           let obj = {};
           obj.bid = item.bid;
           obj.imgUrl = item.book_cover;
           obj.linkText = item.bookname.slice(0, 3) + '...';
+          this.doneResult.shift();
           this.doneResult.push(obj);
         })
-        callback();
       })
     },
     addrefresh1 () {
+      let h = document.getElementsByClassName('bookBox--b')[0];
+        h.style.height = h.offsetHeight + 'px';
       if (this.refreshJudge1) {
+
         this.refreshJudge1 = false;
-        this.doneJudge  = false;
+        // this.doneJudge  = false;
         this.getDoneBook(() => {this.doneJudge = true;});
         let refresh = document.getElementsByClassName('refresh__box--icon');
         refresh[1].classList.add('refreshing');
@@ -366,7 +369,7 @@ export default {
         }, 1000);
       }
     },
-    getBoyGirl (callback) {
+    getBoyGirl () {
       this.doneJudge = false;
       getBookBoyGirl (data => {
         this.list2 = data.module[6].m_s_name;
@@ -410,7 +413,7 @@ export default {
           this.doneResult.push(obj);
         })
         this.doneJudge = true;
-        callback();
+        this.getBestSelling();
       })
     },
     getBestSelling () {
@@ -437,11 +440,13 @@ export default {
           obj.bid = item.bid;
           this.newResult.push(obj);
         })
+        this.getRecommend();
       })
     },
     getRecommend () {
       getBookInterest (data => {
         this.list6 = data.module[6].content.title;
+        // this.list6 = 'sd';
         data.module[7].content.forEach((item, index) => { 
           let obj = {};
           obj.bid = item.bid;
@@ -544,7 +549,7 @@ export default {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       font-size: 1.4rem;
       font-weight: 400;
-      padding: 1rem 0 1rem 1rem;
+      padding: 1rem 0 1.2rem 1rem;
       color: #333;
       &::after {
         content: '';
@@ -566,7 +571,7 @@ export default {
     .statName (@fcolor: #70a7e3) {
       .statNameG;
       color: @fcolor;
-      border: 0.005rem solid @fcolor;
+      border: 0.1rem solid @fcolor;
       margin-right: 0.3rem;
       font-size: 1rem;
     }
@@ -580,7 +585,7 @@ export default {
       height: 13/12rem;
       padding: 0.3rem 0.5rem 0.1rem;
       color: @graycolor;
-      border: 0.005rem solid @graycolor;
+      border: 0.1rem solid @graycolor;
     }
     .recom--header {
       width: 100%;
@@ -666,6 +671,7 @@ export default {
           // grid-template-rows: 8rem;
           // justify-items: space-around;
           // justify-content: space-around;
+          padding: .5rem 0 1rem;
           display: flex;
           justify-content: center;
           list-style: none;
@@ -684,7 +690,7 @@ export default {
               display: inline-block;
               font-size: 1.2rem;
               color: #333;
-              padding: 0.5rem 0;
+              padding: 0.8rem 0;
             }
           }
         }
@@ -718,7 +724,7 @@ export default {
               span:last-child {
                 .statNameG;
                 color: rgb(160, 158, 158);
-                border: 0.005rem solid rgb(209, 207, 207);
+                border: 0.1rem solid rgb(209, 207, 207);
               }
             }
             .boy__box--text__ul--li--text {
@@ -793,7 +799,7 @@ export default {
                 }
                 span {
                   display: inline-block;
-                  margin: 1rem 0;
+                  margin: 2rem 0;
                   font-size: 1.2rem;
                 }
               }
@@ -845,7 +851,7 @@ export default {
       background-color: white;
       border-bottom: 0.7rem solid #f0ebeb;
       position: relative;
-      h3 {
+      .bestSelling--h3 {
         .sectionH3;
       }
       .bestSelling__ul {
@@ -894,6 +900,7 @@ export default {
               width: 70%;
               flex: 1 1 auto;
               height: 113/12rem;
+              position: relative;
               border-left: 1.4rem solid white;
               .bestSelling__ul__li__block--right--title {
                 .bestSellH3;
@@ -916,6 +923,8 @@ export default {
                 margin: 0.5rem 0;
               }
               .bestSelling__ul__li__block--right--tag {
+                position: absolute;
+                bottom: 0;
                 .bestSelling__ul__li__block--right--stat {
                   .statNamered;
                 }
@@ -1123,7 +1132,7 @@ export default {
                   font-size: 1rem;
                   padding: 0.3rem 0.4rem 0.1rem;
                   color: rgb(145, 141, 141);
-                  border: 0.01rem solid rgb(224, 222, 222);
+                  border: 0.1rem solid rgb(224, 222, 222);
                 }
               }
             }

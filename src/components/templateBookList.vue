@@ -96,26 +96,24 @@ export default {
       })
     },
     getData () {
-      if (window.fetch) {
-        seniorityList(this.page, this.gender, this.type, data => {
-          if (data.length == 0) {
-            this.loadJudge = false;
-            return ;
-          }
-          data.forEach(item => {
-            let obj = {};
-            obj.imgUrl = item.cover;
-            obj.title = item.title;
-            obj.author = item.author;
-            obj.bid = item.bid;
-            obj.status = item.status;
-            obj.reads = (item.reads/10000).toFixed(1) + '万';
-            obj.words = (item.words/10000).toFixed(1) + '万字';
-            obj.tags = item.tags.split(",").slice(0, 3);
-            this.arrResult.push(obj);
-          })
+      seniorityList(this.page, this.gender, this.type, data => {
+        if (data.length == 0) {
+          this.loadJudge = false;
+          return ;
+        }
+        data.forEach(item => {
+          let obj = {};
+          obj.imgUrl = item.cover;
+          obj.title = item.title;
+          obj.author = item.author;
+          obj.bid = item.bid;
+          obj.status = item.status;
+          obj.reads = (item.reads/10000).toFixed(1) + '万';
+          obj.words = (item.words/10000).toFixed(1) + '万字';
+          obj.tags = item.tags.split(",").slice(0, 3);
+          this.arrResult.push(obj);
         })
-      }
+      })
     },
     switchData () {
       switch (this.sex) {
@@ -161,7 +159,7 @@ export default {
   .statName (@fcolor: #70a7e3) {
     .statNameG;
     color: @fcolor;
-    border: 0.005rem solid @fcolor;
+    border: 0.1rem solid @fcolor;
     margin-right: 0.3rem;
     font-size: 1rem;
   }
@@ -197,6 +195,7 @@ export default {
           width: 56/12rem;
           height: 74/12rem;
           position: relative;
+          flex: 0 1 auto;
           .box__ul__li--imgBox--img {
             width: 100%;
             height: 100%;
@@ -221,10 +220,10 @@ export default {
           }
         }
         .box__ul__li--right {
-          width: 200/12rem;
+          width: 100%;
           height: 76/12rem;
-          margin: -0.2rem 0 0 1.5rem;
-          flex: 1 1 auto;
+          margin: 0 0 0 1.5rem;
+          flex: 1 0 auto;
           position: relative;
           .box__ul__li--right--title {
             width: 100%;
@@ -277,9 +276,10 @@ export default {
               border: 0.1rem solid @borderColor;
               padding: 0.3rem 0.3rem 0.1rem 0.3rem;
               font-size: 1.2rem;
+              margin-right: .2rem;
             }
             .box__ul__li--right--tags--three {
-              border: 1px solid rgba(73,159,255,.3);
+              border: 0.1rem solid rgba(73,159,255,.3);
               padding: 0.3rem 0.3rem 0.1rem 0.3rem;
               font-size: 1.25rem;
               color: #499fff;

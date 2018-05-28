@@ -3,11 +3,13 @@
 <template>
   <div class="seniority">
     <nav class="seniority--nav">
-      <div @click="back">↤</div>
-      <div>
-        <span>{{ listName }}</span>
+      <div class="seniority--nav--header">
+        <div @click="back">↤</div>
+        <div>
+          <span>{{ listName }}</span>
+        </div>
+        <router-link to="/" tag="div">H</router-link>
       </div>
-      <router-link to="/" tag="div">H</router-link>
     </nav>
     <div class="seniority__list">
       <ul class="seniority__list__ul">
@@ -81,18 +83,25 @@ export default {
     background-color: rgb(241, 240, 240);
     .seniority--nav {
       width: 100%;
-      line-height: 45px;
+      line-height: 45/12rem;
       background-color: rgb(241, 157, 60);
-      display: grid;
-      grid-template-columns: 50px auto 50px;
-      color: white;
-      text-align: center;
-      font-size: 1.5rem;
-      div > span {
+      .seniority--nav--header {
+        width: 90%;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: white;
         text-align: center;
-        width: 25%;
-        display: inline-block;
+        font-size: 1.5rem;
+        // div > span {
+        //   text-align: center;
+        //   width: 25%;
+        //   display: inline-block;
+        // }
       }
+      // display: grid;
+      // grid-template-columns: 50px auto 50px;
     }
     .seniority__list {
       width: 100vw;
@@ -128,7 +137,8 @@ export default {
               font-weight: 400;
             }
             .seniority__list--section--p {
-              font-size: 1rem;
+              font-size: 1.1rem;
+              padding-top: .3rem;
               font-weight: 300;
               color: rgb(92, 92, 92);
             }

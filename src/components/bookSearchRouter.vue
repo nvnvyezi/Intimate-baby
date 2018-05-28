@@ -1,16 +1,19 @@
 <template>
   <div class="box">
-    <nav>
-      <div @click="back">↤</div>
-      <div>
-        <span>{{ listName }}</span>
+    <nav class="box--nav">
+      <div class="box--nav--header">
+        <div @click="back">↤</div>
+        <div>
+          <span>{{ listName }}</span>
+        </div>
+        <router-link to="/" tag="div">H</router-link>
       </div>
-      <router-link to="/" tag="div">H</router-link>
     </nav>
     <div class="form__search">
       <div class="form__search__content">
         <span class="form__search__content--icon"></span>
         <input class="form__search__content--input" type="text" name="" @input="getSearchData" placeholder="书名/作者/关键词" />
+        <span class="form__search__content--icon1" v-show="iconJudge" @click="deleteVal"></span>
         <!-- <router-link class="form__search__content--button" to="bookSearchList" @click.native="saveHistory" tag="button">搜索</router-link> -->
       </div>
     </div>
@@ -37,15 +40,23 @@ export default {
       listName: '搜索',
       searchJudge: false,
       searchData1: [],
-      flag: true
+      // input框删除所有
+      iconJudge: false
     }
   },
   methods: {
+    deleteVal (e) {
+      let input = document.getElementsByClassName('form__search__content--input')[0];
+      input.value = '';
+      this.iconJudge = false;
+      this.searchJudge = false;
+    },
     back () {
       this.$router.go(-1);
     },
+    // 模糊搜索
     getSearchData (e) {
-      this.q = e.target.value;
+      this.iconJudge = true;
       getBookSearch (e.target.value, data => {
         if (data.status === 1) {
           this.searchJudge = true;
@@ -56,11 +67,10 @@ export default {
       })
     },
     saveHistory (e) {
-      this.flag = false;
       let str =  e.target.innerText;
       if (str!== '') {        
         let data = [];
-        if (localStorage.getItem('searchHistory') !== null) {
+        if (localStorage.getItem('searchHistory') != null) {
           data = localStorage.getItem('searchHistory').split(',');
         }
         if (data.indexOf(str) === -1) {
@@ -77,7 +87,7 @@ export default {
         this.searchJudge = false;
       }
     }
-  }
+  },
 }
 </script>
 
@@ -91,15 +101,22 @@ export default {
     width: 100vw;
     height: auto;
     background-color: rgb(245, 243, 243);
-    nav {
+    .box--nav {
       width: 100%;
       line-height: 45px;
       background-color: rgb(241, 157, 60);
-      display: grid;
-      grid-template-columns: 50px auto 50px;
-      color: white;
-      text-align: center;
-      font-size: 1.5rem;
+      .box--nav--header {
+        width: 90%;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: white;
+        text-align: center;
+        font-size: 1.5rem;
+      }
+      // display: grid;
+      // grid-template-columns: 50px auto 50px;
     }
     .form__search {
       width: 100vw;
@@ -125,9 +142,21 @@ export default {
           background-position: center center;
           background-repeat: no-repeat;
         }
+        .form__search__content--icon1 {
+          width: 3rem;
+          height: 3.5rem;
+          display: block;
+          // margin-right: .15rem;
+          background-image: url('../assets/cancel.png');
+          background-size: 1rem 1rem;
+          background-position: center center;
+          background-repeat: no-repeat;
+        }
         .form__search__content--input {
           width: 70%;
+          flex: 1 1 auto;
           // height: 40px;
+          background-color: white;
           border: none;
           outline: none;
         }

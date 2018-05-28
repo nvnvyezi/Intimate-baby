@@ -1,2 +1,0 @@
-webpackJsonp([16],{MFsm:function(e,t,i){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var n={render:function(){var e=this.$createElement,t=this._self._c||e;return t("div",{staticClass:"box"},[t("keep-alive",[this.$route.meta.keepAlive?t("router-view"):this._e()],1),this._v(" "),this.$route.meta.keepAlive?this._e():t("router-view")],1)},staticRenderFns:[]};var r=i("VU/8")({name:"book",data:function(){return{}}},n,!1,function(e){i("cnQ8")},"data-v-07cba280",null);t.default=r.exports},cnQ8:function(e,t){}});
-//# sourceMappingURL=16.2b881f2200e8f41568ab.js.map

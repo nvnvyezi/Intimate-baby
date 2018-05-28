@@ -103,11 +103,18 @@ export default {
     }
   },
   mounted () {
+    this.$nextTick(function () { 
+      let input = document.getElementsByClassName('form__search__content--input')[0];
+      input.value = localStorage['searchData'];
+      this.iconJudge = true;
+    })
     this.getSearchData();
     let searchBox = document.getElementsByClassName('searchBox');
     searchBox[0].addEventListener('touchstart', this.showFooter, false);
-    searchBox[0].addEventListener('touchmove', this.showFooter, false);
-    searchBox[0].addEventListener('touchend', this.showFooter, false);
+  },
+  beforeDestroyed () {
+    let searchBox = document.getElementsByClassName('searchBox');
+    searchBox[0].removeEventListener('touchstart', this.showFooter, false);
   }
 }
 </script>
@@ -136,7 +143,7 @@ export default {
   .statName (@fcolor: #70a7e3) {
     .statNameG;
     color: @fcolor;
-    border: 0.005rem solid @fcolor;
+    border: 0.1rem solid @fcolor;
     margin-right: 0.3rem;
     font-size: 0.7rem;
   }
@@ -153,7 +160,7 @@ export default {
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  .box {
+  .searchBox {
     width: 100vw;
     height: auto;
     background-color: white;
@@ -162,12 +169,12 @@ export default {
       width: 85%;
       margin: 0 auto;
       .box__ul__li {
-        width: 100%rem;
+        width: 100%;
         height: auto;
         padding: 1.8rem 0;
         display: -webkit-box;
         -webkit-box-orient: horizontal;
-        border-bottom: 0.08rem solid @borderColor;
+        border-bottom: 0.1rem solid @borderColor;
         .box__ul__li--imgBox {
           width: 56/12rem;
           height: 74/12rem;
@@ -196,10 +203,11 @@ export default {
           }
         }
         .box__ul__li--right {
-          width: 200/12rem;
+          // width: 200/12rem;
+          width: 100%;
           height: 76/12rem;
-          margin: 0 0 0 1.3rem;
-          flex: 1 1 auto;
+          margin: 0 0 0 1.6rem;
+          flex: 1 0 auto;
           border-left: 0rem solid white;
           .box__ul__li--right--title {
             width: 100%;

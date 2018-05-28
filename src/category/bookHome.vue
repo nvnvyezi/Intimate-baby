@@ -170,7 +170,6 @@ export default {
   .bookHome {
     width: 100vw;
     height: auto;
-    margin-top: 45/12rem;
     background-color: rgb(255, 255, 255);
     position: relative;
     top: 0;

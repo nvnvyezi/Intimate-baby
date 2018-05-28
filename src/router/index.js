@@ -39,6 +39,9 @@ const bookChapter = () => import ( /*webpackChunkName: "bookChapter"*/'@/compone
 
 export default new Router({
   base: '/intimateBaby/',
+  scrollBehavior: () => ({
+    y: 0
+  }),
   routes: [
     {
       path: '/login',

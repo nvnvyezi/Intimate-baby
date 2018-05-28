@@ -1,11 +1,13 @@
 <template>
   <div class="box">
-    <nav>
-      <div @click="back">↤</div>
-      <div>
-        <span>{{ listName }}</span>
+    <nav class="box--nav">
+      <div class="box--nav--header">
+        <div @click="back">↤</div>
+        <div>
+          <span>{{ listName }}</span>
+        </div>
+        <router-link to="/" tag="div">H</router-link>
       </div>
-      <router-link to="/" tag="div">H</router-link>
     </nav>
     <router-view></router-view>
   </div>
@@ -37,15 +39,22 @@ export default {
     width: 100vw;
     height: auto;
     background-color: rgb(245, 243, 243);
-    nav {
+    .box--nav {
       width: 100%;
       line-height: 45px;
       background-color: rgb(241, 157, 60);
-      display: grid;
-      grid-template-columns: 50px auto 50px;
-      color: white;
-      text-align: center;
-      font-size: 1.5rem;
+      // display: grid;
+      // grid-template-columns: 50px auto 50px;
+      .box--nav--header {
+        width: 90%;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: white;
+        text-align: center;
+        font-size: 1.5rem;
+      }
     }
   }
 }

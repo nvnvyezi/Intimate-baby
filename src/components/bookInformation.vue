@@ -14,15 +14,16 @@
     </section>
     <section class="cover--buttons">
       <router-link class="cover--buttons--button" to="bookChapter" tag="button">开始阅读</router-link>
-      <button class="cover--buttons--button">加书架</button>
+      <button class="cover--buttons--button" style="background-color: #f08300;color: white;" disabled='disabled' v-if="bookshelfJudge1">加书架</button>
+      <button class="cover--buttons--button" v-else @click="addBookshelf">加书架</button>
       <button class="cover--buttons--button">离线下载</button>
     </section>
     <section class="cover--info">
       <div class="cover--info--text">
-        <p class="cover--info--text--p poff">{{ bookData.info }}</p>
-        <span class="cover--info--text--icon"><i class="ir" @click="showP"></i></span>
+        <p class="cover--info--text--p">{{ bookData.info }}</p>
+        <span v-show="iconJudge" class="cover--info--text--icon"><i class="ir" @click="showP"></i></span>
       </div>
-      <router-link class="cover--info--text--new" to="" tag="div"><i class="li"></i><span class="ltext">最新</span><span class="ctext">{{ bookData.lastet_chapter }}</span><i class="ri"></i></router-link>
+      <router-link class="cover--info--text--new" @click.native="newChapter" to="bookchapter" tag="div"><i class="li"></i><span class="ltext">最新</span><span class="ctext">{{ bookData.lastet_chapter }}</span><i class="ri"></i></router-link>
       <router-link class="cover--info--text--new" @click.native="propCatelog" to="bookinformatecatelog" tag="div"><i class="li2"></i><span class="ltext">目录</span><span class="ctext">点一下</span><i class="ri"></i></router-link>
     </section>
     <section class="comments">
@@ -46,7 +47,7 @@
         <h3 class="bookBox--h3">看过这本书的人还在看</h3>
         <div class="li__box">
           <div class="li__box--ul">
-            <ul>
+            <ul class="bookBox--c">
               <li @click="changeInfoBook" v-for="(item, index) in result1" :key="index" :bid="item.bid">
                   <img src="" v-lazyLoad="item.imgUrl" :alt="item.linkText">
                   <span>{{ item.linkText }}</span>
@@ -63,7 +64,7 @@
     <section class="otherBooks">
       <h3 class="otherbooks--h3">作者的所有作品</h3>
       <ul class="box__ul">
-        <router-link class="box__ul__li" to="bookinformation" tag="li" v-for="(item, index) in arrResult" :key="index">
+        <router-link class="box__ul__li" to="bookinformation" tag="li" v-for="(item, index) in arrResult" @click.native="changeBookId" :bid="item.bid" :key="index">
           <div class="box__ul__li--imgBox">
             <img class="box__ul__li--imgBox--img" src="" v-lazyLoad="item.imgUrl" :alt="item.author">
           </div>
@@ -88,7 +89,7 @@
 </template>
 
 <script>
-import { bookInfo, bookComments, bookRecom, otherBooks } from "../api/api";
+import { bookInfo, bookComments, bookRecom, otherBooks, bookCatelog } from "../api/api";
 import md5 from '../encryption/md5'
 export default {
   name: 'bookInformation',
@@ -100,7 +101,9 @@ export default {
       arrResult: [],
       refreshJudge: true,
       user_id: 8000000,
-      encryptKey: '37e81a9d8f02596e1b895d07c171d5c9'
+      encryptKey: '37e81a9d8f02596e1b895d07c171d5c9',
+      bookshelfJudge1: this.bookshelfJudge,
+      iconJudge: false
     }
   },
   computed: {
@@ -118,7 +121,6 @@ export default {
           id: newVal
         })
         localStorage.setItem('bookId', newVal);
-        document.documentElement.scrollTop = 0;
         this.getBookInfo();
       }
     },
@@ -149,9 +151,67 @@ export default {
     },
     timestamp () {
       return Date.now();
+    },
+    bookshelfJudge: {
+      get: function () {        
+        try {
+          return localStorage['bookshelf'].indexOf(localStorage['bookId']) != -1
+        } catch (error) {
+          return false;
+        }
+      },
+      set: function (newVal) {
+        console.log(newVal)
+        this.bookshelfJudge1 = newVal;
+      }
     }
   },
   methods: {
+    newChapter () {
+      this.$store.dispatch({
+        type: 'triggerPage',
+        page: this.length
+      })
+      this.$store.dispatch({
+        type: 'triggerSize',
+        size: this.length
+      })
+      localStorage['chapterPage'] = this.length;
+    },
+    getCatelog () {
+      let sign = md5(this.bookId + "" + this.timestamp + this.user_id + this.encryptKey);
+      let arr = [];
+      bookCatelog (this.bookId, this.user_id, sign, this.timestamp, data => {
+        data.forEach(item => {
+          item.volumeList.forEach(item => {
+            let obj = {};
+            obj.chapterName = item.chapterName;
+            obj.contUrlSuffix = item.contUrlSuffix;
+            arr.push(obj);
+          })
+        })
+        this.length = data[0].volumeList.length;
+        localStorage['chapterSize'] = this.length;
+        localStorage.setItem('bookCatelog', JSON.stringify(arr));
+      })
+    },
+    changeBookId (e) {
+      let id = e.currentTarget.getAttribute('bid');
+      this.bookId = id;
+    },
+    // 加书架
+    addBookshelf () {
+      let bookId = localStorage.getItem('bookId');
+      let data = [];
+      if (localStorage['bookshelf']) {
+        data = localStorage['bookshelf'].split(',');
+      }
+      if (data.indexOf(bookId) === -1) {
+        data.push(bookId);
+        localStorage['bookshelf'] = bookId;
+      }
+      this.bookshelfJudge = true;
+    },
     propCatelog () {
       this.$store.dispatch({
         type: 'triggerBookId',
@@ -170,40 +230,37 @@ export default {
       e.target.classList.toggle('il');
     },
     getBookInfo () {
-      if (window.fetch) {
-        let sign = md5(this.bookId + "" + this.timestamp + this.user_id + this.encryptKey);
-        bookInfo (this.bookId, this.user_id, sign, this.timestamp, item => {
-          console.log(item)
-          let obj = {};
-          obj.imgUrl = item.imgUrl;
-          obj.title = item.bookName;
-          obj.author = item.authorName;
-          obj.authorId = item.authorId;
-          obj.category = item.className;
-          obj.words = item.wordCount+ '万字';
-          obj.chapterId = item.firstChapter.chapterId;
-          obj.status = item.state;
-          obj.info = item.desc;
-          obj.lastet_chapter = item.lastChapter.chapterName;
+      let sign = md5(this.bookId + "" + this.timestamp + this.user_id + this.encryptKey);
+      bookInfo (this.bookId, this.user_id, sign, this.timestamp, item => {
+        // console.log(item)
+        let obj = {};
+        obj.imgUrl = item.imgUrl;
+        obj.title = item.bookName;
+        obj.author = item.authorName;
+        obj.authorId = item.authorId;
+        obj.category = item.className;
+        obj.words = item.wordCount+ '万字';
+        obj.chapterId = item.firstChapter.chapterId;
+        obj.status = item.state;
+        obj.info = item.desc;
+        obj.lastet_chapter = item.lastChapter.chapterName;
 
-          localStorage.setItem('authorId', item.authorId);
-          localStorage.setItem('authorName', item.authorName);
-          localStorage.setItem('bookName', item.bookName);
-          this.$store.dispatch({
-            type: 'triggerAuthor',
-            id: item.authorId,
-            name: item.authorName
-          })
-          this.$store.dispatch({
-            type: 'triggerBookName',
-            name: item.bookName
-          })
-          this.bookData = obj;
-          this.getComments();
-          this.getRecom();
-          this.getData();
+        localStorage.setItem('authorId', item.authorId);
+        localStorage.setItem('authorName', item.authorName);
+        localStorage.setItem('bookName', item.bookName);
+        this.$store.dispatch({
+          type: 'triggerAuthor',
+          id: item.authorId,
+          name: item.authorName
         })
-      }
+        this.$store.dispatch({
+          type: 'triggerBookName',
+          name: item.bookName
+        })
+        this.bookData = obj;
+        this.getCatelog();
+        this.getComments();
+      })
     },
     getComments () {
       this.commentData = [];
@@ -215,13 +272,17 @@ export default {
           obj.text = item.text;
           this.commentData.push(obj);
         })
+        this.getRecom();
+        this.getData();
       })
     },
     addrefresh () {
       if (this.refreshJudge) {
+        let h = document.getElementsByClassName('bookBox--c')[0];
+        h.style.height = h.offsetHeight + 'px';
         this.refreshJudge = false;
-        this.judge  = false;
-        this.getRecom(() => {this.judge = true;});
+        // this.judge  = false;
+        this.getRecom();
         let refresh = document.getElementsByClassName('refresh__box--icon');
         refresh[0].classList.add('refreshing');
         setTimeout(() => {
@@ -231,22 +292,22 @@ export default {
       }
     },
     getRecom () {
-      this.result1 = [];
-      if (window.fetch) {
-        bookRecom(this.bookName, this.authorName, data => {
-          data.forEach((item) => {  
-            let obj = {};
-            obj.bid = item.id;
-            obj.imgUrl = item.cover;
-            obj.linkText = item.bookname.length > 3 ? item.bookname.slice(0, 3) + '...' : item.bookname;
-            this.result1.push(obj);
-          })
+      bookRecom(this.bookName, this.authorName, data => {
+        // callback();
+        this.result1 = [];
+        data.forEach((item) => {  
+          let obj = {};
+          obj.bid = item.id;
+          obj.imgUrl = item.cover;
+          obj.linkText = item.bookname.length > 3 ? item.bookname.slice(0, 3) + '...' : item.bookname;
+          this.result1.push(obj);
         })
-      }
+      })
     },
     getData () {
       this.arrResult = [];
       otherBooks(this.authorId, data => {
+        // console.log(data)
         data.forEach(item => {
             let obj = {};
             obj.imgUrl = item.cover;
@@ -264,6 +325,15 @@ export default {
   mounted () {
     this.getBookInfo();
   },
+  updated () {
+    if (!this.iconJudge) {   
+      let pH = document.getElementsByClassName('cover--info--text--p')[0];
+      if (pH.offsetHeight > 84) {
+        this.iconJudge = true;
+        pH.classList.add('poff');
+      }
+    }
+  }
 }
 </script>
 
@@ -732,7 +802,7 @@ export default {
               bottom: 0;
               .box__ul__li--right--tags--words,
               .box__ul__li--right--tags--one {
-                border: 1px solid @bottomColor;
+                border: 0.1rem solid @bottomColor;
                 padding: 0.4rem 0.5rem 0.1rem 0.5rem;
                 font-size: 1.2rem;
               }

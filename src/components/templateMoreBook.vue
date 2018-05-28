@@ -1,11 +1,13 @@
 <template>
   <div class="box">
     <nav class="navHeader">
-      <div @click="back">↤</div>
-      <div>
-        <span>{{ title }}</span>
+      <div class="navHeader--header">
+        <div @click="back">↤</div>
+        <div>
+          <span>{{ title }}</span>
+        </div>
+        <router-link to="/" tag="div">H</router-link>
       </div>
-      <router-link to="/" tag="div">H</router-link>
     </nav>
     <nav class="navType">
       <ul class="navType__ul">
@@ -72,13 +74,20 @@ export default {
         width: 100%;
         height: 44/12rem;
         background-color: #f08300;
-        display: grid;
-        grid-template-columns: 50/12rem auto 50/12rem;
-        align-items: center;
-        color: white;
-        text-align: center;
-        font-size: 1.6rem;
-        letter-spacing: 0.1rem;
+        // display: grid;
+        // grid-template-columns: 50/12rem auto 50/12rem;
+        .navHeader--header {
+          width: 90%;
+          margin: 0 auto;
+          line-height: 44/12rem;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          color: white;
+          text-align: center;
+          font-size: 1.6rem;
+          letter-spacing: 0.1rem;
+        }
       }
       .navType {
         width: 100%;

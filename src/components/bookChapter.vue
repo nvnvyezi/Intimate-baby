@@ -2,7 +2,7 @@
   <div class="chapterBox" :style="{fontSize: `${sizeFont}rem`}">
     <!-- <h3 class="h3">{{ chapterName }}</h3>  -->
     <div @click="test" class="chapter">
-      <div class="chapter--content"></div>
+      <!-- <div class="chapter--content"></div> -->
     </div>
   </div>
 </template>
@@ -28,31 +28,13 @@ export default {
       chapterName: '',
       startX: 0,
       startY: 0,
-      flag: 500
+      flag: 500,
+      // 判断可以点击下一章
+      clickJudge: false,
+      p: 0,
     }
   },
   computed: {
-    page: {
-      get: function () {
-        let page = this.$store.state.bookInfo.page;
-        if (!page) {
-          page = localStorage.getItem('chapterPage');
-          this.$store.dispatch({
-            type: 'triggerPage',
-            page
-          })
-        }
-        return page;
-      },
-      set: function (newVal) {
-        // console.log(newVal)
-        this.$store.dispatch({
-          type: 'triggerPage',
-          page: newVal
-        })
-        localStorage.setItem('chapterPage', newVal);
-      }
-    },
     bookName () {
       let name = this.$store.state.bookInfo.bookName;
       if (!name) {
@@ -69,54 +51,89 @@ export default {
     },
   },
   mounted () {
-    this.page = 0;
-    this.getChapter();
+    if (localStorage['historybookName'] != this.bookName || localStorage['historyauthorName'] != this.authorName) {
+      this.changePage(0);
+      this.getChapter(0);
+    } else {
+      this.getChapter(localStorage['chapterPage']);
+    }
   },
   methods: {
+    changePage (page) {
+      this.$store.dispatch({
+        type: 'triggerPage',
+        page,
+      })
+      localStorage['chapterPage'] = page;
+    },
     test (e) {
-      e.stopPropagation();
-      let screenW = document.documentElement.offsetWidth;
-      let x = e.clientX;
-      if (e.target === e.currentTarget.firstChild && x <= 100) {
-        // console.log('别殿了')
-        if (this.page > 0) {
-          this.page--;
-        } else {
-          this.$emit('showWrong', '当前已经是第一章');
-          this.page = 0;
-        }
-      } else if (e.target != e.currentTarget.firstChild && x <= 100) {
-        if (e.target.nextSibling) {
-          if (e.target.nextSibling.nextSibling) {
-            e.target.nextSibling.nextSibling.style.display = 'none';
+      if (!this.clickJudge) {
+        e.stopPropagation();
+        try {
+          let screenW = document.documentElement.offsetWidth;
+          let p = localStorage['chapterPage'];
+          // console.log(p)
+          let x = e.clientX;
+          if (e.target === e.currentTarget.firstChild && x <= 100) {
+            // console.log('别殿了')
+            if (p > 0) {
+              this.clickJudge = true;
+              --p;
+              this.changePage(p);
+              this.getChapter(p);
+            } else {
+              this.$emit('showWrong', '当前已经是第一章');
+              thi.changePage(0);
+            }
+          } else if (e.target != e.currentTarget.firstChild && x <= 100) {
+            if (e.target.nextSibling) {
+              if (e.target.nextSibling.nextSibling) {
+                e.target.nextSibling.nextSibling.style.display = 'none';
+              }
+            }
+            e.target.previousSibling.style.transform = `translate(0px, 0px)`;
+            e.target.previousSibling.style.display = 'block';
           }
-        }
-        e.target.previousSibling.style.transform = `translate(0px, 0px)`;
-        e.target.previousSibling.style.display = 'block';
-      }
-      if (e.target === e.currentTarget.lastChild && x >= screenW/2 + 60) {
-        // console.log('别了准备下一张')
-        if (this.page < localStorage.getItem('chapterSize')) {
-          this.page++;
-        } else {
-          this.$emit('showWrong', '当前已经是最后一章');
-          this.page = localStorage.getItem('chapterSize');
-        }
-      } else if (e.target != e.currentTarget.lastChild && x >= screenW/2 + 60) {
-        if (e.target.previousSibling) {
-          if (e.target.previousSibling.previousSibling) {
-            e.target.previousSibling.previousSibling.style.display = 'none';
+          if (e.target === e.currentTarget.lastChild && x >= screenW/2 + 60) {
+            console.log('别了准备下一张')
+            if (p < localStorage.getItem('chapterSize') - 1) {
+              this.clickJudge = true;
+              ++p;
+              this.changePage(p);
+              this.getChapter(p);
+            } else {
+              this.$emit('showWrong', '当前已经是最后一章');
+              this.changePage(localStorage.getItem('chapterSize') - 1);
+            }
+          } else if (e.target != e.currentTarget.lastChild && x >= screenW/2 + 60) {
+            if (e.target.previousSibling) {
+              if (e.target.previousSibling.previousSibling) {
+                e.target.previousSibling.previousSibling.style.display = 'none';
+              }
+            }    
+            e.target.style.transform = `translate(${ -screenW }px, 0px)`;
+            e.target.nextSibling.style.display = 'block';
           }
-        }    
-        e.target.style.transform = `translate(${ -screenW }px, 0px)`;
-        e.target.nextSibling.style.display = 'block';
+        } catch (error) {
+          this.$emit('showWrong', '获取出错');
+        }
       }
     },
-    getChapter () {
-        getBookChapter (this.bookName, this.authorName, this.page, data => {
-        this.chapterName = data.chapter;
-        this.$emit('changeCatelog', this.chapterName);
-        this.handleText(data.text);
+    getChapter (p) {
+      let chapter = document.getElementsByClassName('chapter');
+      chapter[0].innerHTML = '<div class="chapter--content" style="position: absolute;width: 95vw;left: 50%;margin-left: -47.5vw;ransition: transform .5s ease;"></div>';
+      this.$emit('showWrong', '正在获取');
+      getBookChapter (this.bookName, this.authorName, p, data => {
+        // console.log(data)
+        if (!data.err) {
+          this.chapterName = data.chapter;
+          this.$emit('changeCatelog', this.chapterName);
+          this.handleText(data.text);
+          this.clickJudge = false;
+          this.$emit('reduction');
+        } else {
+          this.$emit('showWrong', data.data);
+        }
       })
     },
     handleText (text) {
@@ -172,10 +189,6 @@ export default {
     }
   },
   watch: {
-    page () {
-      this.getChapter();
-    },
-
     color (str) {
       let chapter = document.getElementsByClassName('chapter');
       let chapterContent = document.getElementsByClassName('chapter--content');
@@ -184,6 +197,10 @@ export default {
         chapterContent[i].style.backgroundColor = `#${ this.color }`;
       }
     }
+  },
+  beforeDestroy () {
+    localStorage.setItem('historybookName', this.bookName);
+    localStorage.setItem('historyauthorName', this.authorName);
   }
 }
 </script>

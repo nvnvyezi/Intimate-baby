@@ -4,7 +4,6 @@ const bookInfo = {
     bookName: '',
     authorName: '',
     authorId: '',
-    page: ''
   },
   mutations: {
     changeBookId (state, data) {
@@ -12,9 +11,6 @@ const bookInfo = {
     },
     changeBookName (state, data) {
       state.bookName  = data.name;
-    },
-    changePage (state, data) {
-      state.page  = data.page;
     },
     changeAuthor (state, data) {
       state.authorName = data.name;
@@ -31,9 +27,6 @@ const bookInfo = {
     triggerAuthor ({commit}, data) {
       commit('changeAuthor', data);
     },
-    triggerPage ({commit}, data) {
-      commit('changePage', data);
-    }
   }
 }
 

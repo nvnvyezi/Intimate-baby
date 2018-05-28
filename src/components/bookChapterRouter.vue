@@ -2,7 +2,7 @@
   <div class="chapterR">
     <section class="chapterR--hint" v-show="hintJudge">{{ hint }}</section>
     <header class="chapterR--header topAni">
-      <nav>
+      <nav class="chapterR--header--nav">
         <ul class="chapterR--header__ul">
           <router-link to="bookinformatecatelog" tag="li" class="chapterR--header__ul--left"><span class="chapterR--header__ul--Lspan">目录</span></router-link>
           <li class="chapterR--header__ul--middle">{{ chapterName }}</li>
@@ -11,7 +11,7 @@
       </nav>
     </header>
     <transition>
-      <router-view @changeCatelog="changeCatelog" @showWrong="showWrong" :sizeFont="fontSize" :color="color"></router-view>
+      <router-view ref="bookChapter" @changeCatelog="changeCatelog" @reduction="reduction" @showWrong="showWrong" :sizeFont="fontSize" :color="color"></router-view>
     </transition>
     <section v-show="colorJudge" class="chapterR--setUp">
       <div class="chapterR--setUp__content">
@@ -48,8 +48,6 @@
 </template>
 
 <script>
-import { bookCatelog } from "../api/api";
-import md5 from '../encryption/md5';
 export default {
   name: 'chapterRouter',
   data () {
@@ -61,33 +59,14 @@ export default {
       color: 'D5EFD2',
       colorJudge: false,
       fontSize: 2,
-      user_id: 8000000,
-      encryptKey: '37e81a9d8f02596e1b895d07c171d5c9',
+      // 请求上一章下一章
+      clickJudge: false
     }
-  },
-  computed: {
-    bookId () {
-      let id = this.$store.state.bookInfo.bookId
-      if (!id) {
-        id = localStorage.getItem('bookId');
-      }
-      return id;
-    },
-    timestamp () {
-      return Date.now();
-    },
   },
   mounted () {
     let chapter = document.getElementsByClassName('chapterR')[0];
     chapter.addEventListener('touchstart', this.handleStart, false);
-    chapter.addEventListener('touchmove', this.stopEvent, false);
     chapter.addEventListener('touchend', this.handleEnd, false);
-
-    let sign = md5(this.bookId + "" + this.timestamp + this.user_id + this.encryptKey);
-    bookCatelog (this.bookId, this.user_id, sign, this.timestamp, data => {
-      this.len = data[0].volumeList.length;
-      localStorage.setItem('chapterSize', this.len);
-    })
   },
   methods: {
     subFont () {
@@ -132,9 +111,16 @@ export default {
         this.timeId = null;
       }, 1000);
     },
+    // 恢复点击上下章
+    reduction () {
+      this.clickJudge = false;
+    },
     left () {
-      if (!this.timeId) {
-        let page = this.$store.state.bookInfo.page;
+      if (!this.clickJudge) {
+        // console.log(this.$refs.bookChapter)
+        this.clickJudge = true;
+        let page = this.$store.state.bookChapter.page;
+        console.log(page);
         if (page <= 0) {
           page = 0;
           this.$store.dispatch({
@@ -151,13 +137,15 @@ export default {
             page
           })
           localStorage.setItem('chapterPage', page);
+          this.$refs.bookChapter.getChapter(page);
         }
       }
     },
     right () {
-      if (!this.timeId) {
-        let page = this.$store.state.bookInfo.page;
-        if (page >= this.len) {
+      if (!this.clickJudge) {
+        this.clickJudge = true;
+        let page = this.$store.state.bookChapter.page;
+        if (page < this.len) {
           page = this.len;
           this.$store.dispatch({
             type: 'triggerPage',
@@ -173,6 +161,7 @@ export default {
             page
           })
           localStorage.setItem('chapterPage', page);
+          this.$refs.bookChapter.getChapter(page);
         }
       }
     },
@@ -185,7 +174,10 @@ export default {
       let endY = e.changedTouches[0].pageY;
       let screenH = document.documentElement.clientHeight;
       let screenW = document.documentElement.clientWidth;
-      if (endX === this.startX && endY === this.startY && (endX >= screenW/2 - 50 && endX <= screenW/2 + 50) && (endY >= screenH/2 - 100 && endY <= screenH/2 + 100)) {
+      if (endY < screenH - 160) {
+        this.colorJudge = false;
+      }
+      if (endX === this.startX && endY === this.startY && (endX >= screenW/2 - 80 && endX <= screenW/2 + 80) && (endY >= screenH/2 - 180 && endY <= screenH/2 + 180)) {
         let bottom = document.getElementsByClassName('chapterR--footer')[0];
         let top = document.getElementsByClassName('chapterR--header')[0];
         bottom.classList.toggle('bottomAni');
@@ -210,7 +202,7 @@ export default {
   }
   .bottomAni {
     transition: transform .5s ease;
-    transform: translateY(50/12rem);
+    transform: translateY(54/12rem);
   }
   .selectColor {
     border: 1/6rem solid #14be7d;
@@ -312,7 +304,7 @@ export default {
     }
     .chapterR--hint {
       width: 60%;
-      line-height: 2rem;
+      line-height: 2.4rem;
       position: absolute;
       transition: all 1s ease;
       top: 50%;
@@ -331,53 +323,55 @@ export default {
       position: fixed;
       top: 0;
       z-index: 1000;
-      .chapterR--header__ul {
-        display: flex;
-        color: @wordColor;
-        list-style: none;
-        align-items: center;
-        justify-content: space-between;
-        font-size: 1rem;
-        .chapterR--header__ul--right,
-        .chapterR--header__ul--left {
-          flex: 1 1 auto;
-          text-align: center;
-          .chapterR--header__ul--Lspan {
-            width: 60/12rem;
-            line-height: 24/12rem;
-            display: inline-block;
-            &::before {
-              content: '';
+      .chapterR--header--nav {
+        width: 95%;
+        margin: 0 auto;
+        .chapterR--header__ul {
+          display: flex;
+          color: @wordColor;
+          list-style: none;
+          align-items: center;
+          justify-content: space-between;
+          font-size: 1.1rem;
+          .chapterR--header__ul--right,
+          .chapterR--header__ul--left {
+            .chapterR--header__ul--Lspan {
+              width: 60/12rem;
+              line-height: 24/12rem;
               display: inline-block;
-              width: 30/12rem;
-              height: 28/12rem;
-              background: url(../assets/chapter.png) no-repeat 0 16/12rem;
-              background-size: 25/12rem 250/12rem;
+              &::before {
+                content: '';
+                display: inline-block;
+                width: 30/12rem;
+                height: 28/12rem;
+                background: url(../assets/chapter.png) no-repeat 0 16/12rem;
+                background-size: 25/12rem 250/12rem;
+              }
+            }
+            .chapterR--header__ul--Rspan {
+              width: 60/12rem;
+              line-height: 24/12rem;
+              display: inline-block;
+              &::before {
+                content: '';
+                display: inline-block;
+                width: 30/12rem;
+                height: 28/12rem;
+                background: url(../assets/chapter.png) no-repeat 0 -11/12rem;
+                background-size: 25/12rem 250/12rem;
+              }
             }
           }
-          .chapterR--header__ul--Rspan {
-            width: 60/12rem;
-            line-height: 24/12rem;
-            display: inline-block;
-            &::before {
-              content: '';
-              display: inline-block;
-              width: 30/12rem;
-              height: 28/12rem;
-              background: url(../assets/chapter.png) no-repeat 0 -11/12rem;
-              background-size: 25/12rem 250/12rem;
-            }
+          .chapterR--header__ul--middle {
+            flex: 2 1 auto;
+            text-align: center;
           }
-        }
-        .chapterR--header__ul--middle {
-          flex: 2 1 auto;
-          text-align: center;
         }
       }
     }
     .chapterR--footer {
       width: 100%;
-      height: 48/12rem;
+      height: 54/12rem;
       position: fixed;
       left: 0;
       bottom: 0;
