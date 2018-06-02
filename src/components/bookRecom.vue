@@ -6,7 +6,7 @@
 
     </header>
     <mt-swipe :auto="4000" class="swipe__box">
-        <mt-swipe-item v-for="(item, index) in swipeData" :key="index"><img :src="item.imgUrl" :alt="item.linkText" srcset=""></mt-swipe-item>
+        <mt-swipe-item v-for="(item, index) in swipeData" :bid="item.bid" @click.native="changeInfoBook1" :key="index"><img :src="item.imgUrl" :alt="item.linkText" srcset=""></mt-swipe-item>
     </mt-swipe>
     <nav id="nav2">
       <!-- <span to="/" tag="div"><span>强推</span></span> -->
@@ -235,6 +235,7 @@ export default {
     this.judge1 = false;
     let that = this;
     getBookData (data => {
+      // console.log(data)
       this.list = data.module[3].m_s_name;
       data.module[0].content.forEach(item => {  
         let obj = {};
@@ -242,7 +243,8 @@ export default {
         obj.linkText = item.link_text;
         let len = item.link_url.indexOf('bid:');
         let len1 = item.link_url.indexOf('});');
-        obj.bid = item.link_url.slice(len + 4, len1);
+        obj.bid = item.link_url.slice(len + 4, len + 11);
+        // console.log()
         this.swipeData.push(obj);
       })
       data.module[3].content.forEach(item => {  
@@ -270,27 +272,36 @@ export default {
   },
   methods: {
     changeInfoBook (e) {
-      let bookName = '';
+      let id = '';
       let cla = e.currentTarget.getAttribute('class');
       if (cla.indexOf('aaa') !== -1) {
-        bookName = e.currentTarget.firstChild.lastChild.getAttribute('bid');
+        id = e.currentTarget.firstChild.lastChild.getAttribute('bid');
       } else if (cla.indexOf('bbb') !== -1) {
-        bookName = e.currentTarget.lastChild.getAttribute('bid');
+        id = e.currentTarget.lastChild.getAttribute('bid');
       } else if (cla.indexOf('ccc') !== -1) {
-        bookName = e.currentTarget.firstChild.getAttribute('bid');
+        id = e.currentTarget.firstChild.getAttribute('bid');
       } else if (cla.indexOf('ddd') !== -1) {
-        bookName = e.currentTarget.children[1].firstChild.getAttribute('bid');
+        id = e.currentTarget.children[1].firstChild.getAttribute('bid');
       } else if (cla.indexOf('eee') !== -1) {
-        bookName = e.currentTarget.children[1].getAttribute('bid');
-        if (bookName == null) {
-          bookName = e.currentTarget.children[0].children[1].firstChild.getAttribute('bid');
+        id = e.currentTarget.children[1].getAttribute('bid');
+        if (id == null) {
+          id = e.currentTarget.children[0].children[1].firstChild.getAttribute('bid');
         }
       }
       this.$store.dispatch({
         type: 'triggerBookId',
-        id: bookName
+        id: id
       })
-      localStorage.setItem('bookId', bookName);
+      localStorage.setItem('bookId', id);
+    },
+    changeInfoBook1 (e) {
+      let id = e.currentTarget.getAttribute('bid');
+      this.$store.dispatch({
+        type: 'triggerBookId',
+        id: id
+      })
+      localStorage.setItem('bookId', id);
+      this.$router.push('bookinformation');
     },
     changeProp (e) {
       switch (e.currentTarget.getAttribute('class')) {
@@ -299,13 +310,23 @@ export default {
             type: 'changeMoreBookTitle',
             title: '精品畅销'
           })
+          this.$store.dispatch({
+            type: 'triggerType',
+            typ: 1
+          })
           localStorage.getItem('MoreBookTitle', '精品畅销');
+          localStorage.setItem('seniorityType', 1);
           break;
         case 'new--foot':
           this.$store.commit({
             type: 'changeMoreBookTitle',
             title: '新书潜力'
           })
+          this.$store.dispatch({
+            type: 'triggerType',
+            typ: 6
+          })
+          localStorage.setItem('seniorityType', 6);
           localStorage.getItem('MoreBookTitle', '新书潜力');
           break;
         default:

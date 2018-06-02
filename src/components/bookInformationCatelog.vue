@@ -180,6 +180,7 @@ export default {
       .catelog--list__ul {
         width: 100%;
         height: auto;
+        list-style: none;
         .catelog--list__ul__li {
           width: 100%;
           line-height: 48.5/12rem;

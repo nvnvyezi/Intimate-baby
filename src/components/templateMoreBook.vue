@@ -15,8 +15,7 @@
         <li class="navType__ul__li"  @click="changeSex">女生</li>
       </ul>
     </nav>
-    <bookList v-if="sexJudge" :sex=sex></bookList>
-    <bookList v-else :sex=sex></bookList>
+    <bookList :sex="sex"></bookList>
   </div>
 </template>
 

@@ -18,10 +18,12 @@ const book = () => import ( /*webpackChunkName: "book"*/'@/components/book');
 const recom = () => import ( /*webpackChunkName: "bookRecom"*/'@/components/bookRecom');
 const moreBook = () => import ( /*webpackChunkName: "moreBook"*/'@/components/templateMoreBook');
 
+const cate = () => import ( /*webpackChunkName: "cate"*/'@/components/cate');
 const category = () => import ( /*webpackChunkName: "bookCategory"*/'@/components/bookCategory');
 const list = () => import ( /*webpackChunkName: "bookList"*/'@/category/bookList');
 const cateHome = () => import ( /*webpackChunkName: "bookHome"*/'@/category/bookHome');
 
+const seniority = () => import ( /*webpackChunkName: "seniority"*/'@/components/seniority');
 const bookSeniorityRouter = () => import ( /*webpackChunkName: "bookSeniorityRouter"*/'@/components/bookSeniorityRouter');
 const bookSeniorityHome = () => import ( /*webpackChunkName: "bookSeniorityHome"*/'@/components/bookSeniorityHome');
 // const bookSeniorityList = () => import ( /*webpackChunkName: "bookSeniorityList"*/'@/components/bookSeniorityList');
@@ -36,6 +38,7 @@ const bookInformationCatelog = () => import ( /*webpackChunkName: "bookInformati
 
 const bookChapterRouter = () => import ( /*webpackChunkName: "bookChapterRouter"*/'@/components/bookChapterRouter');
 const bookChapter = () => import ( /*webpackChunkName: "bookChapter"*/'@/components/bookChapter');
+const musicPlayer = () => import ( /*webpackChunkName: "musicPlayer"*/'@/components/musicPlayer');
 
 export default new Router({
   base: '/intimateBaby/',
@@ -48,11 +51,11 @@ export default new Router({
       name: 'HelloWorld',
       component: HelloWorld
     },
-    // {
-    //   path: '/show',
-    //   name: 'loading',
-    //   component: loading
-    // },
+    {
+      path: '/music',
+      name: 'musicPlayer',
+      component: musicPlayer
+    },
     {
       path: '/',
       name: 'home',
@@ -87,8 +90,8 @@ export default new Router({
         },
         {
           path: '/cate',
-          name: 'book',
-          component: book,
+          name: 'cate',
+          component: cate,
           meta: {
             keepAlive: true
           },
@@ -123,8 +126,8 @@ export default new Router({
         },
         {
           path: '/seniority',
-          name: 'book',
-          component: book,
+          name: 'seniority',
+          component: seniority,
           meta: {
             keepAlive: true
           },

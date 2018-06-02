@@ -230,6 +230,7 @@ export default {
       e.target.classList.toggle('il');
     },
     getBookInfo () {
+      // console.log(this.bookId)
       let sign = md5(this.bookId + "" + this.timestamp + this.user_id + this.encryptKey);
       bookInfo (this.bookId, this.user_id, sign, this.timestamp, item => {
         // console.log(item)
@@ -264,7 +265,9 @@ export default {
     },
     getComments () {
       this.commentData = [];
+      // console.log(this.authorId, this.bookId)
       bookComments (this.authorId, this.bookId, data =>  {
+        // console.log(data)
         data.forEach(item => {
           let obj = {};
           obj.userPhoto = item.userPhoto;
@@ -370,7 +373,7 @@ export default {
     .statName (@fcolor: #70a7e3) {
       .statNameG;
       color: @fcolor;
-      border: 0.005rem solid @fcolor;
+      border: 0.1rem solid @fcolor;
       margin-right: 0.3rem;
       font-size: 1.1rem;
     }
@@ -574,7 +577,8 @@ export default {
         }
         .ri {
           width: 2rem;
-          height: 1.8rem;
+          height: 1rem;
+          line-height: 1rem;
           display: inline-block;
           position: absolute;
           right: 6%;

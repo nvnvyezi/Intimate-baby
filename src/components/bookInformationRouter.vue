@@ -9,7 +9,9 @@
         <router-link to="/" tag="div">H</router-link>
       </div>
     </nav>
-    <router-view></router-view>
+    <transition mode="out-in" name="infoAni">
+      <router-view></router-view>
+    </transition>
   </div>
 </template>
 
@@ -31,6 +33,13 @@ export default {
 
 <style lang="less" scoped>
 @media screen and(max-width: 720px){
+  .infoAni-enter-active {
+    transition: all .5s ease;
+  }
+  .infoAni-enter {
+    opacity: 0;
+    transform: translateX(100vw);
+  }
   * {
     margin: 0;
     padding: 0;

@@ -1,6 +1,6 @@
 <template>
   <div class="chapterBox" :style="{fontSize: `${sizeFont}rem`}">
-    <!-- <h3 class="h3">{{ chapterName }}</h3>  -->
+    <h3 class="h3">{{ chapterName }}</h3> 
     <div @click="test" class="chapter">
       <!-- <div class="chapter--content"></div> -->
     </div>
@@ -32,6 +32,8 @@ export default {
       // 判断可以点击下一章
       clickJudge: false,
       p: 0,
+      // 判断是否首次进来
+      firstCome: true
     }
   },
   computed: {
@@ -52,10 +54,12 @@ export default {
   },
   mounted () {
     if (localStorage['historybookName'] != this.bookName || localStorage['historyauthorName'] != this.authorName) {
-      this.changePage(0);
+      this.changePage(1);
       this.getChapter(0);
     } else {
-      this.getChapter(localStorage['chapterPage']);
+      let num = parseInt(localStorage['chapterPage']);
+      this.changePage(localStorage['chapterPage']);
+      this.getChapter(num);
     }
   },
   methods: {
@@ -71,11 +75,11 @@ export default {
         e.stopPropagation();
         try {
           let screenW = document.documentElement.offsetWidth;
-          let p = localStorage['chapterPage'];
+          let p = parseInt(this.$store.state.bookChapter.page);
           // console.log(p)
           let x = e.clientX;
           if (e.target === e.currentTarget.firstChild && x <= 100) {
-            // console.log('别殿了')
+            console.log('别殿了')
             if (p > 0) {
               this.clickJudge = true;
               --p;
@@ -83,7 +87,7 @@ export default {
               this.getChapter(p);
             } else {
               this.$emit('showWrong', '当前已经是第一章');
-              thi.changePage(0);
+              this.changePage(0);
             }
           } else if (e.target != e.currentTarget.firstChild && x <= 100) {
             if (e.target.nextSibling) {
@@ -115,21 +119,26 @@ export default {
             e.target.nextSibling.style.display = 'block';
           }
         } catch (error) {
-          this.$emit('showWrong', '获取出错');
+          console.log(error)
+          this.$emit('showWrong', '获取出错,请刷新一下');
         }
       }
     },
     getChapter (p) {
       let chapter = document.getElementsByClassName('chapter');
       chapter[0].innerHTML = '<div class="chapter--content" style="position: absolute;width: 95vw;left: 50%;margin-left: -47.5vw;ransition: transform .5s ease;"></div>';
-      this.$emit('showWrong', '正在获取');
+      if (this.firstCome) {
+        this.firstCome = false;
+        this.$emit('showWrong', '第一次加载缓慢');
+      } else {
+        this.$emit('showWrong', '正在获取');
+      }
       getBookChapter (this.bookName, this.authorName, p, data => {
         // console.log(data)
+        // 缓存的章节
         if (!data.err) {
-          this.chapterName = data.chapter;
-          this.$emit('changeCatelog', this.chapterName);
-          this.handleText(data.text);
           this.clickJudge = false;
+          this.handleText(data.text);
           this.$emit('reduction');
         } else {
           this.$emit('showWrong', data.data);

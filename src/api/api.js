@@ -691,13 +691,63 @@ export function getBookChapter (bookName, author, page, cb) {
     page
   }
   // const url = `http://127.0.0.1:3000/chapter`;
-  const url = `http://193.112.4.143:3001/chapter`;
+  const url = `http://${ window.location.hostname}:3001/chapter`;
   if (window.fetch) {
     fetchGet(url, options, 'get', (data) => {
       cb(data);
     })
   } else {
     axios.get(url, options, {}).then(res => {
+      cb(res.data);
+    }).catch(err => {
+      console.log(err);
+    })
+  }
+}
+
+// 音乐榜单
+export function musiclist (cb) {
+  const url = `http://${window.location.hostname}:3001/music`;
+  if (window.fetch) {
+    fetchGet(url, {}, 'get', (data) => {
+      cb(data);
+    })
+  } else {
+    axios.get(url, {}, {}).then(res => {
+      cb(res);
+    }).catch(err => {
+      console.log(err);
+    })
+  }
+}
+
+// 获取歌曲
+export function song (mid, cb) {
+  const url = `http://${window.location.hostname}:3001/song`;
+  let a = new Date().getTime();
+  if (window.fetch) {
+    fetchGet(url, {mid: mid}, 'get', (data) => {
+      cb(data);
+    })
+  } else {
+    axios.get(url, {mid, mid}, {}).then(res => {
+      cb(res.data);
+    }).catch(err => {
+      console.log(err);
+    })
+  }
+}
+
+// 获取歌词
+export function musicLyric (mid, cb) {
+  const url = `http://${window.location.hostname}:3001/lyric`;
+  let a = new Date().getTime();
+  if (window.fetch) {
+    fetchGet(url, {mid: mid}, 'get', (data) => {
+      cb(data);
+    })
+  } else {
+    axios.get(url, {mid, mid}, {}).then(res => {
       cb(res.data);
     }).catch(err => {
       console.log(err);

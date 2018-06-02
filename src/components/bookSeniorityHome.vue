@@ -37,6 +37,7 @@ export default {
   },
   created () {
     seniorityHome(data => {
+      console.log(data)
       data.forEach((item, index) => {
         if (index % 2 === 0) {
           let obj = {};

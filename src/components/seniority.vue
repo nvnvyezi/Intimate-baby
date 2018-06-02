@@ -1,12 +1,12 @@
 //推荐主路由
 <template>
   <div class="box">
-    <transition mode="out-in" name="BookAni">
+    <transition mode="in-out" name="save">
       <keep-alive>
         <router-view v-if="$route.meta.keepAlive"></router-view>
       </keep-alive>
     </transition>
-    <transition mode="out-in" name="BookAni">
+    <transition mode="in-out" name="save">
       <router-view v-if="!$route.meta.keepAlive"></router-view>
     </transition>
   </div>
@@ -20,13 +20,6 @@ export default {
 
 <style lang="less" scoped>
 @media screen and(max-width: 720px) {
-  .BookAni-enter-active{
-    transition: all .5s ease;
-  }
-  .BookAni-enter {
-    transform: translateX(0.1rem);
-    opacity: 0;
-  }
   .box {
     width: 100vw;
     height: auto;

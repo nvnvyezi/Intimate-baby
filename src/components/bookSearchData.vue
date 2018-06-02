@@ -11,7 +11,7 @@
           </div>
           <div class="box__ul__li--right--author">
             <p class="box__ul__li--right--author--author">{{ item.author}}</p>
-            <span class="box__ul__li--right--author--reads">{{ item.reads}}</span>
+            <!-- <span class="box__ul__li--right--author--reads">{{ item.reads}}</span> -->
           </div>
           <div class="box__ul__li--right--tags">
             <span v-if="item.status == 0" class="statNameblue">连载</span>

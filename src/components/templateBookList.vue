@@ -55,7 +55,8 @@ export default {
     }
   },
   watch: {
-    sex () {
+    sex (str) {
+      // console.log(str)
       this.arrResult = [];
       this.switchData();
     }
@@ -190,7 +191,7 @@ export default {
         padding: 1.8rem 0;
         display: -webkit-box;
         -webkit-box-orient: horizontal;
-        border-bottom: 0.08rem solid @borderColor;
+        border-bottom: 0.1rem solid @borderColor;
         .box__ul__li--imgBox {
           width: 56/12rem;
           height: 74/12rem;
@@ -220,6 +221,7 @@ export default {
           }
         }
         .box__ul__li--right {
+          // width: 70%;
           width: 100%;
           height: 76/12rem;
           margin: 0 0 0 1.5rem;
@@ -248,7 +250,7 @@ export default {
             }
             .box__ul__li--right--author--reads {
               display: block;
-              text-align: right;
+              text-align: center;
               -webkit-box-flex: 1;
               &::before {
                 content: '';

@@ -11,7 +11,7 @@
       </nav>
     </header>
     <transition>
-      <router-view ref="bookChapter" @changeCatelog="changeCatelog" @reduction="reduction" @showWrong="showWrong" :sizeFont="fontSize" :color="color"></router-view>
+      <router-view ref="bookChapter" @reduction="reduction" @showWrong="showWrong" :sizeFont="fontSize" :color="color"></router-view>
     </transition>
     <section v-show="colorJudge" class="chapterR--setUp">
       <div class="chapterR--setUp__content">
@@ -52,7 +52,6 @@ export default {
   name: 'chapterRouter',
   data () {
     return {
-      chapterName: '',
       hint: '',
       hintJudge: false,
       timeId: null,
@@ -67,6 +66,15 @@ export default {
     let chapter = document.getElementsByClassName('chapterR')[0];
     chapter.addEventListener('touchstart', this.handleStart, false);
     chapter.addEventListener('touchend', this.handleEnd, false);
+  },
+  computed: {
+    chapterName () {
+      let name = this.$store.state.bookInfo.bookName;
+      if (!name) {
+        name = localStorage['bookName'];
+      }
+      return name;
+    }
   },
   methods: {
     subFont () {
@@ -99,9 +107,9 @@ export default {
     setUp () {
       this.colorJudge = !this.colorJudge;
     },
-    changeCatelog (str) {
-      this.chapterName = str;
-    },
+    // changeCatelog (str) {
+    //   this.chapterName = str;
+    // },
     showWrong (str) {
       this.hintJudge = true;
       this.hint = str;
@@ -120,7 +128,7 @@ export default {
         // console.log(this.$refs.bookChapter)
         this.clickJudge = true;
         let page = this.$store.state.bookChapter.page;
-        console.log(page);
+        // console.log(page);
         if (page <= 0) {
           page = 0;
           this.$store.dispatch({
