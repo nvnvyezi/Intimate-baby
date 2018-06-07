@@ -4,11 +4,11 @@
   <div class="seniority">
     <nav class="seniority--nav">
       <div class="seniority--nav--header">
-        <div @click="back">↤</div>
+        <div @click="back" class="header-iconL"></div>
         <div>
           <span>{{ listName }}</span>
         </div>
-        <router-link to="/" tag="div">H</router-link>
+        <router-link to="/" tag="div" class="header-iconR"></router-link>
       </div>
     </nav>
     <div class="seniority__list">
@@ -37,7 +37,7 @@ export default {
   },
   created () {
     seniorityHome(data => {
-      console.log(data)
+      // console.log(data)
       data.forEach((item, index) => {
         if (index % 2 === 0) {
           let obj = {};
@@ -77,6 +77,13 @@ export default {
     margin: 0;
     padding: 0;
   }
+  .iconG {
+    width: 2rem;
+    height: 2rem;
+    background-size: contain;
+    position: relative;
+    z-index: 5;
+  }
   .seniority {
     width: 100vw;
     height: 100vh;
@@ -84,22 +91,31 @@ export default {
     background-color: rgb(241, 240, 240);
     .seniority--nav {
       width: 100%;
-      line-height: 45/12rem;
+      height: 4rem;
+      display: flex;
+      justify-content: center;
+      position: relative;
+      // align-items: center;
       background-color: rgb(241, 157, 60);
       .seniority--nav--header {
         width: 90%;
-        margin: 0 auto;
+        line-height: 4rem;
+        // display: grid;
+        // grid-template-columns: 50px auto 50px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         color: white;
         text-align: center;
-        font-size: 1.5rem;
-        // div > span {
-        //   text-align: center;
-        //   width: 25%;
-        //   display: inline-block;
-        // }
+        font: 600 1.7rem '微软雅黑';
+        .header-iconL {
+          .iconG;
+          background: url('../assets/返回.svg') no-repeat center;
+        }
+        .header-iconR {
+          .iconG;
+          background: url('../assets/h.svg') no-repeat center;
+        }
       }
       // display: grid;
       // grid-template-columns: 50px auto 50px;

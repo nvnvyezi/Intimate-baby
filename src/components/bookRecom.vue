@@ -1,15 +1,23 @@
 //推荐主页面
 <template>
   <div class="recomBox">
-    <!-- <h3>强推</h3> -->
-    <header class="recom--header">
-
+    <header class="main--header">
+      <section class="main--header-l"></section>
+      <ul class="main--header-r">
+        <router-link  v-if="!showName" to="login" tag="li" class="main--header-r-l1"></router-link>
+        <router-link v-else to="login" tag="li" class="main--header-r-l3">{{ showName }}</router-link>
+        <li class="main--header-r-l2"></li>
+        <!-- <li></li> -->
+      </ul>
     </header>
-    <mt-swipe :auto="4000" class="swipe__box">
-        <mt-swipe-item v-for="(item, index) in swipeData" :bid="item.bid" @click.native="changeInfoBook1" :key="index"><img :src="item.imgUrl" :alt="item.linkText" srcset=""></mt-swipe-item>
-    </mt-swipe>
+    <div class="swipe__box">
+      <div class="swipe__box-out">
+        <div class="swipe--container" v-for="(item, index) in swipeData" :bid="item.bid" @click.native="changeInfoBook1" :key="index">
+          <img :src="item.imgUrl" :alt="item.linkText" />
+        </div>
+      </div>
+    </div>
     <nav id="nav2">
-      <!-- <span to="/" tag="div"><span>强推</span></span> -->
       <router-link to="cate" tag="div"><span>分类</span></router-link>
       <router-link to="seniority" tag="div"><span>排行</span></router-link>
       <router-link to="booksearch" tag="div"><span>搜索</span></router-link>
@@ -185,20 +193,16 @@
         </ul>
       </div>
     </section>
-    <nav class="footerNav" id="nav1">
+    <!-- <nav class="footerNav" id="nav1">
       <router-link class="footerNav--div" to="/" tag="div"></router-link>
       <router-link class="footerNav--div" to="" tag="div"></router-link>
       <router-link class="footerNav--div" to="" tag="div"></router-link>
       <router-link class="footerNav--div" to="" tag="div"></router-link>
-    </nav>
+    </nav> -->
   </div>
 </template>
 
 <script>
-import { Swipe, SwipeItem } from 'mint-ui';
-import Vue from 'vue'
-Vue.component(Swipe.name, Swipe);
-Vue.component(SwipeItem.name, SwipeItem);
 import { getBookData, getBookRecom, getBookBoyGirl, getBookDone, getBookBestSell, getBookInterest } from "../api/api";
 export default {
   name: 'recom',
@@ -259,17 +263,24 @@ export default {
     })
   },
   computed: {
-    hide () {
-      return this.$store.state.home.hide;
+    // hide () {
+    //   return this.$store.state.home.hide;
+    // }
+    showName () {
+      let name = localStorage['userName'];
+      if (name) {
+        return name;
+      }
+      return false;
     }
   },
-  mounted () {
-    if (this.$route.path === '/') {
-      let recomBox = document.getElementsByClassName('recomBox')[0];
-      recomBox.addEventListener('touchstart', this.start, false);
-      recomBox.addEventListener('touchend', this.end, false);
-    }
-  },
+  // mounted () {
+  //   if (this.$route.path === '/') {
+  //     let recomBox = document.getElementsByClassName('recomBox')[0];
+  //     recomBox.addEventListener('touchstart', this.start, false);
+  //     recomBox.addEventListener('touchend', this.end, false);
+  //   }
+  // },
   methods: {
     changeInfoBook (e) {
       let id = '';
@@ -482,66 +493,66 @@ export default {
         })
       })
     },
-    start (e) {
-      this.startx = e.touches[0].pageX;
-      this.starty = e.touches[0].pageY;
-    },
-    end (e) {
-      let endx, endy;
-      endx = e.changedTouches[0].pageX;
-      endy = e.changedTouches[0].pageY;
-      let direction = this.getDirection(this.startx, this.starty, endx, endy);
-      switch (direction) {
-        case 0:
-          // console.log('为华东');
-          break;
-        case 1:
-          // console.log('向上');
-          this.hideChange(1);
-          break;
-        case 2:
-          // console.log('下');
-          this.hideChange(2);
-          break;
-        case 3:
-          // console.log('坐');
-          break;
-        case 4:
-          // console.log('有');
-          break;
-        default:
-          break;
-      }
-    },
-    hideChange (num) {
-      if (num === 2) {
-        nav1.classList.add('aniContrary');
-        nav1.classList.remove('ani');
-      }
-      if (num === 1) {
-        nav1.classList.remove('aniContrary');
-        nav1.classList.add('ani');
-      }
-    },
-    getAngle (angx, angy) {                               //获得角度
-      return Math.atan2(angy, angx) * 180 / Math.PI;
-    },
-    getDirection (startx, starty, endx, endy) {                                       //返回方向
-      let angx = endx - startx;
-      let angy = endy - starty;
-      let res = 0;
-      let angle = this.getAngle(angx, angy);
-      if (angle >= -170 && angle <= -10) {
-        res = 1;
-      } else if (angle > 10 && angle < 170) {
-        res = 2;
-      } else if ((angle >= 170 && angle <= 180) || (angle >= -180 && angle < -170)) {
-        res = 3;
-      } else if (angle >= -10 && angle <= 10) {
-        res = 4;
-      }
-      return res;
-    }
+    // start (e) {
+    //   this.startx = e.touches[0].pageX;
+    //   this.starty = e.touches[0].pageY;
+    // },
+    // end (e) {
+    //   let endx, endy;
+    //   endx = e.changedTouches[0].pageX;
+    //   endy = e.changedTouches[0].pageY;
+    //   let direction = this.getDirection(this.startx, this.starty, endx, endy);
+    //   switch (direction) {
+    //     case 0:
+    //       // console.log('为华东');
+    //       break;
+    //     case 1:
+    //       // console.log('向上');
+    //       this.hideChange(1);
+    //       break;
+    //     case 2:
+    //       // console.log('下');
+    //       this.hideChange(2);
+    //       break;
+    //     case 3:
+    //       // console.log('坐');
+    //       break;
+    //     case 4:
+    //       // console.log('有');
+    //       break;
+    //     default:
+    //       break;
+    //   }
+    // },
+    // hideChange (num) {
+    //   if (num === 2) {
+    //     nav1.classList.add('aniContrary');
+    //     nav1.classList.remove('ani');
+    //   }
+    //   if (num === 1) {
+    //     nav1.classList.remove('aniContrary');
+    //     nav1.classList.add('ani');
+    //   }
+    // },
+    // getAngle (angx, angy) {                               //获得角度
+    //   return Math.atan2(angy, angx) * 180 / Math.PI;
+    // },
+    // getDirection (startx, starty, endx, endy) {                                       //返回方向
+    //   let angx = endx - startx;
+    //   let angy = endy - starty;
+    //   let res = 0;
+    //   let angle = this.getAngle(angx, angy);
+    //   if (angle >= -170 && angle <= -10) {
+    //     res = 1;
+    //   } else if (angle > 10 && angle < 170) {
+    //     res = 2;
+    //   } else if ((angle >= 170 && angle <= 180) || (angle >= -180 && angle < -170)) {
+    //     res = 3;
+    //   } else if (angle >= -10 && angle <= 10) {
+    //     res = 4;
+    //   }
+    //   return res;
+    // }
   }
 }
 </script>
@@ -566,6 +577,47 @@ export default {
     width: 100vw;
     height: auto;
     background-color: rgb(238, 237, 237);
+    
+    .main--header {
+      width: 100%;
+      height: 4rem;
+      background-color: rgb(241, 157, 60);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .main--header-l {
+        width: 13rem;
+        height: 4rem;
+        background: url('../assets/logo.png') no-repeat center;
+        background-size: 13rem 4rem;
+      }
+      .main--header-r {
+        list-style: none;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        .main--header-r-l1 {
+          width: 4rem;
+          height: 4rem;
+          background: url('../assets/登录.svg') no-repeat center center;
+          background-size: 2rem;
+        }
+        .main--header-r-l2 {
+          width: 4rem;
+          height: 4rem;
+          background: url('../assets/书架.svg') no-repeat center;
+          background-size: 2rem;
+        }
+        .main--header-r-l3 {
+          // width: 9rem;
+          line-height: 4rem;
+          font: 500 2rem 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+          color: white;
+          letter-spacing: .1rem;
+          text-align: center;
+        }
+      }
+    }
     .sectionH3 {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       font-size: 1.4rem;
@@ -608,10 +660,24 @@ export default {
       color: @graycolor;
       border: 0.1rem solid @graycolor;
     }
-    .recom--header {
+    .swipe__box {
       width: 100%;
-      height: 45/12rem;
-      background-color: rgb(241, 157, 60);
+      height: 181/12rem;
+      position: relative;
+      .swipe__box-out {
+        width: 5 * 100%;
+        height: 100%;
+        position: absolute;
+        .swipe--container {
+          display: inline-block;
+          width: 100% / 5;
+          height: 100%;
+          img {
+            width: 100%;
+            height: 100%;
+          }
+        }
+      }
     }
     #nav2 {
       width: 100%;
@@ -760,14 +826,6 @@ export default {
             }
           }
         }
-      }
-    }
-    .swipe__box {
-      width: 100vw;
-      height: 26vh;
-      img {
-        width: 100%;
-        height: 100%;
       }
     }
     .bookBox {
@@ -1158,32 +1216,6 @@ export default {
               }
             }
           }
-        }
-      }
-    }
-    .footerNav {
-      width: 100vw;
-      height: 50/12rem;
-      background-color: rgb(153, 161, 158);
-      // background-color: paleturquoise;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      .footerNav--div{
-        width: 23.8%;
-        height: 100%;
-        display: inline-block;
-        &:nth-child(1) {
-          background: url('../assets/小说.png') no-repeat center;
-        }
-        &:nth-child(2) {
-          background: url('../assets/电影.png') no-repeat center;
-        }
-        &:nth-child(3) {
-          background: url('../assets/社区.png') no-repeat center;
-        }
-        &:nth-child(4) {
-          background: url('../assets/我的.png') no-repeat center;
         }
       }
     }

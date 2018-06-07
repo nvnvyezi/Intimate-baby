@@ -5,17 +5,29 @@ import App from './App'
 import router from './router'
 
 import store from './store/store'
+import popup from "./components/template/popup";
+
+Vue.use(popup)
 
 Vue.config.productionTip = false
 
-// router.beforeEach((to, from, next) => {
-//   let showFooter = to.meta.showFooter;
-//   console.log(showFooter)
-//   if (showFooter) {
-//     console.log(this.$store)
-//     next();
-//   }
-// })
+router.beforeEach((to, from, next) => {
+  // console.log(to, from)
+  let flag = localStorage['userName'];
+  if (to.path === '/login' && !flag) {
+    next()
+  } else if (from.name === null && to.path === '/login' && flag) {
+    next({
+      path: '/'
+    });
+  } else if (from.path === '/' && to.path === '/login' && flag) {
+    next({
+      path: '/user'
+    });
+  }else {
+    next()
+  }
+})
 
 /* eslint-disable no-new */
 new Vue({

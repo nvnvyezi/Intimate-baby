@@ -1,6 +1,16 @@
 import fetchGet from '../wheel/fetchGet'
 import axios from '../wheel/axios'
 const qs = require('qs');
+
+const jsencrypt = new JSEncrypt();
+const publicKey = `-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDFjtrjia4kcXabpi+U6zHBD3PC
+YiWpp3SUKpsZpb8YzxE6TJBmG7OOM4xg14gYxFr6X4Rw+YuTBgHFWYzx2A1ghzmH
+wi+F1Tj5UjGQWjvw80PBjruw1UhbMCM7XDam8W+tWELTGjbHkhWjpnuKf+7DYfC7
+KOqjVPRIYzbFt7RTrQIDAQAB
+-----END PUBLIC KEY-----
+`;
+jsencrypt.setPublicKey(publicKey);
 // import axios from 'axios'
 // 获取分类都有什么
 export function categoryHome (cb) {
@@ -708,6 +718,7 @@ export function getBookChapter (bookName, author, page, cb) {
 // 音乐榜单
 export function musiclist (cb) {
   const url = `http://${window.location.hostname}:3001/music`;
+  // const url = `http://193.112.4.143:3001/music`;
   if (window.fetch) {
     fetchGet(url, {}, 'get', (data) => {
       cb(data);
@@ -724,13 +735,13 @@ export function musiclist (cb) {
 // 获取歌曲
 export function song (mid, cb) {
   const url = `http://${window.location.hostname}:3001/song`;
-  let a = new Date().getTime();
+  // const url = `http://193.112.4.143:3001/song`;
   if (window.fetch) {
     fetchGet(url, {mid: mid}, 'get', (data) => {
       cb(data);
     })
   } else {
-    axios.get(url, {mid, mid}, {}).then(res => {
+    axios.get(url, {mid: mid}, {}).then(res => {
       cb(res.data);
     }).catch(err => {
       console.log(err);
@@ -741,16 +752,63 @@ export function song (mid, cb) {
 // 获取歌词
 export function musicLyric (mid, cb) {
   const url = `http://${window.location.hostname}:3001/lyric`;
-  let a = new Date().getTime();
+  // const url = `http://193.112.4.143:3001/lyric`;
   if (window.fetch) {
     fetchGet(url, {mid: mid}, 'get', (data) => {
       cb(data);
     })
   } else {
-    axios.get(url, {mid, mid}, {}).then(res => {
+    axios.get(url, {mid: mid}, {}).then(res => {
       cb(res.data);
     }).catch(err => {
       console.log(err);
     })
   }
+}
+
+// 用户登录
+export function userLoginG (cb) {
+  const url = `https://${window.location.hostname}:3002/login`;
+  // const url = `https://127.0.0.1:3002/login`;
+  axios.get(url, {}, {}).then(res => {
+    cb(res.data);
+  }).catch(err => {
+    console.log(err);
+  })
+}
+export function userLoginP (id, pw, cb) {
+  const url = `https://${window.location.hostname}:3002/login`;
+  // const url = `https://127.0.0.1:3002/login`;
+  const options = {
+    id: jsencrypt.encrypt(id),
+    pw: jsencrypt.encrypt(pw)
+  }
+    axios.post(url, options, {}).then(res => {
+      cb(res.data);
+    }).catch(err => {
+      console.log(err);
+    })
+}
+
+// 用户注册
+export function userRegisterG (cb) {
+  const url = `https://${window.location.hostname}:3002/register`;
+  axios.get(url, {}, {}).then(res => {
+    cb(res.data);
+  }).catch(err => {
+    console.log(err);
+  })
+}
+export function userRegisterP (id, pw, email, cb) {
+  const url = `https://${window.location.hostname}:3002/register`;
+  const options = {
+    id: jsencrypt.encrypt(id),
+    pw: jsencrypt.encrypt(pw),
+    email: jsencrypt.encrypt(email),
+  }
+    axios.post(url, options, {}).then(res => {
+      cb(res.data);
+    }).catch(err => {
+      console.log(err);
+    })
 }

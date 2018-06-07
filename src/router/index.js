@@ -1,13 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import MintUI from 'mint-ui'
-import 'mint-ui/lib/style.css'
-
 import lazyLoad from '../wheel/lazyLoad'
 
 Vue.use(Router)
-Vue.use(MintUI)
 Vue.use(lazyLoad)
 
 // import HelloWorld from '@/login/HelloWorld'
@@ -38,7 +34,8 @@ const bookInformationCatelog = () => import ( /*webpackChunkName: "bookInformati
 
 const bookChapterRouter = () => import ( /*webpackChunkName: "bookChapterRouter"*/'@/components/bookChapterRouter');
 const bookChapter = () => import ( /*webpackChunkName: "bookChapter"*/'@/components/bookChapter');
-const musicPlayer = () => import ( /*webpackChunkName: "musicPlayer"*/'@/components/musicPlayer');
+// const musicPlayer = () => import ( /*webpackChunkName: "musicPlayer"*/'@/components/musicPlayer');
+const user = () => import ( /*webpackChunkName: "user"*/'@/components/user');
 
 export default new Router({
   base: '/intimateBaby/',
@@ -52,10 +49,15 @@ export default new Router({
       component: HelloWorld
     },
     {
-      path: '/music',
-      name: 'musicPlayer',
-      component: musicPlayer
+      path: '/user',
+      name: 'user',
+      component: user,
     },
+    // {
+    //   path: '/music',
+    //   name: 'musicPlayer',
+    //   component: musicPlayer
+    // },
     {
       path: '/',
       name: 'home',

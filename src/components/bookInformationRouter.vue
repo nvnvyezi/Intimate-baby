@@ -2,11 +2,11 @@
   <div class="box">
     <nav class="box--nav">
       <div class="box--nav--header">
-        <div @click="back">↤</div>
+        <div @click="back" class="header-iconL"></div>
         <div>
           <span>{{ listName }}</span>
         </div>
-        <router-link to="/" tag="div">H</router-link>
+        <router-link to="/" tag="div" class="header-iconR"></router-link>
       </div>
     </nav>
     <transition mode="out-in" name="infoAni">
@@ -44,25 +44,44 @@ export default {
     margin: 0;
     padding: 0;
   }
+  .iconG {
+    width: 2rem;
+    height: 2rem;
+    background-size: contain;
+    position: relative;
+    z-index: 5;
+  }
   .box {
     width: 100vw;
     height: auto;
     background-color: rgb(245, 243, 243);
     .box--nav {
       width: 100%;
-      line-height: 45px;
+      height: 4rem;
+      display: flex;
+      justify-content: center;
+      position: relative;
+      // align-items: center;
       background-color: rgb(241, 157, 60);
-      // display: grid;
-      // grid-template-columns: 50px auto 50px;
       .box--nav--header {
         width: 90%;
-        margin: 0 auto;
+        line-height: 4rem;
+        // display: grid;
+        // grid-template-columns: 50px auto 50px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         color: white;
         text-align: center;
-        font-size: 1.5rem;
+        font: 600 1.7rem '微软雅黑';
+        .header-iconL {
+          .iconG;
+          background: url('../assets/返回.svg') no-repeat center;
+        }
+        .header-iconR {
+          .iconG;
+          background: url('../assets/h.svg') no-repeat center;
+        }
       }
     }
   }

@@ -208,7 +208,7 @@ export default {
       }
       if (data.indexOf(bookId) === -1) {
         data.push(bookId);
-        localStorage['bookshelf'] = bookId;
+        localStorage['bookshelf'] = data;
       }
       this.bookshelfJudge = true;
     },

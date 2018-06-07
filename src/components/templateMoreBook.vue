@@ -2,11 +2,11 @@
   <div class="box">
     <nav class="navHeader">
       <div class="navHeader--header">
-        <div @click="back">↤</div>
+        <div @click="back" class="header-iconL"></div>
         <div>
           <span>{{ title }}</span>
         </div>
-        <router-link to="/" tag="div">H</router-link>
+        <router-link to="/" tag="div" class="header-iconR"></router-link>
       </div>
     </nav>
     <nav class="navType">
@@ -66,27 +66,44 @@ export default {
   @media screen and(max-width: 720px) {
     @borderColor:rgba(153,153,153,.3);
     @wordColor: #999;
+    .iconG {
+      width: 2rem;
+      height: 2rem;
+      background-size: contain;
+      position: relative;
+      z-index: 5;
+    }
     .box {
       width: 100%;
       height: auto;
       .navHeader {
         width: 100%;
-        height: 44/12rem;
-        background-color: #f08300;
+      height: 4rem;
+      display: flex;
+      justify-content: center;
+      position: relative;
+      // align-items: center;
+      background-color: rgb(241, 157, 60);
+      .navHeader--header {
+        width: 90%;
+        line-height: 4rem;
         // display: grid;
-        // grid-template-columns: 50/12rem auto 50/12rem;
-        .navHeader--header {
-          width: 90%;
-          margin: 0 auto;
-          line-height: 44/12rem;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          color: white;
-          text-align: center;
-          font-size: 1.6rem;
-          letter-spacing: 0.1rem;
+        // grid-template-columns: 50px auto 50px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: white;
+        text-align: center;
+        font: 600 1.7rem '微软雅黑';
+        .header-iconL {
+          .iconG;
+          background: url('../assets/返回.svg') no-repeat center;
         }
+        .header-iconR {
+          .iconG;
+          background: url('../assets/h.svg') no-repeat center;
+        }
+      }
       }
       .navType {
         width: 100%;
