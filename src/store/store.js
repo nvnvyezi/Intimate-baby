@@ -7,6 +7,7 @@ import bookSearch from './book-search'
 import bookInfo from './book-info'
 import bookCategory from './book-category'
 import bookChapter from './book-chapter'
+import mv from './mv'
 
 const store = new Vuex.Store({
   modules: {
@@ -14,7 +15,8 @@ const store = new Vuex.Store({
       bookSearch,
       bookInfo,
       bookCategory,
-      bookChapter
+      bookChapter,
+      mv
   }
 })
 

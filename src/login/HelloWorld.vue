@@ -143,6 +143,13 @@ export default {
                 this.$toast(data.data);
                 this.$route.meta.isLogin = true;
                 localStorage['userName'] = id;
+                userBookShelfG(id, data => {
+                  if (data.err) {
+                    this.$toast(data.data);
+                  } else {
+                    localStorage['bookshelf'] = data.result;
+                  }
+                })
                 location.reload();
               }, 500);
             }

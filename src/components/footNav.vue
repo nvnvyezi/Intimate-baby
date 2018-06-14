@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import music from './template/musicPlayer'
+import music from './template/music/musicPlayer'
 export default {
   components: {
     music

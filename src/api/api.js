@@ -783,11 +783,11 @@ export function userLoginP (id, pw, cb) {
     id: jsencrypt.encrypt(id),
     pw: jsencrypt.encrypt(pw)
   }
-    axios.post(url, options, {}).then(res => {
-      cb(res.data);
-    }).catch(err => {
-      console.log(err);
-    })
+  axios.post(url, options, {}).then(res => {
+    cb(res.data);
+  }).catch(err => {
+    console.log(err);
+  })
 }
 
 // 用户注册
@@ -806,9 +806,49 @@ export function userRegisterP (id, pw, email, cb) {
     pw: jsencrypt.encrypt(pw),
     email: jsencrypt.encrypt(email),
   }
-    axios.post(url, options, {}).then(res => {
-      cb(res.data);
-    }).catch(err => {
-      console.log(err);
-    })
+  axios.post(url, options, {}).then(res => {
+    cb(res.data);
+  }).catch(err => {
+    console.log(err);
+  })
+}
+
+// 加书架
+export function userBookShelfG (id, cb) {
+  const url = `https://${window.location.hostname}:3002/shelf`;
+  axios.get(url, {id}, {}).then(res => {
+    cb(res.data);
+  }).catch(err => {
+    console.log(err);
+  })
+}
+export function userBookShelfP (id, bookShelf, cb) {
+  const url = `https://${window.location.hostname}:3002/shelf`;
+  const options = {
+    id,
+    bookShelf: bookShelf.join(',')
+  }
+  axios.post(url, options, {}).then(res => {
+    cb(res.data);
+  }).catch(err => {
+    cb('失败');
+  })
+}
+
+// 音乐ｍｖ
+export function musicMvList (cb) {
+  const url = `https://${window.location.hostname}:3002/mv`;
+  axios.get(url, {}, {}).then(res => {
+    cb(res.data)
+  }).catch((err) => {
+    cb({err: true, data: 'axios请求失败'})
+  })
+}
+export function musicMvPlay (uri, cb) {
+  let url = `https://${window.location.hostname}:3002/mvPlay`;
+  axios.get(url, {uri}, {}).then(res => {
+    cb(res.data)
+  }).catch((err) => {
+    cb({err: true, data: 'axios请求失败'})
+  })
 }

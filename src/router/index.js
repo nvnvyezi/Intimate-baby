@@ -35,7 +35,15 @@ const bookInformationCatelog = () => import ( /*webpackChunkName: "bookInformati
 const bookChapterRouter = () => import ( /*webpackChunkName: "bookChapterRouter"*/'@/components/bookChapterRouter');
 const bookChapter = () => import ( /*webpackChunkName: "bookChapter"*/'@/components/bookChapter');
 // const musicPlayer = () => import ( /*webpackChunkName: "musicPlayer"*/'@/components/musicPlayer');
+
+const userRouter = () => import ( /*webpackChunkName: "userRouter"*/'@/components/userRouter');
 const user = () => import ( /*webpackChunkName: "user"*/'@/components/user');
+
+const takePicture = () => import ( /*webpackChunkName: "takePicture"*/'@/components/template/takePicture/takePicture');
+
+const musicMvRouter = () => import ( /*webpackChunkName: "musicMvRouter"*/'@/components/musicMvRouter');
+const musicMv = () => import ( /*webpackChunkName: "musicMv"*/'@/components/musicMv');
+const musicMvPlay = () => import ( /*webpackChunkName: "musicMvPlay"*/'@/components/musicMvPlay');
 
 export default new Router({
   base: '/intimateBaby/',
@@ -50,14 +58,41 @@ export default new Router({
     },
     {
       path: '/user',
-      name: 'user',
-      component: user,
+      name: 'userRouter',
+      component: userRouter,
+      children: [
+        {
+          path: '/',
+          component: user,
+          name: 'user'
+        }
+      ]
     },
-    // {
-    //   path: '/music',
-    //   name: 'musicPlayer',
-    //   component: musicPlayer
-    // },
+    {
+      path: '/musicmv',
+      component: musicMvRouter,
+      name: 'musicMvRouter',
+      meta: {
+        keepAlive: true
+      },
+      children: [
+        {
+          path: '/',
+          name: 'musicMv',
+          component: musicMv
+        },
+        {
+          path: '/mvplay',
+          name: 'musicMvPlay',
+          component: musicMvPlay
+        }
+      ]
+    },
+    {
+      path: '/picture',
+      name: 'takePicture',
+      component: takePicture
+    },
     {
       path: '/',
       name: 'home',
@@ -193,7 +228,7 @@ export default new Router({
           name: 'bookInformationRouter',
           component: bookInformationRouter,
           meta: {
-            keepAlive: true
+            keepAlive: false
           },
           children: [
             {

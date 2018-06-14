@@ -26,8 +26,8 @@
 </template>
 
 <script>
-import { musiclist, song, musicLyric } from "../../api/api";
-import base64 from '../../encryption/base64'
+import { musiclist, song, musicLyric } from "../../../api/api";
+import base64 from '../../../encryption/base64'
 export default {
   name: 'musicPlayer',
   data () {
@@ -248,13 +248,13 @@ export default {
     background-size: 100%;
   }
   .mode1 {
-    background: url('../../assets/顺序.svg') no-repeat center;
+    background: url('../../../assets/顺序.svg') no-repeat center;
   }
   .mode2 {
-    background: url('../../assets/随机.svg') no-repeat center;
+    background: url('../../../assets/随机.svg') no-repeat center;
   }
   .mode3 {
-    background: url('../../assets/单曲循环.svg') no-repeat center;
+    background: url('../../../assets/单曲循环.svg') no-repeat center;
   }
   .musicPlayer {
     width: 100vw;
@@ -279,7 +279,7 @@ export default {
       left: 2rem;
       bottom: 4rem;
       z-index: 1002;
-      background: url('../../assets/音乐.svg') no-repeat center bottom;
+      background: url('../../../assets/音乐.svg') no-repeat center bottom;
       background-size: 2rem 2.5rem;
     }
     .lyric {
@@ -367,20 +367,20 @@ export default {
         align-items: center;
         .mus--con--cont--play {
           .playG;
-          background: url('../../assets/播放.svg') no-repeat center;
+          background: url('../../../assets/播放.svg') no-repeat center;
         }
         .mus--con--cont--stop {
           .playG;
-          background: url('../../assets/暂停.svg') no-repeat center;
+          background: url('../../../assets/暂停.svg') no-repeat center;
         }
         .mus--con--cont--previous {
           .playG;
-          background: url('../../assets/previous.svg') no-repeat center;
+          background: url('../../../assets/previous.svg') no-repeat center;
         }
         .mus--con--cont--next {
           .playG;
           transform: rotate(180deg);
-          background: url('../../assets/previous.svg') no-repeat center;
+          background: url('../../../assets/previous.svg') no-repeat center;
         }
       }
     }

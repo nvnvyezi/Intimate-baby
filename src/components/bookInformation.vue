@@ -14,7 +14,7 @@
     </section>
     <section class="cover--buttons">
       <router-link class="cover--buttons--button" to="bookChapter" tag="button">开始阅读</router-link>
-      <button class="cover--buttons--button" style="background-color: #f08300;color: white;" disabled='disabled' v-if="bookshelfJudge1">加书架</button>
+      <button class="cover--buttons--button" style="background-color: #e6e7ed;border: none; color: white;" disabled='disabled' v-if="bookshelfJudge">加书架</button>
       <button class="cover--buttons--button" v-else @click="addBookshelf">加书架</button>
       <button class="cover--buttons--button">离线下载</button>
     </section>
@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import { bookInfo, bookComments, bookRecom, otherBooks, bookCatelog } from "../api/api";
+import { bookInfo, bookComments, bookRecom, otherBooks, bookCatelog, userBookShelfG, userBookShelfP } from "../api/api";
 import md5 from '../encryption/md5'
 export default {
   name: 'bookInformation',
@@ -102,14 +102,15 @@ export default {
       refreshJudge: true,
       user_id: 8000000,
       encryptKey: '37e81a9d8f02596e1b895d07c171d5c9',
-      bookshelfJudge1: this.bookshelfJudge,
-      iconJudge: false
+      iconJudge: false,
+      bookshelfJudge: false
     }
   },
   computed: {
     bookId: {
       get: function () {        
         let id = this.$store.state.bookInfo.bookId;
+        // console.log(id)
         if (!id) {
           id = localStorage.getItem('bookId');
         }
@@ -151,19 +152,6 @@ export default {
     },
     timestamp () {
       return Date.now();
-    },
-    bookshelfJudge: {
-      get: function () {        
-        try {
-          return localStorage['bookshelf'].indexOf(localStorage['bookId']) != -1
-        } catch (error) {
-          return false;
-        }
-      },
-      set: function (newVal) {
-        console.log(newVal)
-        this.bookshelfJudge1 = newVal;
-      }
     }
   },
   methods: {
@@ -208,9 +196,14 @@ export default {
       }
       if (data.indexOf(bookId) === -1) {
         data.push(bookId);
-        localStorage['bookshelf'] = data;
+        userBookShelfP(localStorage['userName'], data, dat => {
+          if (!dat.err) {
+            localStorage['bookshelf'] = data;
+            this.bookshelfJudge = true;
+          }
+          this.$toast(dat.data);
+        })
       }
-      this.bookshelfJudge = true;
     },
     propCatelog () {
       this.$store.dispatch({
@@ -327,6 +320,11 @@ export default {
   },
   mounted () {
     this.getBookInfo();
+    try {
+      this.bookshelfJudge =  localStorage['bookshelf'].indexOf(localStorage['bookId']) != -1
+    } catch (error) {
+      this.bookshelfJudge = false;
+    }
   },
   updated () {
     if (!this.iconJudge) {   
