@@ -133,6 +133,7 @@ export default {
     width: 100vw;
     height: auto;
     background-color: white;
+    overflow-x: hidden;
     .catelog--header {
       width: 100%;
       height: 48.5/12rem;

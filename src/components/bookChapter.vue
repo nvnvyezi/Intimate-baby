@@ -36,6 +36,14 @@ export default {
       firstCome: true
     }
   },
+  // beforeRouteEnter (to, from, next) {
+  //   this.$store.commit('changeShowHeader', false);
+  //   next();
+  // },
+  // beforeRouteLeave (to, from, next) {
+  //   this.$store.commit('changeShowHeader', true);
+  //   next();
+  // },
   computed: {
     bookName () {
       let name = this.$store.state.bookInfo.bookName;
@@ -61,6 +69,7 @@ export default {
       this.changePage(localStorage['chapterPage']);
       this.getChapter(num);
     }
+    this.$store.commit('changeShowHeader', false);
   },
   methods: {
     changePage (page) {
@@ -210,6 +219,7 @@ export default {
   beforeDestroy () {
     localStorage.setItem('historybookName', this.bookName);
     localStorage.setItem('historyauthorName', this.authorName);
+    this.$store.commit('changeShowHeader', true);
   }
 }
 </script>

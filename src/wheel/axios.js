@@ -8,6 +8,12 @@ const CancelToken = axios.CancelToken;
 // 请求拦截器
 axios.interceptors.request.use(config => {
   // 发起请求时，取消当前正在进行相同的请求
+  if (config.url.includes('http://')) {
+    axios.defaults.withCredentials = false;
+  }
+  if (config.url.includes('https://')) {
+    axios.defaults.withCredentials = true;
+  }
   if (reqArr[config.url]) {
     reqArr[config.url]('操作取消');
     reqArr[config.url] = cancel;
@@ -83,7 +89,7 @@ export default {
         url,
         params,
         // headers,
-        withCredentials: true,          //    表示跨域请求时是否需要使用凭证
+        // withCredentials: true,          //    表示跨域请求时是否需要使用凭证
         responseType: 'json',           //    服务器相应的数据类型
         method: 'get',
         cancelToken: new CancelToken(c => {
@@ -103,7 +109,7 @@ export default {
         data: qs.stringify(data),
         headers,
         method: 'post',
-        withCredentials: true,
+        // withCredentials: true,
         responseType: 'json',           //    服务器相应的数据类型
         cancelToken: new CancelToken(c => {
           cancel = c;

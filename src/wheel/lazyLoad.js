@@ -50,11 +50,12 @@ export default (Vue, options = {}) => {
   }
 
   onListenScroll = () => {
+    // console.log(2224)
     let screenHeight = window.innerHeight;
     for (let i = 0, len = listenList.length; i < len; i++) {
       isCanShow(listenList[i], screenHeight);
     }
-      window.onscroll = onListenScroll;
+    window.onscroll = onListenScroll;
   }
 
   const addListener = (el, binding) => {
@@ -86,8 +87,4 @@ export default (Vue, options = {}) => {
     //所在组件的 VNode 更新时调用，但是可能发生在其子 VNode 更新之前。指令的值可能发生了改变，也可能没有。但是你可以通过比较更新前后的值来忽略不必要的模板更新 (详细的钩子函数参数见下)。
     update: addListener
   })
-}
-
-export function init() {
-  onListenScroll();
 }

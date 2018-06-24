@@ -2,10 +2,10 @@
 <template>
   <div class="bookHome">
     <p class="refresh"></p>
-    <div v-if="judge" class="list seniority__list">
+    <div class="list seniority__list">
       <div class="boy--title">男生分类</div>
       <ul class="list__ul">
-        <router-link class="list__ul__li" :to="userRouter" :sex="item.sex" @click.native="changeProp" v-for="(item, index) in boyList" :cid="item.cid" :name="item.relatedName" :list="item.list" :key="index" tag="li">
+        <router-link class="list__ul__li" to="cater" :sex="item.sex" @click.native="changeProp" v-for="(item, index) in boyList" :cid="item.cid" :name="item.relatedName" :list="item.list" :key="index" tag="li">
           <!-- <i></i> -->
           <div class="list__ul__li__middle">
             <div class="list__ul__li__middle--top">{{ item.list }}</div>
@@ -15,8 +15,7 @@
       </ul>
       <div class="boy--title">女生分类</div>
       <ul class="list__ul">
-        <router-link class="list__ul__li" :to="userRouter" :sex="item.sex" @click.native="changeProp" v-for="(item, index) in girlList" :cid="item.cid" :name="item.relatedName" :list="item.list" :key="index" tag="li">
-          <!-- <i></i> -->
+        <router-link class="list__ul__li girl-li" to="cater" :sex="item.sex" @click.native="changeProp" v-for="(item, index) in girlList" :cid="item.cid" :name="item.relatedName" :list="item.list" :key="index" tag="li">
           <div class="list__ul__li__middle">
             <div class="list__ul__li__middle--top">{{ item.list }}</div>
             <div class="list__ul__li__middle--bottom">{{ item.text }}</div>
@@ -24,11 +23,7 @@
         </router-link>
       </ul>
     </div>
-    <div v-else class="loading__box">
-      <img src="../assets/b421bb2aafbf4315acf62a078d5c11e2.gif" alt="">
-    </div>
   </div>
-  
 </template>
 
 <script>
@@ -43,9 +38,6 @@ export default {
     return {
       boyList: [],
       girlList: [],
-      judge: true,
-      refreshJudge: false,
-      userRouter: 'cater'
     }
   },
   // updated () {
@@ -87,13 +79,6 @@ export default {
   // },
   created () {
     this.judge = false;
-    let that = this;
-    if (this.$route.path === '/cate') {
-      this.userRouter = 'cater';
-    }
-    if (this.$route.path === '/seniority') {
-      this.userRouter = 'seniorityList';
-    }
     categoryHome(data => {
       // console.log(data)
       let boy= data.boy;
@@ -123,6 +108,7 @@ export default {
             this.girlList.push(obj);
           }
         }
+        // console.log(this.girlList)
       }
       this.judge = true;
     })
@@ -130,21 +116,23 @@ export default {
   methods: {
     changeProp (e) {
       let list = e.currentTarget.getAttribute('list');
-      let name = e.currentTarget.getAttribute('name');
-      let cid = e.currentTarget.getAttribute('cid');
+      let name = e.currentTarget.getAttribute('name');          //标题
+      let cid = e.currentTarget.getAttribute('cid');            //
       let sex = e.currentTarget.getAttribute('sex');
+      this.$store.commit('changeListName', list);
       localStorage.setItem('listName', list);
-      this.$store.dispatch({
-        type: 'triggerFirst',
-        firstCate: list
-      })
+      // this.$store.dispatch({
+      //   type: 'triggerFirst',
+      //   firstCate: list
+      // })
       this.$store.dispatch({
         type: 'triggerCid',
         secondCate: cid
       })
-      localStorage.setItem('firstCate', name);
       localStorage.setItem('cid', cid);
+      localStorage.setItem('firstCate', list);
       localStorage.setItem('sex', sex);
+      localStorage['girlLN'] = name;
     }
   },
 }
@@ -158,14 +146,12 @@ export default {
   }
   .iconG {
     content: '';
-    width: 40/12rem;
-    height: 40/12rem;
+    width: 40px;
+    height: 40px;
     display: block;
-    background-size: 3rem 3rem;
     border-left: 10px solid transparent;
-    border-radius: 50%;
-    background-repeat: no-repeat;
-    background-position: center 70%;
+    background: url('../assets/data_image_png;base….png') no-repeat;
+    background-size: 100%;
   }
   .bookHome {
     width: 100vw;
@@ -173,6 +159,7 @@ export default {
     background-color: rgb(255, 255, 255);
     position: relative;
     top: 0;
+    overflow-x: hidden;
     .refresh {
       text-align: center;
     }
@@ -207,62 +194,68 @@ export default {
             border-left: 15px solid transparent;
             .list__ul__li__middle--top {
               font-size: 1.35rem;
-              overflow-x: hidden;
+              // overflow-x: hidden;
             }
             .list__ul__li__middle--bottom {
-              font-size: 1rem;
+              font-size: 1.2rem;
               color: #999;
             }
           }
           &:nth-child(1)::before {
             .iconG;
-            background-image: url('../assets/all.png');
+            background-position: 0 -215px;
           }
           &:nth-child(2)::before {
             .iconG;
-            background-image: url('../assets/xuanhuan.png');
+            background-position: 0 -270px;
           }
           &:nth-child(3)::before {
             .iconG;
-            background-image: url('../assets/wuxia.png');
+            background-position: 0 -324px;
           }
           &:nth-child(4)::before {
             .iconG;
-            background-image: url('../assets/kehuan.png');
+            background-position: 0 -378px;
+          }
+          &:nth-child(5)::before {
+            .iconG;
+            background-position: 0 -432px;
+          }
+          &:nth-child(6)::before {
+            .iconG;
+            background-position: 0 -486px;
+          }
+          &:nth-child(7)::before {
+            .iconG;
+            background-position: 0 -540px;
+          }
+          &:nth-child(8)::before {
+            .iconG;
+            background-position: 0 -594px;
+          }
+          &:nth-child(9)::before {
+            .iconG;
+            background-position: 0 -648px;
+          }
+          &:nth-child(10)::before {
+            .iconG;
+            background-position: 0 -702px;
           }
         }
-        li:nth-child(5)::before {
-          .iconG;
-          background-image: url('../assets/lishi.png');
+        .girl-li {
+          &:nth-child(1)::before {
+            .iconG;
+            background-position: 0 0px;
+          }
+          &:nth-child(2)::before {
+            .iconG;
+            background-position: 0 -54px;
+          }
+          &:nth-child(3)::before {
+            .iconG;
+            background-position: 0 -108px;
+          }
         }
-        li:nth-child(6)::before {
-          .iconG;
-          background-image: url('../assets/dushi.png');
-        }
-        li:nth-child(7)::before {
-          .iconG;
-          background-image: url('../assets/wangyou.png');
-        }
-        li:nth-child(8)::before {
-          .iconG;
-          background-image: url('../assets/nvsheng.png');
-        }
-        li:nth-child(9)::before {
-          .iconG;
-          background-image: url('../assets/wangyou.png');
-        }
-        li:nth-child(10)::before {
-          .iconG;
-          background-image: url('../assets/nvsheng.png');
-        }
-      }
-    }
-    .loading__box {
-      width: 100vw;
-      height: auto;
-      img {
-        width: 100%;
-        height: auto;
       }
     }
   }

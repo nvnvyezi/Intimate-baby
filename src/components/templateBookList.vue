@@ -10,7 +10,7 @@
             <h3 class="box__ul__li--right--title--h3" :bid="item.bid">{{ item.title }}</h3>
           </div>
           <div class="box__ul__li--right--author">
-            <p class="box__ul__li--right--author--author">{{ item.author}}</p>
+            <span class="box__ul__li--right--author--author">{{ item.author}}</span>
             <span class="box__ul__li--right--author--reads">{{ item.reads}}</span>
           </div>
           <div class="box__ul__li--right--tags">
@@ -51,7 +51,8 @@ export default {
       gender: 1,
       loadJudge: true,
       page: 1,
-      timeId: null
+      binJ: true,
+      dataBinJ: true
     }
   },
   watch: {
@@ -72,21 +73,24 @@ export default {
   },
   mounted () {
     this.getData();
-    let templateBox = document.getElementsByClassName('templateBox');
-    templateBox[0].addEventListener('touchstart', this.showFooter, false);
+    if (this.binJ) {
+      this.binJ = false;
+      window.addEventListener('scroll', this.showFooter, false);
+    }
   },
   methods: {
     showFooter () {
-      let footer = document.getElementsByClassName('templateBox--footer');
-      let li = document.getElementsByTagName('li');
+      let li = document.getElementsByClassName('box__ul__li');
       let liBottom = li[li.length-1].getBoundingClientRect().bottom
       let screenHeight = document.documentElement.clientHeight;
       if (liBottom - screenHeight < 120) {
-        clearTimeout(this.timeId);
-        this.timeId = setTimeout(() => {
-          this.page++;
-          this.getData();
-        }, 300);
+        if (this.dataBinJ) {
+          this.dataBinJ = false;
+          setTimeout(() => {
+            this.page++;
+            this.getData();
+          }, 300);
+        }
       }
     },
     changeInfoBook (e) {
@@ -98,6 +102,7 @@ export default {
     },
     getData () {
       seniorityList(this.page, this.gender, this.type, data => {
+        this.dataBinJ = true;
         if (data.length == 0) {
           this.loadJudge = false;
           return ;
@@ -132,6 +137,9 @@ export default {
           break;
       }
     }
+  },
+  beforeDestroy () {
+    window.addEventListener('scroll', this.showFooter, false);
   }
 }
 </script>
@@ -160,9 +168,9 @@ export default {
   .statName (@fcolor: #70a7e3) {
     .statNameG;
     color: @fcolor;
-    border: 0.1rem solid @fcolor;
+    border: 1px solid @fcolor;
     margin-right: 0.3rem;
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
   .statNamered {
     .statName(#f08300)
@@ -188,15 +196,18 @@ export default {
       .box__ul__li {
         width: 100%;
         height: auto;
-        padding: 1.8rem 0;
-        display: -webkit-box;
-        -webkit-box-orient: horizontal;
-        border-bottom: 0.1rem solid @borderColor;
+        padding: 1.6rem 0;
+        // display: -webkit-box;
+        // -webkit-box-orient: horizontal;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid @borderColor;
         .box__ul__li--imgBox {
-          width: 56/12rem;
-          height: 74/12rem;
+          width: 56px;
+          height: 74px;
           position: relative;
-          flex: 0 1 auto;
+          margin-right: 14px;
           .box__ul__li--imgBox--img {
             width: 100%;
             height: 100%;
@@ -221,53 +232,52 @@ export default {
           }
         }
         .box__ul__li--right {
-          // width: 70%;
-          width: 100%;
-          height: 76/12rem;
-          margin: 0 0 0 1.5rem;
-          flex: 1 0 auto;
+          width: calc(100% - 70px);
+          height: 74px;
           position: relative;
           .box__ul__li--right--title {
             width: 100%;
-            line-height: 24/12rem;
+            line-height: 2rem;
             .box__ul__li--right--title--h3 {
               .titleH3;
             }
           }
           .box__ul__li--right--author {
             width: 100%;
-            height: 12/12rem;
-            display: -webkit-box;
-            font-size: 1.1rem;
-            -webkit-box-orient: horizontal;
-            -webkit-box-align: center;
-            -webkit-box-pack: end;
-            margin: 0.3rem 0 0 0;
+            // height: 12/12rem;
+            // display: -webkit-box;
+            font-size: 1.2rem;
+            margin-top: 4px;
+            // -webkit-box-orient: horizontal;
+            // -webkit-box-align: center;
+            // -webkit-box-pack: end;
+            // margin: 0.3rem 0 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
             color: @wordColor;
             .box__ul__li--right--author--author {
-              display: block;
-              -webkit-box-flex: 1;
+              display: inline-block;
+              // -webkit-box-flex: 1;
             }
             .box__ul__li--right--author--reads {
-              display: block;
+              display: inline-block;
               text-align: center;
-              -webkit-box-flex: 1;
+              // -webkit-box-flex: 1;
               &::before {
                 content: '';
-                width: 16/12rem;
-                height: 10/12rem;
+                width: 14/12rem;
+                height: 1rem;
                 display: inline-block;
-                padding-right: 1rem;
-                background-image: url('../assets/reads.png');
-                background-size: 16/12rem 16/12rem;
-                background-repeat: no-repeat;
-                background-position: center center;
+                padding-right: .6rem;
+                background: url('../assets/reads.png') no-repeat 0 0;
+                background-size: 14/12rem 14/12rem;
               }
             }
           }
           .box__ul__li--right--tags {
             width: 100%;
-            height: 22/12rem;
+            // height: 22/12rem;
             color: @wordColor;
             text-align: left;
             position: absolute;
@@ -275,15 +285,15 @@ export default {
             .box__ul__li--right--tags--words,
             .box__ul__li--right--tags--one,
             .box__ul__li--right--tags--two {
-              border: 0.1rem solid @borderColor;
+              border: 1px solid @borderColor;
               padding: 0.3rem 0.3rem 0.1rem 0.3rem;
               font-size: 1.2rem;
               margin-right: .2rem;
             }
             .box__ul__li--right--tags--three {
-              border: 0.1rem solid rgba(73,159,255,.3);
+              border: 1px solid rgba(73,159,255,.3);
               padding: 0.3rem 0.3rem 0.1rem 0.3rem;
-              font-size: 1.25rem;
+              font-size: 1.2rem;
               color: #499fff;
             }
           }

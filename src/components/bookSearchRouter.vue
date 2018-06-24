@@ -1,6 +1,6 @@
 <template>
   <div class="box">
-    <nav class="box--nav">
+    <!-- <nav class="box--nav">
       <div class="box--nav--header">
         <div @click="back" class="header-iconL"></div>
         <div>
@@ -8,7 +8,7 @@
         </div>
         <router-link to="/" tag="div" class="header-iconR"></router-link>
       </div>
-    </nav>
+    </nav> -->
     <div class="form__search">
       <div class="form__search__content">
         <span class="form__search__content--icon"></span>
@@ -37,7 +37,7 @@ export default {
   name: 'bookSearch',
   data () {
     return {
-      listName: '搜索',
+      // listName: '搜索',
       searchJudge: false,
       searchData1: [],
       // input框删除所有
@@ -51,9 +51,9 @@ export default {
       this.iconJudge = false;
       this.searchJudge = false;
     },
-    back () {
-      this.$router.go(-1);
-    },
+    // back () {
+    //   this.$router.go(-1);
+    // },
     // 模糊搜索
     getSearchData (e) {
       this.iconJudge = true;
@@ -108,35 +108,35 @@ export default {
     width: 100vw;
     height: auto;
     background-color: rgb(245, 243, 243);
-    .box--nav {
-      width: 100%;
-      height: 4rem;
-      display: flex;
-      justify-content: center;
-      position: relative;
-      // align-items: center;
-      background-color: rgb(241, 157, 60);
-      .box--nav--header {
-        width: 90%;
-        line-height: 4rem;
-        // display: grid;
-        // grid-template-columns: 50px auto 50px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        color: white;
-        text-align: center;
-        font: 600 1.7rem '微软雅黑';
-        .header-iconL {
-          .iconG;
-          background: url('../assets/返回.svg') no-repeat center;
-        }
-        .header-iconR {
-          .iconG;
-          background: url('../assets/h.svg') no-repeat center;
-        }
-      }
-    }
+    // .box--nav {
+    //   width: 100%;
+    //   height: 4rem;
+    //   display: flex;
+    //   justify-content: center;
+    //   position: relative;
+    //   // align-items: center;
+    //   background-color: rgb(241, 157, 60);
+    //   .box--nav--header {
+    //     width: 90%;
+    //     line-height: 4rem;
+    //     // display: grid;
+    //     // grid-template-columns: 50px auto 50px;
+    //     display: flex;
+    //     justify-content: space-between;
+    //     align-items: center;
+    //     color: white;
+    //     text-align: center;
+    //     font: 600 1.7rem '微软雅黑';
+    //     .header-iconL {
+    //       .iconG;
+    //       background: url('../assets/返回.svg') no-repeat center;
+    //     }
+    //     .header-iconR {
+    //       .iconG;
+    //       background: url('../assets/h.svg') no-repeat center;
+    //     }
+    //   }
+    // }
     .form__search {
       width: 100vw;
       height: 5rem;
@@ -195,8 +195,8 @@ export default {
         .searchDataBox1__ul--li {
           width: 100%;
           line-height: 4rem;
-          border-bottom: 2px solid rgb(243, 241, 241);
-          font-size: 1rem;
+          border-bottom: 1px solid rgb(243, 241, 241);
+          font-size: 1.2rem;
         }
       }
       .searchDataBox1__ul--li:last-child {

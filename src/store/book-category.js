@@ -2,8 +2,8 @@ let bookCategory = {
   state: {
     firstCate: '',
     secondCate: '',
-    words: '',
-    sort: '' || 'monthHot',
+    words: 0,
+    sort: '',
     cid: 1
   },
   mutations: {        //变化

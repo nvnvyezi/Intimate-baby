@@ -44,6 +44,8 @@ const takePicture = () => import ( /*webpackChunkName: "takePicture"*/'@/compone
 const musicMvRouter = () => import ( /*webpackChunkName: "musicMvRouter"*/'@/components/musicMvRouter');
 const musicMv = () => import ( /*webpackChunkName: "musicMv"*/'@/components/musicMv');
 const musicMvPlay = () => import ( /*webpackChunkName: "musicMvPlay"*/'@/components/musicMvPlay');
+const swipe = () => import ( /*webpackChunkName: "swipe"*/'@/components/template/swipe/swipe');
+const nav = () => import ( /*webpackChunkName: "nav"*/'@/components/template/leftNav/nav');
 
 export default new Router({
   base: '/intimateBaby/',
@@ -55,6 +57,16 @@ export default new Router({
       path: '/login',
       name: 'HelloWorld',
       component: HelloWorld
+    },
+    {
+      path: '/swipe',
+      name: 'swipe',
+      component: swipe
+    },
+    {
+      path: '/nav',
+      name: 'nav',
+      component: nav
     },
     {
       path: '/user',
@@ -73,7 +85,7 @@ export default new Router({
       component: musicMvRouter,
       name: 'musicMvRouter',
       meta: {
-        keepAlive: true
+        keepAlive: false
       },
       children: [
         {
@@ -97,6 +109,9 @@ export default new Router({
       path: '/',
       name: 'home',
       component: home,
+      meta: {
+        keepAlive: true
+      },
       children: [
         {
           path: '/',
@@ -112,7 +127,7 @@ export default new Router({
               component: recom,
               meta: {
                 keepAlive: true,
-                showFooter: true
+                showFooter: false
               },
             },
             {
@@ -227,19 +242,16 @@ export default new Router({
           path: '/bookinformation',
           name: 'bookInformationRouter',
           component: bookInformationRouter,
-          meta: {
-            keepAlive: false
-          },
           children: [
             {
               path: '/',
               name: 'bookInformation',
-              component: bookInformation
+              component: bookInformation,
             },
             {
               path:'/bookinformatecatelog',
               name: 'bookinformationcatelog',
-              component: bookInformationCatelog
+              component: bookInformationCatelog,
             }
           ]
         },

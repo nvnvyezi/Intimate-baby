@@ -1,22 +1,14 @@
 //推荐主页面
 <template>
   <div class="recomBox">
-    <header class="main--header">
-      <section class="main--header-l"></section>
-      <ul class="main--header-r">
-        <router-link  v-if="!showName" to="login" tag="li" class="main--header-r-l1"></router-link>
-        <router-link v-else to="login" tag="li" class="main--header-r-l3">{{ showName }}</router-link>
-        <li class="main--header-r-l2"></li>
-        <!-- <li></li> -->
-      </ul>
-    </header>
-    <div class="swipe__box">
+    <!-- <div class="swipe__box">
       <div class="swipe__box-out">
         <div class="swipe--container" v-for="(item, index) in swipeData" :bid="item.bid" @click.native="changeInfoBook1" :key="index">
           <img :src="item.imgUrl" :alt="item.linkText" />
         </div>
       </div>
-    </div>
+    </div> -->
+    <!-- <swipe :swipeData="swipeData"></swipe> -->
     <nav id="nav2">
       <router-link to="cate" tag="div"><span>分类</span></router-link>
       <router-link to="seniority" tag="div"><span>排行</span></router-link>
@@ -193,18 +185,16 @@
         </ul>
       </div>
     </section>
-    <!-- <nav class="footerNav" id="nav1">
-      <router-link class="footerNav--div" to="/" tag="div"></router-link>
-      <router-link class="footerNav--div" to="" tag="div"></router-link>
-      <router-link class="footerNav--div" to="" tag="div"></router-link>
-      <router-link class="footerNav--div" to="" tag="div"></router-link>
-    </nav> -->
   </div>
 </template>
 
 <script>
 import { getBookData, getBookRecom, getBookBoyGirl, getBookDone, getBookBestSell, getBookInterest } from "../api/api";
+import swipe from './template/swipe/swipe';
 export default {
+  components: {
+    swipe
+  },
   name: 'recom',
   data () {
     return {
@@ -266,13 +256,6 @@ export default {
     // hide () {
     //   return this.$store.state.home.hide;
     // }
-    showName () {
-      let name = localStorage['userName'];
-      if (name) {
-        return name;
-      }
-      return false;
-    }
   },
   // mounted () {
   //   if (this.$route.path === '/') {
@@ -317,28 +300,22 @@ export default {
     changeProp (e) {
       switch (e.currentTarget.getAttribute('class')) {
         case 'bestSelling__foot':
-          this.$store.commit({
-            type: 'changeMoreBookTitle',
-            title: '精品畅销'
-          })
+          this.$store.commit('changeListName', '精品畅销榜')
           this.$store.dispatch({
             type: 'triggerType',
             typ: 1
           })
-          localStorage.getItem('MoreBookTitle', '精品畅销');
+          localStorage.getItem('listName', '精品畅销榜');
           localStorage.setItem('seniorityType', 1);
           break;
         case 'new--foot':
-          this.$store.commit({
-            type: 'changeMoreBookTitle',
-            title: '新书潜力'
-          })
+          this.$store.commit('changeListName', '新书潜力榜');
           this.$store.dispatch({
             type: 'triggerType',
             typ: 6
           })
           localStorage.setItem('seniorityType', 6);
-          localStorage.getItem('MoreBookTitle', '新书潜力');
+          localStorage.getItem('listName', '新书潜力榜');
           break;
         default:
           break;
@@ -577,47 +554,6 @@ export default {
     width: 100vw;
     height: auto;
     background-color: rgb(238, 237, 237);
-    
-    .main--header {
-      width: 100%;
-      height: 4rem;
-      background-color: rgb(241, 157, 60);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      .main--header-l {
-        width: 13rem;
-        height: 4rem;
-        background: url('../assets/logo.png') no-repeat center;
-        background-size: 13rem 4rem;
-      }
-      .main--header-r {
-        list-style: none;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        .main--header-r-l1 {
-          width: 4rem;
-          height: 4rem;
-          background: url('../assets/登录.svg') no-repeat center center;
-          background-size: 2rem;
-        }
-        .main--header-r-l2 {
-          width: 4rem;
-          height: 4rem;
-          background: url('../assets/书架.svg') no-repeat center;
-          background-size: 2rem;
-        }
-        .main--header-r-l3 {
-          // width: 9rem;
-          line-height: 4rem;
-          font: 500 2rem 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-          color: white;
-          letter-spacing: .1rem;
-          text-align: center;
-        }
-      }
-    }
     .sectionH3 {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       font-size: 1.4rem;
@@ -626,8 +562,8 @@ export default {
       color: #333;
       &::after {
         content: '';
-        width: .25rem;
-        height: 1.2rem;
+        width: .28rem;
+        height: 1.35rem;
         display: inline-block;
         background: #f08300;
         position: absolute;
@@ -636,17 +572,16 @@ export default {
       }
     }
     .statNameG {
-      height: 1rem;
+      // height: 1rem;
       line-height: 1rem;
-      font-size: 1rem;
+      font-size: 1.2rem;
       padding: 0.3rem 0.5rem 0.1rem;
     }
     .statName (@fcolor: #70a7e3) {
       .statNameG;
       color: @fcolor;
-      border: 0.1rem solid @fcolor;
+      border: 1px solid @fcolor;
       margin-right: 0.3rem;
-      font-size: 1rem;
     }
     .statNamered {
       .statName(#f08300)
@@ -657,8 +592,9 @@ export default {
     .borderColorG {
       height: 13/12rem;
       padding: 0.3rem 0.5rem 0.1rem;
+      font-size: 1.2rem;
       color: @graycolor;
-      border: 0.1rem solid @graycolor;
+      border: 1px solid @graycolor;
     }
     .swipe__box {
       width: 100%;
@@ -692,20 +628,23 @@ export default {
       align-items: center;
       padding-bottom: 3rem;
       div{
-        width: 44/12rem;
-        height: 44/12rem;
+        // width: 44/12rem;
+        // height: 44/12rem;
+        width: 13%;
+        height: 0;
+        padding-bottom: 13%;
         flex: 0 1 auto;
         border-radius: 16px;
         background-repeat: no-repeat;
         background-position: center center;
         background-size: cover cover;
+        position: relative;
         span{
-          position: relative;
-          top: 50/12rem;
-          left: 0;
-          width: 44/12rem;
+          width: 100%;
           display: inline-block;
           text-align: center;
+          position: absolute;
+          bottom: -2rem;
           font-size: 1.3rem;
           color: rgb(175, 172, 172);
         }
@@ -811,7 +750,7 @@ export default {
               span:last-child {
                 .statNameG;
                 color: rgb(160, 158, 158);
-                border: 0.1rem solid rgb(209, 207, 207);
+                border: 1px solid rgb(209, 207, 207);
               }
             }
             .boy__box--text__ul--li--text {
@@ -945,22 +884,23 @@ export default {
         }
         .bestSelling__ul__li:first-child {
           width: 100%;
-          height: 145/12rem;
+          // height: 145/12rem;
+          height: auto;
+          padding-bottom: 1.5rem;
           border-top: none;
           .bestSelling__ul__li__block {
             width: 100%;
             height: auto;
             display: flex;
             justify-content: space-between;
-            vertical-align: text-bottom;
             .bestSelling__ul__li__block--left {
-              width: 84/12rem;
-              // height: 112/12rem;
-              height: auto;
+              width: 84px;
+              height: 112px;
+              margin-right: 16px;
               position: relative;
               .bestSelling__ul__li__block--left--img {
                 width: 100%;
-                height: auto;
+                height: 100%;
               }
               .bestSelling__ul__li__block--left--icon {
                 background-image: url('../assets/bestSellicon.png');
@@ -976,30 +916,33 @@ export default {
               }
             }
             .bestSelling__ul__li__block--right {
-              width: 70%;
-              flex: 1 1 auto;
-              height: 113/12rem;
+              width: calc(100% - 100px);
+              // flex: 1 1 auto;
+              height: 112px;
               position: relative;
-              border-left: 1.4rem solid white;
+              // border-left: 1.4rem solid white;
               .bestSelling__ul__li__block--right--title {
-                .bestSellH3;
+                width: 100%;
+                height: auto;
+                line-height: 1.8rem;
+                font: 400 1.5rem/1.8rem "微软雅黑";
               }
               .bestSelling__ul__li__block--right--author {
-                font-size: 1.1rem;
+                font-size: 1.2rem;
+                padding: .5rem 0;
                 color: @graycolor;
               }
               .bestSelling__ul__li__block--right--info {
                 width: 100%;
-                height: 3.2rem;
-                // height: auto;
+                height: 3rem;
+                line-height: 1.6rem;
+                font-size: 1.2rem;
                 overflow: hidden;
                 display: -webkit-box;
-                font-size: 1.1rem;
                 -webkit-line-clamp: 2;
                 -webkit-box-orient: vertical;
                 text-overflow: ellipsis;
                 color: @graycolor;
-                margin: 0.5rem 0;
               }
               .bestSelling__ul__li__block--right--tag {
                 position: absolute;
@@ -1014,7 +957,6 @@ export default {
                 .bestSelling__ul__li__block--right--tags {
                   width: 38.02/12rem;
                   margin-left: 0.3rem;
-                  font-size: 1.1rem;
                   .borderColorG;
                 }
               }
@@ -1038,7 +980,8 @@ export default {
             vertical-align: middle;
           }
           .bestSelling__ul__li--title {
-            .bestSellH3;
+            font-size: 1.5rem;
+            font-weight: 400;
             -webkit-box-flex: 3;
             margin-left: 1rem;
             overflow: hidden;
@@ -1052,7 +995,7 @@ export default {
           }
           .bestSelling__ul__li--type {
             .borderColorG;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
           }
         }
         .bestSelling__ul__li:nth-child(2) {
@@ -1162,43 +1105,47 @@ export default {
             padding: 1.3rem 0;
             border-bottom: 0.1rem solid #f0ebeb;
             .recommend--body--ul--li__left {
-              width: 84/12rem;
-              height: 112/12rem;
+              width: 84px;
+              height: 112px;
+              margin-right: 16px;
               .recommend--body--ul--li__left--img {
                 width: 100%;
                 height: 100%;
               }
             }
             .recommend--body--ul--li__right {
-              width: 188/12rem;
-              height: 113/12rem;
-              flex: 1 1 auto;
-              border-left: 1.4rem solid white;
+              width: calc(100% - 100px);
+              height: 112px;
               position: relative;
               .recommend--body--ul--li__right--title {
                 font-size: 1.5rem;
                 width: 100%;
                 font-weight: 400;
-                height: 24/12rem;
+                line-height: 1.6rem;
+                display: block;
+                list-style: none;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                padding: 0;
+                // padding-bottom: .5rem;
                 font-family: "Helvetica Neue",Helvetica,STHeiTi,sans-serif;
               }
               .recommend--body--ul--li__right--author {
-                font-size: 1rem;
+                display: block;
+                font-size: 1.2rem;
                 color: rgb(170, 169, 169);
-                padding: 0.4rem 0;
+                margin-top: 10px;
               }
               .recommend--body--ul--li__right--info {
                 width: 100%;
                 height: 3.2rem;
-                font-size: 1rem;
+                font-size: 1.2rem;
+                line-height: 1.6rem;
                 color: rgb(170, 169, 169);
                 overflow: hidden;
                 display: -webkit-box;
                 -webkit-line-clamp: 2;
                 text-overflow: ellipsis;
+                margin-top: 8px;
                 -webkit-box-orient: vertical;
               }
               .recommend--body--ul--li__right--tags {
@@ -1208,10 +1155,10 @@ export default {
                 .recommend--body--ul--li__right--tags--two,
                 .recommend--body--ul--li__right--tags--three {
                   height: 13/12rem;
-                  font-size: 1rem;
+                  font-size: 1.2rem;
                   padding: 0.3rem 0.4rem 0.1rem;
                   color: rgb(145, 141, 141);
-                  border: 0.1rem solid rgb(224, 222, 222);
+                  border: 1px solid rgb(224, 222, 222);
                 }
               }
             }

@@ -1,28 +1,34 @@
 <template>
   <div class="mvR">
     <header class="mvR-header">
-      <section class="main--header-l">{{title}}</section>
+      <router-link to="musicmv" tag="section" class="main--header-l">{{title}}</router-link>
       <ul class="main--header-r">
         <router-link  v-if="!showName" to="login" tag="li" class="main--header-r-l1"></router-link>
         <router-link v-else to="login" tag="li" class="main--header-r-l3">{{ showName }}</router-link>
-        <li class="main--header-r-l2"></li>
+        <li @click="showNav" class="main--header-r-l2"></li>
         <!-- <li></li> -->
       </ul>
     </header>
     <transition>
-      <keep-alive>
+      <!-- <keep-alive> -->
         <router-view></router-view>
-      </keep-alive>
+      <!-- </keep-alive> -->
     </transition>
+    <leftNav :showJ="showN" @changeShowM="showNav"></leftNav>
   </div>
 </template>
 
 <script>
+import leftNav from './template/leftNav/nav';
 export default {
+  components: {
+    leftNav
+  },
   name: 'musicMvRouter',
   data () {
     return {
-      title: '音乐MV'  
+      title: '音乐MV',
+      showN: false
     }
   },
   computed: {
@@ -33,6 +39,11 @@ export default {
       }
       return false;
     }
+  },
+  methods: {
+    showNav () {
+      this.showN = !this.showN;
+    },
   }
 }
 </script>
@@ -69,7 +80,7 @@ export default {
       .main--header-r-l2 {
         width: 4rem;
         height: 4rem;
-        background: url('../assets/书架.svg') no-repeat center;
+        background: url('../assets/menu.svg') no-repeat center;
         background-size: 2rem;
       }
       .main--header-r-l3 {

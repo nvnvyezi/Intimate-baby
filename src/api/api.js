@@ -49,7 +49,6 @@ export function categoryHome (cb) {
       console.log(err);
     })
   }
-  
 }
 
 // 获取每个分类都有什么分类
@@ -92,7 +91,7 @@ export function categoryList (body, cb) {
 }
 
 // 获取每个分类的内容都有什么
-export function categoryContent (flag, page, words, firstCate, secondCate, tag, sort, cb) {
+export function categoryContent (page, words, firstCate, secondCate, sort, cb) {
   const options = {
     do: 'is_caterank',
     p: 1,
@@ -105,7 +104,16 @@ export function categoryContent (flag, page, words, firstCate, secondCate, tag, 
     sort,
     _: 1526888329617
   }
-  const options1 = {
+  const url = 'http://read.xiaoshuo1-sm.com/novel/i.php';
+  axios.get(url, options, {}).then(res => {
+    cb(res.data.data)
+  }).catch(err => {
+    console.log(err);
+  })
+}
+
+export function categoryContent1 (page, words, tag, sort, cb) {
+  const options = {
     do: 'is_caterank',
     p: 1,
     page,
@@ -114,20 +122,21 @@ export function categoryContent (flag, page, words, firstCate, secondCate, tag, 
     onlyCpBooks: 1,
     tag,
     sort,
-    _: 1526888329617
+    _: 1529748776290
   }
-  const options2 = {
-    do: 'is_caterank',
-    p: 1,
-    page,
-    words,
-    shuqi_h5: '',
-    onlyCpBooks: 1,
-    firstCate,
-    sort,
-    _: 1526888329617
-  }
-  const options3 = {
+  const url = 'http://read.xiaoshuo1-sm.com/novel/i.php';
+  // axios.get(url, options, {}).then(res => {
+  //   console.log(res)
+  //   cb(res.data.data)
+  // }).catch(err => {
+  //   console.log(err);
+  // })
+  fetchGet(url, options, 'get', (data) => {
+    cb(data.data);
+  });
+}
+export function categoryContent2 (page, words, secondCate, sort, cb) {
+  const options = {
     do: 'is_caterank',
     p: 1,
     page,
@@ -136,60 +145,18 @@ export function categoryContent (flag, page, words, firstCate, secondCate, tag, 
     onlyCpBooks: 1,
     secondCate,
     sort,
-    _: 1526888329617
+    _: 1529748776290
   }
   const url = 'http://read.xiaoshuo1-sm.com/novel/i.php';
-  if (window.fetch) {
-    if (flag == 0) {
-      fetchGet(url, options, 'get', (data) => {
-        cb(data.data);
-      });
-    }
-    if (flag == 1) {
-      fetchGet(url, options1, 'get', (data) => {
-        cb(data.data);
-      });
-    }
-    if (flag == 2) {
-      fetchGet(url, options2, 'get', (data) => {
-        cb(data.data);
-      });
-    }
-    if (flag == 3) {
-      fetchGet(url, options3, 'get', (data) => {
-        cb(data.data);
-      });
-    }
-  } else {
-    if (flag == 0) {
-      axios.get(url, options, {}).then(res => {
-        cb(res.data.data)
-      }).catch(err => {
-        console.log(err);
-      })
-    }
-    if (flag == 1) {
-      axios.get(url, options1, {}).then(res => {
-        cb(res.data.data)
-      }).catch(err => {
-        console.log(err);
-      })
-    }
-    if (flag == 2) {
-      axios.get(url, options2, {}).then(res => {
-        cb(res.data.data)
-      }).catch(err => {
-        console.log(err);
-      })
-    }
-    if (flag == 3) {
-      axios.get(url, options3, {}).then(res => {
-        cb(res.data.data)
-      }).catch(err => {
-        console.log(err);
-      })
-    }
-  }
+  // axios.get(url, options, {}).then(res => {
+  //   console.log(res)
+  //   cb(res.data.data)
+  // }).catch(err => {
+  //   console.log(err);
+  // })
+  fetchGet(url, options, 'get', (data) => {
+            cb(data.data);
+          });
 }
 
 // 获取排行都有什么榜
@@ -440,6 +407,7 @@ export function getBookData (cb) {
   } else {
     axios.get('http://novelapi.sm.cn/eva_bookstore/v1/module/query', options, {})
           .then(res => {
+            // console.log(res)
             cb(res.data.data);
           }).catch(err => {
             console.log(err);
@@ -701,7 +669,7 @@ export function getBookChapter (bookName, author, page, cb) {
     page
   }
   // const url = `http://127.0.0.1:3000/chapter`;
-  const url = `http://${ window.location.hostname}:3001/chapter`;
+  const url = `https://${ window.location.hostname}:3002/chapter`;
   if (window.fetch) {
     fetchGet(url, options, 'get', (data) => {
       cb(data);
@@ -717,7 +685,7 @@ export function getBookChapter (bookName, author, page, cb) {
 
 // 音乐榜单
 export function musiclist (cb) {
-  const url = `http://${window.location.hostname}:3001/music`;
+  const url = `https://${window.location.hostname}:3002/music`;
   // const url = `http://193.112.4.143:3001/music`;
   if (window.fetch) {
     fetchGet(url, {}, 'get', (data) => {
@@ -734,7 +702,7 @@ export function musiclist (cb) {
 
 // 获取歌曲
 export function song (mid, cb) {
-  const url = `http://${window.location.hostname}:3001/song`;
+  const url = `https://${window.location.hostname}:3002/song`;
   // const url = `http://193.112.4.143:3001/song`;
   if (window.fetch) {
     fetchGet(url, {mid: mid}, 'get', (data) => {
@@ -751,7 +719,7 @@ export function song (mid, cb) {
 
 // 获取歌词
 export function musicLyric (mid, cb) {
-  const url = `http://${window.location.hostname}:3001/lyric`;
+  const url = `https://${window.location.hostname}:3002/lyric`;
   // const url = `http://193.112.4.143:3001/lyric`;
   if (window.fetch) {
     fetchGet(url, {mid: mid}, 'get', (data) => {
@@ -836,14 +804,24 @@ export function userBookShelfP (id, bookShelf, cb) {
 }
 
 // 音乐ｍｖ
-export function musicMvList (cb) {
+export function musicMvList (list, tags, cb) {
   const url = `https://${window.location.hostname}:3002/mv`;
+  axios.get(url, {list, tags}, {}).then(res => {
+    cb(res.data)
+  }).catch((err) => {
+    cb({err: true, data: 'axios请求失败'})
+  })
+}
+
+export function musicMList (cb) {
+  const url = `https://${window.location.hostname}:3002/mvList`;
   axios.get(url, {}, {}).then(res => {
     cb(res.data)
   }).catch((err) => {
     cb({err: true, data: 'axios请求失败'})
   })
 }
+
 export function musicMvPlay (uri, cb) {
   let url = `https://${window.location.hostname}:3002/mvPlay`;
   axios.get(url, {uri}, {}).then(res => {

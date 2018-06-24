@@ -96,16 +96,13 @@ export default {
       })
     }
   },
-  watch: {
-    '$route' (data) {
-      if (data.name == 'bookSearch') {
-        try {
+  activated () {
+    try {
           this.localData = localStorage.getItem('searchHistory').split(',')
+          console.log(this.localData)
         } catch (error) {
-          
+          console.log(error)
         }
-      }
-    }
   }
 }
 </script>
@@ -139,7 +136,7 @@ export default {
           width: 25%;
           height: 31/12rem;
           line-height: 31/12rem;
-          font-size: 1rem;
+          font-size: 1.2rem;
           margin: 1rem 0rem;
           border: 1px solid rgb(236, 232, 232);
           border-radius: 1.5rem;
@@ -190,7 +187,7 @@ export default {
         margin: 0 auto;
         justify-content: space-between;
         align-items: center;
-        border-bottom: 0.1rem solid rgb(238, 237, 237);
+        border-bottom: 1px solid rgb(238, 237, 237);
         .history--header--h3 {
          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
           font-size: 1.4rem;
@@ -236,7 +233,7 @@ export default {
           // height: 48/12rem;
           line-height: 48/12rem;
           font-size: 1.3rem;
-          border-bottom: 0.1rem solid rgb(245, 243, 243);
+          border-bottom: 1px solid rgb(245, 243, 243);
           display: flex;
           justify-content: space-between;
           &:last-child {

@@ -31,7 +31,7 @@ export default {
     width: 100vw;
     height: auto;
     background-color: rgb(240, 235, 235);
-    position: relative;
+    // position: relative;
     .swipe__box {
       width: 100vw;
       height: 30vh;

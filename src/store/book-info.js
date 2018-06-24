@@ -4,6 +4,8 @@ const bookInfo = {
     bookName: '',
     authorName: '',
     authorId: '',
+    // 缓存页面
+    includeCom: 'bookInformation'
   },
   mutations: {
     changeBookId (state, data) {
@@ -15,6 +17,9 @@ const bookInfo = {
     changeAuthor (state, data) {
       state.authorName = data.name;
       state.authorId = data.id;
+    },
+    changeIncludeCom (state, data) {
+      state.includeCom = data;
     }
   },
   actions: {

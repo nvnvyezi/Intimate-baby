@@ -6,27 +6,36 @@
         <div>
           <span>{{ listName }}</span>
         </div>
-        <router-link to="/" tag="div" class="header-iconR"></router-link>
+        <div @click="showNav" class="header-iconR"></div>
       </div>
     </header>
     <transition>
         <router-view></router-view>
     </transition>
+    <leftNav :showJ="showN" @changeShowM="showNav"></leftNav>
   </div>
 </template>
 
 <script>
+import leftNav from './template/leftNav/nav';
 export default {
+  components: {
+    leftNav
+  },
   name: 'user',
   data () {
     return {
-      listName: '详细信息'
+      listName: '详细信息',
+      showN: false,
     }
   },
   methods: {
     back () {
       this.$router.go(-1);
-    }
+    },
+    showNav () {
+      this.showN = !this.showN;
+    },
   }
 }
 </script>

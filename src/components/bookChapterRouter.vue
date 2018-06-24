@@ -6,7 +6,7 @@
         <ul class="chapterR--header__ul">
           <router-link to="bookinformatecatelog" tag="li" class="chapterR--header__ul--left"><span class="chapterR--header__ul--Lspan">目录</span></router-link>
           <li class="chapterR--header__ul--middle">{{ chapterName }}</li>
-          <li class="chapterR--header__ul--right"><span class="chapterR--header__ul--Rspan">书架</span></li>
+          <router-link tag="li" to="user" class="chapterR--header__ul--right"><span class="chapterR--header__ul--Rspan">书架</span></router-link>
         </ul>
       </nav>
     </header>

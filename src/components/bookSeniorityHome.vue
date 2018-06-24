@@ -2,7 +2,7 @@
 
 <template>
   <div class="seniority">
-    <nav class="seniority--nav">
+    <!-- <nav class="seniority--nav">
       <div class="seniority--nav--header">
         <div @click="back" class="header-iconL"></div>
         <div>
@@ -10,7 +10,7 @@
         </div>
         <router-link to="/" tag="div" class="header-iconR"></router-link>
       </div>
-    </nav>
+    </nav> -->
     <div class="seniority__list">
       <ul class="seniority__list__ul">
         <router-link @click.native="changeProp" class="seniority__list__ul__li" to="senioritylist" tag="li" :data-title="item.title" :type="item.type" v-for="(item, index) in data" :key="index">
@@ -31,7 +31,7 @@ export default {
   name: 'bookSeniorityHome',
   data () {
     return {
-      listName: '排行',
+      // listName: '排行',
       data: []
     }
   },
@@ -50,9 +50,9 @@ export default {
     })
   },
   methods: {
-    back () {
-      this.$router.go(-1);
-    },
+    // back () {
+    //   this.$router.go(-1);
+    // },
     changeProp (e) {
       let typ = e.currentTarget.getAttribute('type');
       let title = e.currentTarget.getAttribute('data-title');
@@ -60,12 +60,10 @@ export default {
         type: 'triggerType',
         typ
       })
-      this.$store.commit({
-        type: 'changeMoreBookTitle',
-        moreBookTitle: title
-      })
+      this.$store.commit('changeListName', title)
       localStorage.setItem('seniorityType', typ);
-      localStorage.setItem('MoreBookTitle', title);
+      // localStorage.setItem('MoreBookTitle', title);
+      localStorage.setItem('listName', title);
     }
   }
 }
@@ -89,37 +87,37 @@ export default {
     height: 100vh;
     position: relative;
     background-color: rgb(241, 240, 240);
-    .seniority--nav {
-      width: 100%;
-      height: 4rem;
-      display: flex;
-      justify-content: center;
-      position: relative;
-      // align-items: center;
-      background-color: rgb(241, 157, 60);
-      .seniority--nav--header {
-        width: 90%;
-        line-height: 4rem;
-        // display: grid;
-        // grid-template-columns: 50px auto 50px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        color: white;
-        text-align: center;
-        font: 600 1.7rem '微软雅黑';
-        .header-iconL {
-          .iconG;
-          background: url('../assets/返回.svg') no-repeat center;
-        }
-        .header-iconR {
-          .iconG;
-          background: url('../assets/h.svg') no-repeat center;
-        }
-      }
-      // display: grid;
-      // grid-template-columns: 50px auto 50px;
-    }
+    // .seniority--nav {
+    //   width: 100%;
+    //   height: 4rem;
+    //   display: flex;
+    //   justify-content: center;
+    //   position: relative;
+    //   // align-items: center;
+    //   background-color: rgb(241, 157, 60);
+    //   .seniority--nav--header {
+    //     width: 90%;
+    //     line-height: 4rem;
+    //     // display: grid;
+    //     // grid-template-columns: 50px auto 50px;
+    //     display: flex;
+    //     justify-content: space-between;
+    //     align-items: center;
+    //     color: white;
+    //     text-align: center;
+    //     font: 600 1.7rem '微软雅黑';
+    //     .header-iconL {
+    //       .iconG;
+    //       background: url('../assets/返回.svg') no-repeat center;
+    //     }
+    //     .header-iconR {
+    //       .iconG;
+    //       background: url('../assets/h.svg') no-repeat center;
+    //     }
+    //   }
+    //   // display: grid;
+    //   // grid-template-columns: 50px auto 50px;
+    // }
     .seniority__list {
       width: 100vw;
       height: auto;
@@ -154,7 +152,7 @@ export default {
               font-weight: 400;
             }
             .seniority__list--section--p {
-              font-size: 1.1rem;
+              font-size: 1.2rem;
               padding-top: .3rem;
               font-weight: 300;
               color: rgb(92, 92, 92);

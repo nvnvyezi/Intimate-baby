@@ -326,6 +326,31 @@ export default {
       this.bookshelfJudge = false;
     }
   },
+  beforeRouteLeave (to, from, next) {
+    // console.log(to)
+    if (to.name == 'bookinformationcatelog') {
+      next();
+    } else {
+      this.$store.commit('changeIncludeCom', '');
+      next();
+    }
+  //   console.log(to, from);
+  //   if (to.name == 'bookinformationcatelog') {
+  //     from.meta.keepAlive = true;
+  //     next();
+  //   } else {
+  //     from.meta.keepAlive = false;
+  //     this.$destroy();
+  //     next();
+  //   }
+  },
+  activated () {
+    this.$store.commit('changeIncludeCom', 'bookInformation');
+    // console.log('act');
+  },
+  // deactivated () {
+  //   console.log('deaca');
+  // },
   updated () {
     if (!this.iconJudge) {   
       let pH = document.getElementsByClassName('cover--info--text--p')[0];
@@ -345,7 +370,7 @@ export default {
    @bottomColor: #f2f2f2;
    .infoG {
       display: inline-block;
-      font-size: 1.4rem;
+      font-size: 1.45rem;
       color: @wordColor;
       width: 100%;
       display: inline-block;
@@ -371,9 +396,9 @@ export default {
     .statName (@fcolor: #70a7e3) {
       .statNameG;
       color: @fcolor;
-      border: 0.1rem solid @fcolor;
+      border: 1px solid @fcolor;
       margin-right: 0.3rem;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
     }
     .statNamered {
       .statName(#f08300)
@@ -417,32 +442,31 @@ export default {
       justify-content: space-around;
       align-items: center;
       .cover--header--img {
-        width: 98/12rem;
-        height: 130/12rem;
-        padding-left: 2rem;
+        width: 98px;
+        height: 130px;
+        margin: 0 20px;
         .cover--header--img--photo {
           width: 100%;
           height: 100%;
         }
       }
       .cover--header--info {
-        width: 174/12rem;
-        height: 130/12rem;
-        flex: 1 1 auto;
-        padding-left: 2rem;
+        width: calc(100% - 140px);
+        height: 130px;
         position: relative;
         .cover--header--info--title {
-          line-height: 23/12rem;
-          font-size: 1.6rem;
-          font-weight: 400;
+          // line-height: 23/12rem;
+          font: 400 1.8rem '微软雅黑';
         }
         .cover--header--info--author {
           .infoG;
-          padding: 1.3rem 0 0rem;
+          // padding: 1.3rem 0 0rem;
+          margin-top: 10px;
         }
         .cover--header--info--tags {
           .infoG;
-          padding: 0.7rem 0 1rem;
+          // padding: 0.7rem 0 1rem;
+          margin-top: 10px;
           .tag1 {
             padding-right: 1rem;
           }
@@ -450,7 +474,7 @@ export default {
         .cover--header--info--stat {
           .infoG;
           position: absolute;
-          left: 2rem;
+          left: 0rem;
           bottom: 0;
         }
       }
@@ -757,23 +781,22 @@ export default {
           // -webkit-box-orient: horizontal;
           // border-bottom: 0.08rem solid @borderColor;
           .box__ul__li--imgBox {
-            width: 56/12rem;
-            height: 74/12rem;
+            width: 56px;
+            height: 74px;
             position: relative;
+            margin-right: 14px;
             .box__ul__li--imgBox--img {
               width: 100%;
               height: 100%;
             }
           }
           .box__ul__li--right {
-            width: 200/12rem;
-            height: 74/12rem;
-            flex: 1 1 auto;
-            margin: 0 0 0 1.5rem;
+            width: calc(100% - 70px);
+            height: 74px;
             position: relative;
             .box__ul__li--right--title {
               width: 100%;
-              height: 24/12rem;
+              line-height: 2rem;
               color: #333;
               .box__ul__li--right--title--h3 {
                 .titleH3;
@@ -782,29 +805,30 @@ export default {
             .box__ul__li--right--author {
               width: 100%;
               line-height: 24/12rem;
-              vertical-align: middle;
-              display: -webkit-box;
-              -webkit-box-orient: horizontal;
-              -webkit-box-align: center;
-              -webkit-box-pack: end;
-              font-size: 1.1rem;
+              // vertical-align: middle;
+              // display: -webkit-box;
+              // -webkit-box-orient: horizontal;
+              // -webkit-box-align: center;
+              // -webkit-box-pack: end;
+              font-size: 1.2rem;
               // margin: .2rem 0 0.9rem;
+              margin-top: 4px;
               color: @wordColor;
               .box__ul__li--right--author--author {
                 display: block;
-                -webkit-box-flex: 1;
+                // -webkit-box-flex: 1;
               }
             }
             .box__ul__li--right--tags {
               width: 100%;
-              height: 20/12rem;
+              // height: 20/12rem;
               color: @wordColor;
               text-align: left;
               position: absolute;
               bottom: 0;
               .box__ul__li--right--tags--words,
               .box__ul__li--right--tags--one {
-                border: 0.1rem solid @bottomColor;
+                border: 1px solid @bottomColor;
                 padding: 0.4rem 0.5rem 0.1rem 0.5rem;
                 font-size: 1.2rem;
               }

@@ -1,11 +1,12 @@
 <template>
   <div id="app">
     <!-- <img src="./assets/logo.png"> -->
-    <transition name="" mode="">
+    <!-- <transition name="" mode=""> -->
       <keep-alive>
-        <router-view/>
+        <router-view v-if="$route.meta.keepAlive"></router-view>
       </keep-alive>
-    </transition>
+      <router-view v-if="!$route.meta.keepAlive"></router-view>
+    <!-- </transition> -->
   </div>
 </template>
 
@@ -24,6 +25,7 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
+  /* overflow-y: visible; */
 }
 </style>

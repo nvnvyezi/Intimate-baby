@@ -7,7 +7,7 @@
     </div>
     <section v-show="showTime" class="mus--photo" :style="{backgroundImage: 'url(' + imgUrl + ')'}"></section>
     <section v-show="showTime" class="lyric">{{ lyric }}</section>
-    <section class="mus--switch" @click="showMusic"></section>
+    <section v-show="musicSwitch" class="mus--switch" @click="showMusic"></section>
     <div v-show="musicSwitch" class="mus--container">
       <header class="mus--con--name">{{ musicName }}</header>
       <div class="mus--con--info" @click="playMode" :class="{mode1: modeIndex == 0, mode2: modeIndex == 1, mode3: modeIndex == 2}">
@@ -30,6 +30,12 @@ import { musiclist, song, musicLyric } from "../../../api/api";
 import base64 from '../../../encryption/base64'
 export default {
   name: 'musicPlayer',
+  props: {
+    musicSwitch: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
       playControl: true,
@@ -42,7 +48,7 @@ export default {
       currentTotalTime: this.timeCovert(0), //当前歌曲的总时间
       currenxIndex: 0,
       modeIndex: 0,
-      musicSwitch: false,
+      // musicSwitch: false,
       musicLyric: '',
       lyric: '',
       lyricIndex: 0,
@@ -64,7 +70,7 @@ export default {
       return timeStamp;
     },
     showMusic () {
-      this.musicSwitch = !this.musicSwitch;
+      this.$emit('showMusic');
     },
     trackInfo (i) {
       this.musicName = this.musicList[i].name;
@@ -270,7 +276,7 @@ export default {
       left: 0;
       background: no-repeat center;
       background-size: 4rem 4rem;
-      z-index: 1;
+      z-index: 3002;
     }
     .mus--switch {
       width: 2rem;
@@ -278,7 +284,7 @@ export default {
       position: fixed;
       left: 2rem;
       bottom: 4rem;
-      z-index: 1002;
+      z-index: 3002;
       background: url('../../../assets/音乐.svg') no-repeat center bottom;
       background-size: 2rem 2.5rem;
     }
@@ -294,14 +300,14 @@ export default {
       white-space: nowrap;
       text-overflow: ellipsis;
       text-align: center;
-      z-index: 1;
+      z-index: 3002;
     }
     .mus--time {
       width: calc(100% - 4rem);
       position: fixed;
       top: 0;
       left: 4rem;
-      z-index: 1;
+      z-index: 3002;
       color: #333;
       .mus--time--current {
         width: 44/12rem;
@@ -334,7 +340,7 @@ export default {
       position: fixed;
       top: 50%;
       left: 50%;
-      z-index: 1001;
+      z-index: 3002;
       margin-left: -10rem;
       margin-top: -4rem;
       background-color: rgb(240, 240, 240);

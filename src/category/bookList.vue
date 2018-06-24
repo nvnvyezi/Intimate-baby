@@ -1,6 +1,9 @@
 //分类的书单
 <template>
   <div class="bookList">
+    <transition name="bar-fade" mode="out-in">
+      <div @click="goTop" v-show="barJ" class="header-bar">{{barTitle}}<i class="b-icon"></i></div>
+    </transition>
     <header class="header">
       <section class="header--list">
         <ul class="header--list__ul">
@@ -24,7 +27,7 @@
     <section class="recommend">
       <div class="recommend--body">
         <ul class="recommend--body--ul">
-          <router-link @click.native="changeInfoBook" class="recommend--body--ul--li ddd" to="bookinformation" tag="li" v-for="(item, index) in list" :key="index">
+          <router-link @click.native="changeInfoBook" class="recommend--body--ul--li" to="bookinformation" tag="li" v-for="(item, index) in list" :key="index">
             <div class="recommend--body--ul--li__left">
               <img class="recommend--body--ul--li__left--img" src="" v-lazyLoad="item.imgUrl" :alt="item.bookName">
             </div>
@@ -55,7 +58,7 @@
 </template>
 
 <script>
-import { categoryList, categoryContent } from '../api/api'
+import { categoryList, categoryContent, categoryContent1, categoryContent2} from '../api/api'
 import loading from '../components/loadingImg'
 export default {
   components: {
@@ -104,8 +107,11 @@ export default {
       page: 1,
       loadJudge: true,
       listJudge: true,
-      flag: 0,
-      name: ''
+      tag: 1,
+      barTitle: '最热',
+      barJ: false,
+      bindJ: true,
+      addBindJ: true
     }
   },
   computed: {
@@ -140,6 +146,9 @@ export default {
         if (!secondCate) {
           secondCate = localStorage.getItem('secondCate');
         }
+        if (!secondCate) {
+          secondCate = '';
+        }
         return secondCate;
       },
       set: function (newVal) {
@@ -155,6 +164,9 @@ export default {
         let words = this.$store.state.bookCategory.words;
         if (!words) {
           words = localStorage.getItem('words');
+        }
+        if (!words) {
+          words = '';
         }
         return words;
       },
@@ -184,38 +196,99 @@ export default {
     }
   },
   created () {
-    localStorage.setItem('secondCate', '');
-    localStorage.setItem('words', '');
-    localStorage.setItem('sort', 'monthHot');
-    let sex = localStorage.getItem('sex');
-    if (sex == 0) {     
-      this.firstCate = localStorage.getItem('listName');
-      this.flag = 2;
-    }
-    if (sex == 1) {
-      this.secondCate = localStorage.getItem('firstCate');
-      this.flag = 3;
-    }
+    this.$store.commit('changeListName', localStorage.getItem('firstCate'));
+    localStorage['secondCate'] = '';
+    localStorage['words'] = 0;
+    localStorage['sort'] = 'monthHot';
+    this.$store.dispatch({
+      type: 'triggerSecond',
+      secondCate: ''
+    })
+    this.$store.dispatch({
+      type: 'triggerWords',
+      words: 0
+    })
+    this.$store.dispatch({
+      type: 'triggerSort',
+      sort: 'monthHot'
+    })
     this.page = 1;
+    if (localStorage['sex'] == 1) {
+      let name = localStorage['girlLN'];
+      localStorage['secondCate'] = name;
+      this.$store.dispatch({
+        type: 'triggerSecond',
+        secondCate: name
+      })
+    }
     this.getHeader();
     this.getList();
   },
   mounted () {
     let bookList = document.getElementsByClassName('bookList');
-    bookList[0].addEventListener('touchstart', this.showFooter, false);
+    if (this.addBindJ) {
+      this.addBindJ = false;
+      window.addEventListener('scroll', this.showFooter, false);
+    }
   },
   methods: {
+    // 回到顶部
+    goTop () {
+      let requestAnimationFrame = window.requestAnimationFrame
+          || window.mozRequestAnimationFrame   
+          || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame   
+          || function(clb){  
+              return setTimeout(clb,1000/60);  
+          };  
+      let cancelAnimationFrame = window.cancelAnimationFrame 
+          || window.mozCancelAnimationFrame   
+          || window.webkitCancelAnimationFrame || window.msCancelAnimationFrame   
+          || function(id){clearTimeout(id);};  
+      let top = document.body.scrollTop || document.documentElement.scrollTop;
+      //滚动时长  
+      let duration = 400; //300ms  
+      //计算步长  
+      let step =  top / (duration / ( 1000 / 60)) >> 0; //取整  
+        
+      console.log(step, top, (duration / ( 1000 / 60)))
+        
+      function fn(){
+          if(top >= 0){  
+              top -= step;  
+              document.documentElement.scrollTop = document.body.scrollTop = top;  
+              fn.rafTimer = requestAnimationFrame(fn);  
+          }else{  
+              document.body.scrollTop = 0;  
+              cancelAnimationFrame(fn.rafTimer);  
+          }  
+      }  
+      fn.rafTimer = requestAnimationFrame(fn);  
+    },
+    // 滑动展示底部
     showFooter () {
-      let li = document.getElementsByTagName('li');
+      let header = document.getElementsByClassName('header')[0];
+      let hh = header.getBoundingClientRect().bottom;
+      if (hh <= 0) {
+        this.barJ = true;
+      } else {
+        this.barJ = false;
+      }
+      let li = document.getElementsByClassName('recommend--body--ul--li');
       let liBottom = li[li.length-1].getBoundingClientRect().bottom;
       let screenHeight = document.documentElement.clientHeight;
+      // console.log(liBottom, screenHeight)
       if (liBottom - screenHeight < 120) {
-        setTimeout(() => {
-          this.page++;
-          this.getList();
-        }, 300); 
+        if (this.bindJ) {
+          // console.log(888)
+          this.bindJ = false;
+          setTimeout(() => {
+            this.page++;
+            this.getList();
+          }, 300); 
+        }
       }
     },
+    // 改变bookid
     changeInfoBook (e) {
       let id = e.currentTarget.children[1].firstChild.getAttribute('bid');
       this.$store.dispatch({
@@ -224,6 +297,7 @@ export default {
       })
       localStorage.setItem('bookId', id);
     },
+    // 选中
     selectColor (num, e) {
       let node = null;
       switch (num) {
@@ -273,17 +347,21 @@ export default {
       this.page = 1;
       this.loadJudge = true;
       let name = e.target.getAttribute('name');
-      this.name = name;
       let words = e.target.getAttribute('words');
       let sort = e.target.getAttribute('sort');
-      this.flag = e.target.getAttribute('tag');
-      if (name ) {
+      let tag = e.target.getAttribute('tag');
+      if (tag) {
+        this.tag = tag;
+      }
+      if (name) {
         this.secondCate = name;
+        this.barTitle = 
         this.selectColor(0, e);
       }
       if (name == '') {
         this.firstCate = localStorage.getItem('listName');
-        this.flag = 2;
+        tag = 1;
+        this.secondCate = '';
         this.selectColor(0, e);
       }
       if (words || words == '') {
@@ -292,39 +370,84 @@ export default {
       }
       if (sort || sort == '') {
         this.sort = sort;
+        switch (sort) {
+          case 'monthHot':
+            this.barTitle = '最热';
+            break;
+          case 'updateTime':
+            this.barTitle = '最新';
+            break;
+          default:
+            this.barTitle = '完结';
+            break;
+        }
         this.selectColor(2, e);
       }
       this.list = [];
       this.page = 1;
-      this.getList(name);
+      this.getList();
     },
     getList () {
-      let first = this.firstCate;
-      let second = this.secondCate;
-      // console.log(second)
-      if (localStorage.getItem('sex') == 1) {
-        if (this.flag != 1) {
-          this.flag = 3;
-        }
-      }
-      categoryContent(this.flag, this.page, this.words, first, second, this.name, this.sort, data => {
-        if (data.length == 0) {
-          this.loadJudge = false;
-          return ;
-        }
-        Array.prototype.forEach.call(data, (item) => {
-          let obj = {};
-          obj.imgUrl = item.cover;
-          obj.bid = item.bid;
-          obj.bookName = item.title;
-          obj.authorName = item.author;
-          obj.introduction = item.desc;
-          obj.status = item.status;
-          obj.size = `${(item.words/1000).toFixed(1)}万字`;
-          obj.class_name = item.category;
-          this.list.push(obj);
+      let sex = localStorage['sex'];
+      if (this.tag == 1 && sex == 0) {
+        categoryContent (this.page, this.words, this.firstCate, this.secondCate, this.sort, data => {
+          this.bindJ = true;
+          if (data.length == 0) {
+            this.loadJudge = false;
+            return ;
+          }
+          Array.prototype.forEach.call(data, (item) => {
+            let obj = {};
+            obj.imgUrl = item.cover;
+            obj.bid = item.bid;
+            obj.bookName = item.title;
+            obj.authorName = item.author;
+            obj.introduction = item.desc;
+            obj.status = item.status;
+            obj.size = `${(item.words/10000).toFixed(1)}万字`;
+            obj.class_name = item.category;
+            this.list.push(obj);
+          })
         })
-      })
+      } else if (this.tag == 1 && sex == 1){
+        categoryContent2 (this.page, this.words, this.secondCate, this.sort, data => {
+          if (data.length == 0) {
+            this.loadJudge = false;
+            return ;
+          }
+          Array.prototype.forEach.call(data, (item) => {
+            let obj = {};
+            obj.imgUrl = item.cover;
+            obj.bid = item.bid;
+            obj.bookName = item.title;
+            obj.authorName = item.author;
+            obj.introduction = item.desc;
+            obj.status = item.status;
+            obj.size = `${(item.words/10000).toFixed(1)}万字`;
+            obj.class_name = item.category;
+            this.list.push(obj);
+          })
+        })
+      } else {
+        categoryContent1 (this.page, this.words, this.secondCate, this.sort, data => {
+          if (data.length == 0) {
+            this.loadJudge = false;
+            return ;
+          }
+          Array.prototype.forEach.call(data, (item) => {
+            let obj = {};
+            obj.imgUrl = item.cover;
+            obj.bid = item.bid;
+            obj.bookName = item.title;
+            obj.authorName = item.author;
+            obj.introduction = item.desc;
+            obj.status = item.status;
+            obj.size = `${(item.words/10000).toFixed(1)}万字`;
+            obj.class_name = item.category;
+            this.list.push(obj);
+          })
+        })
+      }
     },
     getHeader () {
       let cid = this.cid;
@@ -337,7 +460,7 @@ export default {
           let obj = {};
           obj.id = item.id;
           obj.name = item.name;
-          obj.tag = 0;
+          obj.tag = 1;
           obj.relatedName = item.relatedName;
           this.headerList.push(obj);
         });
@@ -345,172 +468,205 @@ export default {
           let obj = {};
           obj.id = item.id;
           obj.name = item.name;
-          obj.tag = 1;
+          obj.tag = 0;
           obj.relatedName = item.relatedName;
           this.headerList.push(obj);
         });
       });
     }
+  },
+  beforeDestroy () {
+    window.removeEventListener('scroll', this.showFooter, false);
   }
 }
 </script>
 
 <style lang="less" scoped>
-  @media screen and(max-width:720px){
-    @bottomColor: #f3f3f3;
-    .statNameG {
+@bottomColor: #f3f3f3;
+.bar-fade-enter {
+  transform: translateY(-4rem);
+}
+.bar-fade-enter-active {
+  transition: transform .3s ease;
+}
+.statNameG {
+  height: 1rem;
+  line-height: 1rem;
+  padding: 0.2rem 0.3rem 0.1rem;
+}
+.statName (@fcolor: #70a7e3) {
+  .statNameG;
+  color: @fcolor;
+  border: 1px solid @fcolor;
+  margin-right: 0.3rem;
+  font-size: 1.2rem;
+}
+.statNamered {
+  .statName(#f08300)
+}
+.statNameblue {
+  .statName(#499fff);
+}
+.hoverG {
+  color: #f08300;
+}
+.bookList {
+  width: 100vw;
+  height: 100vh;
+  background-color: white;
+  position: relative;
+  .header-bar {
+    width: 100%;
+    height: 3rem;
+    background-color: white;
+    position: fixed;
+    top: 4rem;
+    left: 0;
+    z-index: 2000;
+    text-align: center;
+    // margin-top: 1rem;
+    font: 400 1.5rem "微软雅黑";
+    padding-top: 1rem;
+    color: #f08300;
+    .b-icon {
+      width: 1rem;
       height: 1rem;
-      line-height: 1rem;
-      padding: 0.3rem 0.5rem 0.1rem;
+      display: inline-block;
+      padding-left: 1rem;
+      background: url('../assets/shouqi.svg') no-repeat center;
+      background-size: 1rem;
+      // transform: skewX(90deg);
     }
-    .statName (@fcolor: #70a7e3) {
-      .statNameG;
-      color: @fcolor;
-      border: 0.1rem solid @fcolor;
-      margin-right: 0.3rem;
-      font-size: 1rem;
-    }
-    .statNamered {
-      .statName(#f08300)
-    }
-    .statNameblue {
-      .statName(#499fff);
-    }
-    .hoverG {
-      color: #f08300;
-    }
-    .bookList {
-      width: 100vw;
-      height: 100vh;
-      background-color: white;
-      .recommend {
+  }
+  .recommend {
+    width: 100%;
+    height: auto;
+    background-color: white;
+    .recommend--body {
+      width: 90%;
+      margin: 0 auto;
+      .recommend--body--ul {
         width: 100%;
-        height: auto;
-        background-color: white;
-        .recommend--body {
-          width: 90%;
-          margin: 0 auto;
-          .recommend--body--ul {
-            width: 100%;
-            list-style: none;
-            .recommend--body--ul--li {
+        list-style: none;
+        overflow-x: hidden;
+        .recommend--body--ul--li {
+          width: 100%;
+          height: auto;
+          display: flex;
+          cursor: pointer;
+          justify-content: space-between;
+          align-items: center;
+          padding: 1.3rem 0;
+          border-bottom: 1px solid #f0ebeb;
+          .recommend--body--ul--li__left {
+            width: 84px;
+            height: 112px;
+            margin-right: 16px;
+            .recommend--body--ul--li__left--img {
               width: 100%;
-              height: auto;
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              padding: 1.3rem 0;
-              border-bottom: 0.1rem solid #f0ebeb;
-              .recommend--body--ul--li__left {
-                width: 84/12rem;
-                height: 112/12rem;
-                flex: 0 1 84/12rem;
-                .recommend--body--ul--li__left--img {
-                  width: 100%;
-                  height: 100%;
-                }
-              }
-              .recommend--body--ul--li__right {
-                // width: 188/12rem;
-                width: calc(100% - 8.8rem);
-                height: 113/12rem;
-                flex: 0 0 auto;
-                border-left: 0rem solid white;
-                position: relative;
-                .recommend--body--ul--li__right--title {
-                  font-size: 1.5rem;
-                  width: 100%;
-                  height: 24/12rem;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                  padding: 0;
-                  font-family: "Helvetica Neue",Helvetica,STHeiTi,sans-serif;
-                }
-                .recommend--body--ul--li__right--author {
-                  font-size: 1rem;
-                  color: rgb(170, 169, 169);
-                  padding: 0.3rem 0;
-                }
-                .recommend--body--ul--li__right--info {
-                  width: 100%;
-                  height: 3rem;
-                  font-size: 1rem;
-                  color: rgb(170, 169, 169);
-                  overflow: hidden;
-                  display: -webkit-box;
-                  -webkit-line-clamp: 2;
-                  text-overflow: ellipsis;
-                  -webkit-box-orient: vertical;
-                }
-                .recommend--body--ul--li__right--tags {
-                  // margin-top: 0.5rem;
-                  position: absolute;
-                  bottom: 0;
-                  .recommend--body--ul--li__right--tags--two,
-                  .recommend--body--ul--li__right--tags--three {
-                    height: 12/12rem;
-                    padding: 0.3rem 0.4rem 0.1rem;
-                    color: rgb(145, 141, 141);
-                    border: 0.1rem solid rgb(224, 222, 222);
-                    margin-right: .2rem;
-                  }
-                }
+              height: 100%;
+            }
+          }
+          .recommend--body--ul--li__right {
+            // width: 188/12rem;
+            width: calc(100% - 100px);
+            height: 112px;
+            position: relative;
+            .recommend--body--ul--li__right--title {
+              width: 100%;
+              font: 400 1.5rem/1.8rem "微软雅黑";
+              overflow: hidden;
+              text-overflow: ellipsis;
+              padding: 0;
+              font-family: "Helvetica Neue",Helvetica,STHeiTi,sans-serif;
+            }
+            .recommend--body--ul--li__right--author {
+              font-size: 1.2rem;
+              color: rgb(170, 169, 169);
+              margin-top: 10px;
+            }
+            .recommend--body--ul--li__right--info {
+              width: 100%;
+              height: 3.2rem;
+              margin-top: 4px;
+              font: 400 1.2rem/1.6rem "微软雅黑";
+              color: rgb(170, 169, 169);
+              display: -webkit-box;
+              -webkit-line-clamp: 2;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              -webkit-box-orient: vertical;
+            }
+            .recommend--body--ul--li__right--tags {
+              // margin-top: 0.5rem;
+              position: absolute;
+              bottom: 0;
+              .recommend--body--ul--li__right--tags--two,
+              .recommend--body--ul--li__right--tags--three {
+                height: 12/12rem;
+                padding: 0.3rem 0.2rem 0.1rem;
+                color: rgb(145, 141, 141);
+                font-size: 1.2rem;
+                border: 1px solid rgb(224, 222, 222);
+                margin-right: .2rem;
               }
             }
           }
-        }
-      }
-      .header {
-        width: 100%;
-        height: auto;
-        .header--list {
-          padding-bottom: 1rem;
-          border-bottom: 0.1rem solid @bottomColor;
-          .header--list__ul {
-            width: 90%;
-            list-style: none;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            .header--list__ul__li {
-              padding: .8rem 1rem 0;
-              font-size: 1.4rem;
-            } 
-          }
-          .middle--list__ul {
-            width: 90%;
-            list-style: none;
-            .middle--list__ul__li {
-              display: inline-block;
-              font-size: 1.4rem;
-              padding: .8rem 1rem 0;
-            }
-          }
-        }
-      }
-      .bookList--footer {
-        width: 100%;
-        line-height: 50/12rem;
-        transform: height 1s ease;
-        .bookList--footer--text {
-          font-size: 1.4rem;
-          text-align: center;
-          &::before {
-            content: '';
-            width: 2rem;
-            height: 1.2rem;
-            display: inline-block;
-            vertical-align: middle;
-            background: url('../assets/load.gif') center center no-repeat;
-            background-size: 1.4rem 1.4rem;
-          }
-        }
-        .bookList--footer--textend {
-          font-size: 1.4rem;
-          text-align: center;
         }
       }
     }
   }
+  .header {
+    width: 100%;
+    height: auto;
+    .header--list {
+      padding-bottom: 1rem;
+      border-bottom: 0.1rem solid @bottomColor;
+      .header--list__ul {
+        width: 90%;
+        list-style: none;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        .header--list__ul__li {
+          cursor: pointer;
+          padding: .8rem 1rem 0;
+          font-size: 1.4rem;
+        } 
+      }
+      .middle--list__ul {
+        width: 90%;
+        list-style: none;
+        .middle--list__ul__li {
+          display: inline-block;
+          font-size: 1.4rem;
+          padding: .8rem 1rem 0;
+        }
+      }
+    }
+  }
+  .bookList--footer {
+    width: 100%;
+    line-height: 50/12rem;
+    transform: height 1s ease;
+    .bookList--footer--text {
+      font-size: 1.4rem;
+      text-align: center;
+      &::before {
+        content: '';
+        width: 2rem;
+        height: 1.2rem;
+        display: inline-block;
+        vertical-align: middle;
+        background: url('../assets/load.gif') center center no-repeat;
+        background-size: 1.4rem 1.4rem;
+      }
+    }
+    .bookList--footer--textend {
+      font-size: 1.4rem;
+      text-align: center;
+    }
+  }
+}
 </style>

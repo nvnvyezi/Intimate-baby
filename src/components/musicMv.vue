@@ -1,38 +1,31 @@
 <template>
   <div class="mv">
     <header class="mv-sort">
-      <div class="mv-container">
-        <select id="artist" class="ms-tag">
-          <option class="t-o" value="all" selected>全部歌手</option>
-          <option class="t-o" value="男歌手">男歌手</option>
-          <option class="t-o" value="女歌手">女歌手</option>
-          <option class="t-o" value="乐队组合">乐队组合</option>
-        </select>
-        <select id="version" class="ms-tag">
-          <option value="all" selected="selected">全部分类</option>
-          <option value="官方mv">官方MV</option>
-          <option value="官方视频">官方视频</option>
-          <option value="影视原声">影视原声</option>
-          <option value="yugao">电影预告</option>
-          <option value="电影主题曲">电影主题曲</option>
-          <option value="模仿翻唱">模仿翻唱</option>
-          <option value="舞蹈视频">舞蹈视频</option>
-          <option value="音乐短片">音乐短片</option>
-          <option value="字幕版">字幕版</option>
-          <option value="歌词版">歌词版</option>
-          <option value="完整版">完整版</option>
-          <option value="现场版">现场版</option>
-          <option value="演唱会">演唱会</option>
-          <option value="动漫">动漫</option>
-        </select>
-        <select id="definition" class="ms-tag">
-          <option value="all" selected="selected">全部视频</option>
-          <option value="1080p">1080P</option>
-          <option value="超清mv">超清MV</option>
-          <option value="高清mv">高清MV</option>
-          <option value="流畅mv">流畅MV</option>
-        </select>
-        <button class="ms-btn">确定</button>
+      <div class="mv-containe">
+        <section id="artist" class="mc-tag">
+          <ul class="t-ul">
+            <li @click="mvSel" v-if="index == 0" class="t-li liG li1" v-for="(item, index) in list" :key="index" :val="item.val">{{item.text}}</li>
+            <li @click="mvSel" v-if="index != 0" class="t-li li1" v-for="(item, index) in list" :key="index" :val="item.val">{{item.text}}</li>
+          </ul>
+        </section>
+        <section id="artist" class="mc-tag">
+          <ul class="t-ul">
+            <li @click="mvSel1" v-if="index == 0" class="t-li liG li2" v-for="(item, index) in opt1" :key="index" :val="item.val">{{item.text}}</li>
+            <li @click="mvSel1" v-if="index != 0" class="t-li li2" v-for="(item, index) in opt1" :key="index" :val="item.val">{{item.text}}</li>
+          </ul>
+        </section>
+        <section id="version" class="mc-tag">
+          <ul class="t-ul">
+            <li @click="mvSel2" v-if="index == 0" class="t-li liG li3" v-for="(item, index) in opt2" :key="index" :val="item.val">{{item.text}}</li>
+            <li @click="mvSel2" v-if="index != 0" class="t-li li3" v-for="(item, index) in opt2" :key="index" :val="item.val">{{item.text}}</li>
+          </ul>
+        </section>
+        <section id="definition" class="mc-tag">
+          <ul class="t-ul">
+            <li @click="mvSel3" v-if="index == 0" class="t-li liG li4" v-for="(item, index) in opt3" :key="index" :val="item.val">{{item.text}}</li>
+            <li @click="mvSel3" v-if="index != 0" class="t-li li4" v-for="(item, index) in opt3" :key="index" :val="item.val">{{item.text}}</li>
+          </ul>
+        </section>
       </div>
     </header>
     <div class="mv-container">
@@ -55,20 +48,67 @@
 </template>
 
 <script>
-import { musicMvList } from "../api/api";
+import { musicMvList, musicMList } from "../api/api";
 export default {
   name: "musicMv",
   data() {
     return {
-      mvArr: []
+      mvArr: [],
+      opt1: [],
+      opt2: [],
+      opt3: [],
+      sel: '',
+      sel1: '',
+      sel2: '',
+      sel3: '',
+      list: [
+        {
+          val: 'mlmv',
+          text: '内地MV'
+        },
+        {
+          val: 'htmv',
+          text: '港台MV'
+        },
+        {
+          val: 'usmv',
+          text: '欧美MV'
+        },
+        {
+          val: 'krmv',
+          text: '韩语MV'
+        },
+        {
+          val: 'jpmv',
+          text: '日语MV'
+        },
+        {
+          val: 'acg',
+          text: '动漫MV'
+        },
+        {
+          val: 'other',
+          text: '综艺MV'
+        }
+      ]
     };
   },
   mounted() {
-    musicMvList(res => {
+    musicMvList('mlmv', '', res => {
+      // console.log(res)
       if (!res.err) {
         this.mvArr = res.result;
       }
       this.$toast(res.data);
+    });
+    musicMList(res => {
+      if (!res.err) {
+        // console.log(res)
+        this.opt1 = res.result.opt1;
+        this.opt2 = res.result.opt2;
+        this.opt3 = res.result.opt3;
+      }
+      // this.$toast(res.data);
     });
   },
   methods: {
@@ -79,12 +119,94 @@ export default {
       localStorage["mvName"] = name;
       this.$store.commit("changeMvUrl", url);
       localStorage["mvUrl"] = url;
+    },
+    mvSel (e) {
+      let val = e.currentTarget.getAttribute('val');
+      let li = document.getElementsByClassName('li1');
+      for (let i = 0, len = li.length; i < len; i++) {
+        li[i].classList.remove('liG');
+      }
+      e.currentTarget.classList.add('liG');
+      if (val != 'all') {
+        this.sel = val;
+      } else {
+        this.sel = '';
+      }
+      this.getmv();
+    },
+    mvSel1 (e) {
+      let val = e.currentTarget.getAttribute('val');
+      let li = document.getElementsByClassName('li2');
+      for (let i = 0, len = li.length; i < len; i++) {
+        li[i].classList.remove('liG');
+      }
+      e.currentTarget.classList.add('liG');
+      if (val != 'all') {
+        this.sel1 = val;
+      } else {
+        this.sel1 = '';
+      }
+      this.getmv();
+    },
+    mvSel2 (e) {
+      let val = e.currentTarget.getAttribute('val');
+      let li = document.getElementsByClassName('li3');
+      for (let i = 0, len = li.length; i < len; i++) {
+        li[i].classList.remove('liG');
+      }
+      e.currentTarget.classList.add('liG');
+      if (val != 'all') {
+        this.sel2 = val;
+      } else {
+        this.sel2 = '';
+      }
+      this.getmv();
+    },
+    mvSel3 (e) {
+      let val = e.currentTarget.getAttribute('val');
+      let li = document.getElementsByClassName('li4');
+      for (let i = 0, len = li.length; i < len; i++) {
+        li[i].classList.remove('liG');
+      }
+      e.currentTarget.classList.add('liG');
+      if (val != 'all') {
+        this.sel3 = val;
+      } else {
+        this.sel3 = '';
+      }
+      this.getmv();
+    },
+    getmv () {
+      let tags = '';
+      if (this.sel1 != '') {
+        tags += this.sel1;
+      }
+      if (this.sel2 != '' && tags == '') {
+        tags += this.sel2;
+      } else if(this.sel2 != '' && tags != ''){
+        tags += `+${this.sel2}`;
+      }
+      if (this.sel3 != '' && tags == '') {
+        tags += this.sel3;
+      } else if(this.sel3 != '' && tags != ''){
+        tags += `+${this.sel3}`;
+      }
+      // console.log(tags)
+      musicMvList(this.sel, tags, res => {
+        if (!res.err) {
+          this.mvArr = res.result;
+        }
+        this.$toast(res.data);
+      });
     }
   }
 };
 </script>
 
 <style lang="less" scoped>
+.liG {
+  color: rgb(8, 143, 233) !important;
+}
 .mv {
   width: 100%;
   height: auto;
@@ -93,29 +215,28 @@ export default {
   .mv-sort {
     width: 96%;
     // height: 3rem;
-    padding: 2rem 0;
+    padding: 1rem 0;
     margin: 0 auto;
-    .mv-container {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: nowrap;
-      .ms-tag {
-        height: 3rem;
-        border: none;
-        font: 400 1.2rem "微软雅黑";
-        margin-left: .5rem;
-        outline: none;
-        background-color: white;
-        .t-o {
-          height: 3rem;
+    .mv-containe {
+      width: 100%;
+      height: auto;
+      .mc-tag {
+        width: 100%;
+        height: auto;
+        border-bottom: .1rem solid rgb(214, 214, 214);
+        padding: .5rem 0;
+        &:last-child {
+          border-bottom: none;
         }
-      }
-      .ms-btn {
-        height: 3rem;
-        border: none;
-        padding: 0 1rem;
-        outline: none;
-        background-color: white;
+        .t-ul {
+          list-style: none;
+          .t-li {
+            display: inline-block;
+            font: 500 1.4rem "微软雅黑";
+            color: #333;
+            padding: 0 .5rem .5rem .5rem;
+          }
+        }
       }
     }
   }
