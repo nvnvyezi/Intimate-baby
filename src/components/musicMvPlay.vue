@@ -200,6 +200,7 @@ export default {
   width: 100%;
   height: auto;
   background: #eee;
+  overflow-x: hidden;
   .mp-video {
     width: 100%;
     height: auto;

@@ -630,9 +630,9 @@ export default {
       div{
         // width: 44/12rem;
         // height: 44/12rem;
-        width: 13%;
+        width: 12%;
         height: 0;
-        padding-bottom: 13%;
+        padding-bottom: 12%;
         flex: 0 1 auto;
         border-radius: 16px;
         background-repeat: no-repeat;

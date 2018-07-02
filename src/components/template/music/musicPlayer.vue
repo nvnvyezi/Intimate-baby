@@ -340,7 +340,7 @@ export default {
       position: fixed;
       top: 50%;
       left: 50%;
-      z-index: 3002;
+      z-index: 1000;
       margin-left: -10rem;
       margin-top: -4rem;
       background-color: rgb(240, 240, 240);

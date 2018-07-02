@@ -33,7 +33,7 @@ export default {
   },
   computed: {
     showName () {
-      let name = localStorage['userName'];
+      let name = sessionStorage['userName'];
       if (name) {
         return name;
       }

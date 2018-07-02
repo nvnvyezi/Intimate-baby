@@ -10,7 +10,9 @@
       </div>
     </header>
     <transition>
+      <keep-alive include="userChange" exclude="user">
         <router-view></router-view>
+      </keep-alive>
     </transition>
     <leftNav :showJ="showN" @changeShowM="showNav"></leftNav>
   </div>

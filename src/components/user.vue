@@ -2,11 +2,11 @@
   <div class="user">
     <div class="userInfo">
       <section class="userInfo-img">
-        <img class="photo" src="../assets/swipe.jpg" alt="">
+        <img class="photo" :src="userImg" alt="">
       </section>
       <section class="userInfo-name">
         <span class="name">{{ userName }}</span>
-        <button class="btn">编辑资料</button>
+        <router-link tag="button" to="user/change" class="btn">编辑资料</router-link>
       </section>
       <section class="userInfo-list">
         <ul class="list">
@@ -59,12 +59,13 @@ export default {
       user_id: 8000000,
       encryptKey: '37e81a9d8f02596e1b895d07c171d5c9',
       book: [],
-      delIcon: false
+      delIcon: false,
+      userImg: ''
     }
   },
   computed: {
     userName () {
-      return localStorage['userName'];
+      return sessionStorage['userName'];
     },
     timestamp () {
       return Date.now();
@@ -72,10 +73,13 @@ export default {
   },
   mounted () {
     userBookShelfG(this.userName, data => {
+      console.log(data);
       if (!data.err) {
-        let book = data.result.split(',');
+        let book = data.result.bookShelf.split(',');
         this.bookShelf = book;
+        this.userImg = data.result.img;
         localStorage['bookshelf'] = book;
+        sessionStorage['userData'] = JSON.stringify(data.result);
         for (let i = 0, len = book.length; i < len; i++) {
           this.getBookInfo(book[i]);
         }
@@ -138,19 +142,20 @@ export default {
   width: 100%;
   height: auto;
   background-color: #f2f2f2;
+  user-select: none;
   .userInfo {
     width: 100%;
     height: auto;
     padding-bottom: 2rem;
     .userInfo-img {
       width: 100%;
-      height: 140/12rem;
+      height: 140px;
       display: flex;
       justify-content: center;
       padding: 2rem 0;
       .photo {
-        width: 140/12rem;
-        height: 140/12rem;
+        width: 140px;
+        height: 140px;
         border-radius: 50%;
         border: .3rem solid #fff;
       }
@@ -174,6 +179,11 @@ export default {
         color: white;
         background-color: @bcColor;
         font: 400 1.4rem Helvetica,Arial,"PingFang SC","Noto Sans",Roboto,"Microsoft Yahei",sans-serif!important;
+      }
+      .n-info {
+        width: 100%;
+        font: 400 1rem "微软雅黑";
+        text-align: left;
       }
     }
     .userInfo-list {

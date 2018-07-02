@@ -12,7 +12,7 @@
             <ul class="c-ul">
               <li @click="showMusic" class="c-li">音乐播放器</li>
               <router-link @click.native="changeFocus" :to="item" tag="li" class="c-li" v-for="(item, index) in menu" :key="index" :data-val="index"><i></i>{{index}}</router-link>
-              <li class="c-li">退出登录</li>
+              <li @click="logOut" class="c-li">退出登录</li>
             </ul>
           </div>
         </section>
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { userLogout } from "../../../api/api";
 export default {
   name: 'leftNav',
   data () {
@@ -85,6 +86,20 @@ export default {
           break;
       }
       this.$emit('changeShowM');
+    },
+    logOut () {
+      this.$emit('changeShowM');
+      userLogout(data => {
+        if (data.err) {
+          this.$toast(data.data);
+        } else {
+          this.$toast(data.data);
+          setTimeout(() => {
+            sessionStorage.removeItem('userName');
+            location.reload();
+          }, 500);
+        }
+      });
     }
   },
   updated () {

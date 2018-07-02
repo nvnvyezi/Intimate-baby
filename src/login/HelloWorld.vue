@@ -23,8 +23,8 @@
         <span class="input__box--span2">New User? <strong class="strong-up" @click="showRegister">{{ message }}</strong></span>
       </div>
       <div class="login__box">
-        <button class="login__box--button">
-          <span class="login__box--span" v-if="LRstatus" @click="login">{{ buttonText }}</span>
+        <button @click="login" class="login__box--button">
+          <span class="login__box--span" v-if="LRstatus">{{ buttonText }}</span>
           <loading v-else></loading>
         </button>
       </div>
@@ -34,7 +34,7 @@
 
 <script>
 import loading from '../components/loading';
-import { userLoginG, userLoginP, userRegisterG, userRegisterP } from "../api/api";
+import { userLoginG, userLoginP, userRegisterG, userRegisterP, userBookShelfG} from "../api/api";
 export default {
   name: 'HelloWorld',
   components: {
@@ -138,11 +138,10 @@ export default {
               console.log(data.data)
               this.$toast(data.data);
             } else {
+              this.$toast(data.data);
               setTimeout(() => {
                 this.LRstatus = true;
-                this.$toast(data.data);
-                this.$route.meta.isLogin = true;
-                localStorage['userName'] = id;
+                sessionStorage['userName'] = id;
                 userBookShelfG(id, data => {
                   if (data.err) {
                     this.$toast(data.data);
@@ -334,6 +333,10 @@ export default {
               padding-left: 17vw;
             }
           }
+          input:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0px 1000px white inset;
+            -webkit-text-fill-color: rgb(175, 175, 175);
+          }
           &::after {
             content: '';
             display: block;
@@ -390,11 +393,12 @@ export default {
           height: 8vh;
           border: none;
           background-color: rgb(248, 54, 112);
-          font-size: 0.9rem;
+          font-size: 1.5rem;
           font-weight: 600;
           border-radius: 30px;
           color: white;
           letter-spacing: 1px;
+          outline: none;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
           &:focus {
             outline: none;

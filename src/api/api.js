@@ -669,7 +669,7 @@ export function getBookChapter (bookName, author, page, cb) {
     page
   }
   // const url = `http://127.0.0.1:3000/chapter`;
-  const url = `https://${ window.location.hostname}:3002/chapter`;
+  const url = `http://${ window.location.hostname}:3001/chapter`;
   if (window.fetch) {
     fetchGet(url, options, 'get', (data) => {
       cb(data);
@@ -685,7 +685,7 @@ export function getBookChapter (bookName, author, page, cb) {
 
 // 音乐榜单
 export function musiclist (cb) {
-  const url = `https://${window.location.hostname}:3002/music`;
+  const url = `http://${window.location.hostname}:3001/music`;
   // const url = `http://193.112.4.143:3001/music`;
   if (window.fetch) {
     fetchGet(url, {}, 'get', (data) => {
@@ -702,7 +702,7 @@ export function musiclist (cb) {
 
 // 获取歌曲
 export function song (mid, cb) {
-  const url = `https://${window.location.hostname}:3002/song`;
+  const url = `http://${window.location.hostname}:3001/song`;
   // const url = `http://193.112.4.143:3001/song`;
   if (window.fetch) {
     fetchGet(url, {mid: mid}, 'get', (data) => {
@@ -719,7 +719,7 @@ export function song (mid, cb) {
 
 // 获取歌词
 export function musicLyric (mid, cb) {
-  const url = `https://${window.location.hostname}:3002/lyric`;
+  const url = `http://${window.location.hostname}:3001/lyric`;
   // const url = `http://193.112.4.143:3001/lyric`;
   if (window.fetch) {
     fetchGet(url, {mid: mid}, 'get', (data) => {
@@ -736,8 +736,8 @@ export function musicLyric (mid, cb) {
 
 // 用户登录
 export function userLoginG (cb) {
-  const url = `https://${window.location.hostname}:3002/login`;
-  // const url = `https://127.0.0.1:3002/login`;
+  const url = `http://${window.location.hostname}:3001/login`;
+  // const url = `http://127.0.0.1:3001/login`;
   axios.get(url, {}, {}).then(res => {
     cb(res.data);
   }).catch(err => {
@@ -745,8 +745,8 @@ export function userLoginG (cb) {
   })
 }
 export function userLoginP (id, pw, cb) {
-  const url = `https://${window.location.hostname}:3002/login`;
-  // const url = `https://127.0.0.1:3002/login`;
+  const url = `http://${window.location.hostname}:3001/login`;
+  // const url = `http://127.0.0.1:3001/login`;
   const options = {
     id: jsencrypt.encrypt(id),
     pw: jsencrypt.encrypt(pw)
@@ -757,10 +757,19 @@ export function userLoginP (id, pw, cb) {
     console.log(err);
   })
 }
+// 用户退出
+export function userLogout (cb) {
+  const url = `http://${window.location.hostname}:3001/logout`;
+  axios.post(url, {}, {}).then(res => {
+    cb(res.data);
+  }).catch(err => {
+    console.log(err);
+  })
+}
 
 // 用户注册
 export function userRegisterG (cb) {
-  const url = `https://${window.location.hostname}:3002/register`;
+  const url = `http://${window.location.hostname}:3001/register`;
   axios.get(url, {}, {}).then(res => {
     cb(res.data);
   }).catch(err => {
@@ -768,7 +777,7 @@ export function userRegisterG (cb) {
   })
 }
 export function userRegisterP (id, pw, email, cb) {
-  const url = `https://${window.location.hostname}:3002/register`;
+  const url = `http://${window.location.hostname}:3001/register`;
   const options = {
     id: jsencrypt.encrypt(id),
     pw: jsencrypt.encrypt(pw),
@@ -783,7 +792,7 @@ export function userRegisterP (id, pw, email, cb) {
 
 // 加书架
 export function userBookShelfG (id, cb) {
-  const url = `https://${window.location.hostname}:3002/shelf`;
+  const url = `http://${window.location.hostname}:3001/shelf`;
   axios.get(url, {id}, {}).then(res => {
     cb(res.data);
   }).catch(err => {
@@ -791,7 +800,7 @@ export function userBookShelfG (id, cb) {
   })
 }
 export function userBookShelfP (id, bookShelf, cb) {
-  const url = `https://${window.location.hostname}:3002/shelf`;
+  const url = `http://${window.location.hostname}:3001/shelf`;
   const options = {
     id,
     bookShelf: bookShelf.join(',')
@@ -805,7 +814,7 @@ export function userBookShelfP (id, bookShelf, cb) {
 
 // 音乐ｍｖ
 export function musicMvList (list, tags, cb) {
-  const url = `https://${window.location.hostname}:3002/mv`;
+  const url = `http://${window.location.hostname}:3001/mv`;
   axios.get(url, {list, tags}, {}).then(res => {
     cb(res.data)
   }).catch((err) => {
@@ -814,7 +823,7 @@ export function musicMvList (list, tags, cb) {
 }
 
 export function musicMList (cb) {
-  const url = `https://${window.location.hostname}:3002/mvList`;
+  const url = `http://${window.location.hostname}:3001/mvList`;
   axios.get(url, {}, {}).then(res => {
     cb(res.data)
   }).catch((err) => {
@@ -823,7 +832,7 @@ export function musicMList (cb) {
 }
 
 export function musicMvPlay (uri, cb) {
-  let url = `https://${window.location.hostname}:3002/mvPlay`;
+  let url = `http://${window.location.hostname}:3001/mvPlay`;
   axios.get(url, {uri}, {}).then(res => {
     cb(res.data)
   }).catch((err) => {

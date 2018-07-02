@@ -38,6 +38,7 @@ const bookChapter = () => import ( /*webpackChunkName: "bookChapter"*/'@/compone
 
 const userRouter = () => import ( /*webpackChunkName: "userRouter"*/'@/components/userRouter');
 const user = () => import ( /*webpackChunkName: "user"*/'@/components/user');
+const userChange = () => import ( /*webpackChunkName: "userChange"*/'@/components/userChange');
 
 const takePicture = () => import ( /*webpackChunkName: "takePicture"*/'@/components/template/takePicture/takePicture');
 
@@ -77,6 +78,11 @@ export default new Router({
           path: '/',
           component: user,
           name: 'user'
+        }, 
+        {
+          path: '/user/change',
+          component: userChange,
+          name: 'userChange'
         }
       ]
     },

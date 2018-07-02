@@ -8,12 +8,6 @@ const CancelToken = axios.CancelToken;
 // 请求拦截器
 axios.interceptors.request.use(config => {
   // 发起请求时，取消当前正在进行相同的请求
-  if (config.url.includes('http://')) {
-    axios.defaults.withCredentials = false;
-  }
-  if (config.url.includes('https://')) {
-    axios.defaults.withCredentials = true;
-  }
   if (reqArr[config.url]) {
     reqArr[config.url]('操作取消');
     reqArr[config.url] = cancel;
@@ -84,6 +78,11 @@ axios.defaults.timeout = 10000;
 
 export default {
   get (url, params, headers) {
+    if (url.includes('http://loc') || url.includes('https://')) {
+      axios.defaults.withCredentials = true;
+    } else {
+      axios.defaults.withCredentials = false;
+    }
     return new Promise((resolve, reject) => {
       axios({
         url,
@@ -103,6 +102,11 @@ export default {
     })
   },
   post (url, data, headers) {
+    if (url.includes('http://loc') || url.includes('https://')) {
+      axios.defaults.withCredentials = true;
+    } else {
+      axios.defaults.withCredentials = false;
+    }
     return new Promise((resolve, reject) => {
       axios({
         url,
@@ -115,6 +119,7 @@ export default {
           cancel = c;
         })
       }).then(res => {
+        console.log(axios.defaults.withCredentials)
         resolve(res);
       }).catch(err => {
         reject(err);
