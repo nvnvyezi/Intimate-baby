@@ -119,7 +119,7 @@ export default {
           cancel = c;
         })
       }).then(res => {
-        console.log(axios.defaults.withCredentials)
+        // console.log(axios.defaults.withCredentials)
         resolve(res);
       }).catch(err => {
         reject(err);

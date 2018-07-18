@@ -73,7 +73,7 @@ export default {
   },
   mounted () {
     userBookShelfG(this.userName, data => {
-      console.log(data);
+      // console.log(data);
       if (!data.err) {
         let book = data.result.bookShelf.split(',');
         this.bookShelf = book;

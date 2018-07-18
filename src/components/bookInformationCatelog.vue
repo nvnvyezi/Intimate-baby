@@ -106,6 +106,16 @@ export default {
       }
       this.maskJudge = false;
     },
+  },
+  watch: {
+    maskJudge (str) {
+      let body = document.getElementsByTagName('body')[0];
+      if (str) {
+        body.style.overflow = 'hidden';
+      } else {
+        body.style.overflow = 'visible';
+      }
+    }
   }
 }
 </script>

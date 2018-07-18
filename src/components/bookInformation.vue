@@ -31,10 +31,10 @@
       <ul class="comments--ul">
         <li class="comments--ul__li" v-for="(item, index) in commentData" :key="index">
           <div>
-            <div class="comments--ul__li--header">
+            <router-link to="user" tag="div" class="comments--ul__li--header">
               <img class="comments--ul__li--header--photo" src="" v-lazyLoad="item.userPhoto" alt="">
               <span class="comments--ul__li--header--name">{{ item.nickName }}</span>
-            </div>
+            </router-link>
             <div class="comments--ul__li--text">
               {{ item.text }}
             </div>

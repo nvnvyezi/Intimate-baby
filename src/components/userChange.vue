@@ -133,7 +133,7 @@ export default {
         img = img.src;
         formData.append('img', img);
       }
-      console.log(intro, gender, day, month, year)
+      // console.log(intro, gender, day, month, year)
       let xhr = new XMLHttpRequest();
       formData.append('intro', intro);
       formData.append('nickname', nickname);
@@ -146,9 +146,11 @@ export default {
         formData.append('year', year);
       }
       xhr.open('post', `http://${window.location.hostname}:3001/upload`);
-      xhr.onreadystatechange = () => {
+      xhr.onreadystatechange = (data) => {
         if (xhr.readyState == 4 && xhr.status == 200) {
-          console.log(xhr);
+          this.$toast(JSON.parse(xhr.response).data);
+        } else {
+          this.$toast('请求错误');
         }
       }
       xhr.withCredentials = true;

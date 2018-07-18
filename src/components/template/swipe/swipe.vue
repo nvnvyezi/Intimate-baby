@@ -86,63 +86,63 @@ export default {
     //   }, this.time);
     // },
     next () {
-    //   if (this.lrJudge) {
-    //     this.lrJudge = false;
-    //     this.move += this.sw;
-    //     this.flag++;
-    //     let sw = document.getElementById('sw');
-    //     let img = document.getElementsByClassName('sc-img')[0];
-    //     sw.style.transform = `translate(${-this.move}px)`;
-    //     sw.style.transition = `all 2s ease`;
-    //     if (this.endJudge) {
-    //       this.endJudge = false;
-    //       sw.addEventListener('transitionend', () => {
-    //         this.lrJudge = true;
-    //         if (this.flag == this.swipeData.length) {
-    //           this.flag = 0;
-    //           this.move = this.sw;
-    //           sw.style.transition = `all 0s ease`;
-    //           sw.style.transform = `translate(${-this.move}px)`;
-    //         }
-    //         if (this.flag == -1) {
-    //           this.flag = this.swipeData.length;
-    //           this.move = (this.swipeData + 1) * this.sw;
-    //           sw.style.transition = `all 0s ease`;
-    //           sw.style.transform = `translate(${-this.move}px)`;
-    //         }
-    //       })
-    //     }
-    //   }
+      if (this.lrJudge) {
+        this.lrJudge = false;
+        this.move += this.sw;
+        this.flag++;
+        let sw = document.getElementById('sw');
+        let img = document.getElementsByClassName('sc-img')[0];
+        sw.style.transform = `translate(${-this.move}px)`;
+        sw.style.transition = `all 2s ease`;
+        if (this.endJudge) {
+          this.endJudge = false;
+          sw.addEventListener('transitionend', () => {
+            this.lrJudge = true;
+            if (this.flag == this.swipeData.length) {
+              this.flag = 0;
+              this.move = this.sw;
+              sw.style.transition = `all 0s ease`;
+              sw.style.transform = `translate(${-this.move}px)`;
+            }
+            if (this.flag == -1) {
+              this.flag = this.swipeData.length;
+              this.move = (this.swipeData + 1) * this.sw;
+              sw.style.transition = `all 0s ease`;
+              sw.style.transform = `translate(${-this.move}px)`;
+            }
+          })
+        }
+      }
     },
     previous () {
-    //   if (this.lrJudge) {
-    //     this.lrJudge = false;
-    //     this.move -= this.sw;
-    //     this.flag--;
-    //     let sw = document.getElementById('sw');
-    //     let img = document.getElementsByClassName('sc-img')[0];
-    //     sw.style.transform = `translate(${-this.move}px)`;
-    //     sw.style.transition = `all 2s ease`;
-    //     if (this.endJudge) {
-    //       this.endJudge = false;
-    //       sw.addEventListener('transitionend', () => {
-    //         this.lrJudge = true;
-    //         if (this.flag == this.swipeData.length) {
-    //           this.flag = 0;
-    //           this.move = this.sw;
-    //           sw.style.transition = `all 0s ease`;
-    //           sw.style.transform = `translate(${-this.move}px)`;
-    //         }
-    //         if (this.flag == -1) {
-    //           this.flag = this.swipeData.length;
-    //           this.move = (this.swipeData.length) * this.sw;
-    //           // console.log(this.move)
-    //           sw.style.transition = `all 0s ease`;
-    //           sw.style.transform = `translate(${-this.move}px)`;
-    //         }
-    //       })
-    //     }
-    //   }
+      if (this.lrJudge) {
+        this.lrJudge = false;
+        this.move -= this.sw;
+        this.flag--;
+        let sw = document.getElementById('sw');
+        let img = document.getElementsByClassName('sc-img')[0];
+        sw.style.transform = `translate(${-this.move}px)`;
+        sw.style.transition = `all 2s ease`;
+        if (this.endJudge) {
+          this.endJudge = false;
+          sw.addEventListener('transitionend', () => {
+            this.lrJudge = true;
+            if (this.flag == this.swipeData.length) {
+              this.flag = 0;
+              this.move = this.sw;
+              sw.style.transition = `all 0s ease`;
+              sw.style.transform = `translate(${-this.move}px)`;
+            }
+            if (this.flag == -1) {
+              this.flag = this.swipeData.length;
+              this.move = (this.swipeData.length) * this.sw;
+              // console.log(this.move)
+              sw.style.transition = `all 0s ease`;
+              sw.style.transform = `translate(${-this.move}px)`;
+            }
+          })
+        }
+      }
     }
   }
 }
