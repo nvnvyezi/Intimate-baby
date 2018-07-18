@@ -43,15 +43,14 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 
 ## 部分截图
 
-![1531894200419](/tmp/1531894200419.png)
+![1531894200419](/media/nvnvyezi/linux_software/linux-web/Intimate-baby/screenshot/1531894200419.png)
 
-![1531894298669](/tmp/1531894298669.png)
 
-![1531894313675](/tmp/1531894313675.png)
 
-![1531894225373](/tmp/1531894225373.png)
+![1531894313675](/media/nvnvyezi/linux_software/linux-web/Intimate-baby/screenshot/1531894313675.png)
 
-![1531894252374](/tmp/1531894252374.png)
+![1531894225373](/media/nvnvyezi/linux_software/linux-web/Intimate-baby/screenshot/1531894225373.png)
 
-![1531894269304](/tmp/1531894269304.png)
+![1531894252374](/media/nvnvyezi/linux_software/linux-web/Intimate-baby/screenshot/1531894252374.png)
 
+![1531894269304](/media/nvnvyezi/linux_software/linux-web/Intimate-baby/screenshot/1531894269304.png)
