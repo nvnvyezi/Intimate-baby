@@ -49,7 +49,7 @@
           <li class="comments--ul__li" v-for="(item, index) in userCom" :key="index">
             <div>
               <router-link to="user" tag="div" class="comments--ul__li--header">
-                <img class="comments--ul__li--header--photo" src="" v-lazyLoad="item.img" alt="">
+                <img class="comments--ul__li--header--photo" src="" v-lazyLoad="wmImg.get(item)" alt="">
                 <span class="comments--ul__li--header--name">{{ item.id }}</span>
               </router-link>
               <div class="comments--ul__li--text">
@@ -127,6 +127,7 @@ export default {
       result1: [],
       arrResult: [],
       userCom: [],
+      wmImg: new WeakMap(),
       refreshJudge: true,
       user_id: 8000000,
       encryptKey: '37e81a9d8f02596e1b895d07c171d5c9',
@@ -379,16 +380,17 @@ export default {
             }
           }, [JSON.parse(data.data), bookId])
           .then((data) => {
-            if (data && JSON.stringify(this.userCom).indexOf(JSON.stringify(data)) === -1) {       
-              // userBookShelfG(data.id, da => {
-              //   if (!da.err) {
-              //     data.img = da.result.img;
-                  this.userCom.push(data);
-            // console.log(this.userCom)
-              //   } else {
-              //     this.$toast('da.data');
-              //   }
-              // })
+            if (data && JSON.stringify(this.userCom).indexOf(JSON.stringify(data)) === -1) {
+              this.userCom.push(data);
+              userBookShelfG(data.id, da => {
+                if (!da.err) {
+                  this.wmImg.set(data, da.result.img);
+                  // console.log(this.userCom)
+                  // console.log(this.wmImg.get(data));
+                } else {
+                  this.$toast('da.data');
+                }
+              })
             }
           }).catch((err) => {
             console.log(err);
