@@ -42,6 +42,33 @@
         </li>
       </ul>
     </section>
+    <section class="comments">
+      <h3 class="comments--header">其他评论</h3>
+      <div v-if="userCom.length">
+        <ul class="comments--ul">
+          <li class="comments--ul__li" v-for="(item, index) in userCom" :key="index">
+            <div>
+              <router-link to="user" tag="div" class="comments--ul__li--header">
+                <img class="comments--ul__li--header--photo" src="" v-lazyLoad="item.img" alt="">
+                <span class="comments--ul__li--header--name">{{ item.id }}</span>
+              </router-link>
+              <div class="comments--ul__li--text">
+                {{ item.text }}
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div v-else class="c-none">
+        <span class="cn-text">暂无评论</span>
+      </div>
+      <div class="nCom">
+        <div class="n-box">
+          <input class="n-input" type="text" name="uCom" id="uCom" placeholder="发表评论"/>
+          <button class="n-btn" @click="sendCom">现在评论</button>
+        </div>
+      </div>
+    </section>
     <section class="bookBox">
       <div class="book-box">
         <h3 class="bookBox--h3">看过这本书的人还在看</h3>
@@ -89,7 +116,7 @@
 </template>
 
 <script>
-import { bookInfo, bookComments, bookRecom, otherBooks, bookCatelog, userBookShelfG, userBookShelfP } from "../api/api";
+import { sendComments, bookInfo, bookComments, bookRecom, otherBooks, bookCatelog, userBookShelfG, userBookShelfP } from "../api/api";
 import md5 from '../encryption/md5'
 export default {
   name: 'bookInformation',
@@ -99,6 +126,7 @@ export default {
       commentData: [],
       result1: [],
       arrResult: [],
+      userCom: [],
       refreshJudge: true,
       user_id: 8000000,
       encryptKey: '37e81a9d8f02596e1b895d07c171d5c9',
@@ -155,6 +183,21 @@ export default {
     }
   },
   methods: {
+    sendCom () {
+      let com = {
+        bookId: localStorage['bookId'],
+        id: sessionStorage['userName'],
+        text: document.getElementById('uCom').value
+      }
+      if (com.text) {
+        sendComments(com, data => {
+          console.log(data);
+          this.$toast(data.data);
+        })
+      } else {
+        this.$toast('请先输入评论');
+      }
+    },
     newChapter () {
       this.$store.dispatch({
         type: 'triggerPage',
@@ -196,7 +239,8 @@ export default {
       }
       if (data.indexOf(bookId) === -1) {
         data.push(bookId);
-        userBookShelfP(localStorage['userName'], data, dat => {
+        userBookShelfP(sessionStorage['userName'], data, dat => {
+          console.log(dat)
           if (!dat.err) {
             localStorage['bookshelf'] = data;
             this.bookshelfJudge = true;
@@ -316,10 +360,49 @@ export default {
             this.arrResult.push(obj);
         })
       })
+    },
+    getUCom () {
+      if (!!window.EventSource) {
+        let bookId = localStorage['bookId'];
+        this.source = new EventSource(`http://${window.location.hostname}:3001/getcom`);
+        this.source.onopen = () => {
+          console.log('链接已建立');
+        }
+        this.source.onmessage = (data) => {
+          this.$worker.run((data, bookId) => {
+            if (data.bookId == bookId) {
+              // this.userCom.pus
+              // console.log(this.userCom)
+              return data;
+            } else {
+              return false;
+            }
+          }, [JSON.parse(data.data), bookId])
+          .then((data) => {
+            if (data && JSON.stringify(this.userCom).indexOf(JSON.stringify(data)) === -1) {       
+              // userBookShelfG(data.id, da => {
+              //   if (!da.err) {
+              //     data.img = da.result.img;
+                  this.userCom.push(data);
+            // console.log(this.userCom)
+              //   } else {
+              //     this.$toast('da.data');
+              //   }
+              // })
+            }
+          }).catch((err) => {
+            console.log(err);
+          })
+        }
+        this.source.onerror = (err) => {
+          console.log(err);
+        }
+      }
     }
   },
   mounted () {
     this.getBookInfo();
+    this.getUCom();
     try {
       this.bookshelfJudge =  localStorage['bookshelf'].indexOf(localStorage['bookId']) != -1
     } catch (error) {
@@ -328,6 +411,7 @@ export default {
   },
   beforeRouteLeave (to, from, next) {
     // console.log(to)
+    this.source.close();
     if (to.name == 'bookinformationcatelog') {
       next();
     } else {
@@ -359,24 +443,26 @@ export default {
         pH.classList.add('poff');
       }
     }
-  }
+  },
+  // beforeDestroy () {
+  //   this.source.close();
+  // }
 }
 </script>
 
 <style lang="less" scoped>
- @media screen and(max-width: 720px) {
-   @wordColor: #999;
-   @borderColor: #f08300;
-   @bottomColor: #f2f2f2;
-   .infoG {
-      display: inline-block;
-      font-size: 1.45rem;
-      color: @wordColor;
-      width: 100%;
-      display: inline-block;
-      text-decoration: none;
-   }
-   .afterG {
+  @wordColor: #999;
+  @borderColor: #f08300;
+  @bottomColor: #f2f2f2;
+  .infoG {
+    display: inline-block;
+    font-size: 1.45rem;
+    color: @wordColor;
+    width: 100%;
+    display: inline-block;
+    text-decoration: none;
+  }
+  .afterG {
     content: '';
     width: 18/12rem;
     height: 28/12rem;
@@ -387,53 +473,53 @@ export default {
     z-index: 3;
     left: 0;
     top: 0;
+  }
+  .statNameG {
+    height: 1rem;
+    line-height: 1rem;
+    padding: 0.4rem 0.5rem 0.1rem;
+  }
+  .statName (@fcolor: #70a7e3) {
+    .statNameG;
+    color: @fcolor;
+    border: 1px solid @fcolor;
+    margin-right: 0.3rem;
+    font-size: 1.2rem;
+  }
+  .statNamered {
+    .statName(#f08300)
+  }
+  .statNameblue {
+    .statName(#499fff);
+  }
+  .titleH3 {
+    font-size: 1.5rem;
+    font-weight: 400;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .sectionH3 {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    padding: 1rem 0 1.3rem 1rem;
+    color: #333;
+    &::after {
+      content: '';
+      width: .25rem;
+      height: 1.2rem;
+      display: inline-block;
+      background: #f08300;
+      position: absolute;
+      top: 1.3rem;
+      left: 0;
     }
-    .statNameG {
-      height: 1rem;
-      line-height: 1rem;
-      padding: 0.4rem 0.5rem 0.1rem;
-    }
-    .statName (@fcolor: #70a7e3) {
-      .statNameG;
-      color: @fcolor;
-      border: 1px solid @fcolor;
-      margin-right: 0.3rem;
-      font-size: 1.2rem;
-    }
-    .statNamered {
-      .statName(#f08300)
-    }
-    .statNameblue {
-      .statName(#499fff);
-    }
-    .titleH3 {
-      font-size: 1.5rem;
-      font-weight: 400;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-   .sectionH3 {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      font-size: 1.4rem;
-      font-weight: 400;
-      padding: 1rem 0 1.3rem 1rem;
-      color: #333;
-      &::after {
-        content: '';
-        width: .25rem;
-        height: 1.2rem;
-        display: inline-block;
-        background: #f08300;
-        position: absolute;
-        top: 1.3rem;
-        left: 0;
-      }
-    }
-   .box {
-     width: 100vw;
-     height: auto;
-     background-color: white;
+  }
+  .box {
+    width: 100vw;
+    height: auto;
+    background-color: white;
     .cover--header {
       width: 100%;
       height: auto;
@@ -617,6 +703,14 @@ export default {
       height: auto;
       border-bottom: 0.7rem solid @bottomColor;
       position: relative;
+      .c-none {
+        width: 100%;
+        text-align: center;
+        padding-bottom: 1em;
+        .cn-text {
+          font: 400 1.3rem "微软雅黑";
+        }
+      }
       .comments--header {
         .sectionH3;
       }
@@ -627,7 +721,7 @@ export default {
         .comments--ul__li {
           width: 100%;
           height: auto;
-          padding: 2rem 0 1rem;
+          padding: .5rem 0 1rem;
           border-bottom: 0.1rem solid @bottomColor;
           &:last-child {
             border-bottom: none;
@@ -659,6 +753,47 @@ export default {
             font-size: 1.4rem;
             padding: 0 0 0 3rem;
             color: #333;
+          }
+        }
+      }
+      .nCom {
+        width: 100%;
+        height: auto;
+        padding: 20px 0;
+        display: flex;
+        justify-content: center;
+        border-top: 1px solid rgb(238, 238, 238);
+        .n-box {
+          width: 90%;
+          height: auto;
+          .n-input {
+            width: 70%;
+            font: 400 1.3rem "微软雅黑";
+            line-height: 25px;
+            vertical-align: middle;
+            color: #999;
+            border: 1px solid #499fff;
+            text-indent: 10px;
+            &:focus {
+              outline: none;
+              text-indent: 10px;
+            }
+            &::placeholder {
+              text-indent: 10px;
+            }
+          }
+          .n-btn {
+            width: 70px;
+            height: 27px;
+            vertical-align: bottom;
+            border: none;
+            color: #ffffff;
+            background-color:#499fff;
+            position: relative;
+            left: -6px;
+            &:focus {
+              outline: none;
+            }
           }
         }
       }
@@ -840,6 +975,5 @@ export default {
         }
       }
     }
-   }
- }
+  }
 </style>

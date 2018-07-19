@@ -839,3 +839,13 @@ export function musicMvPlay (uri, cb) {
     cb({err: true, data: 'axios请求失败'})
   })
 }
+
+//发表评论
+export function sendComments (data, cb) {
+  let url = `http://${window.location.hostname}:3001/comments`;
+  axios.post(url, data, {}).then(res => {
+    cb(res.data)
+  }).catch((err) => {
+    cb({err: true, data: 'axios请求失败'})
+  })
+}
