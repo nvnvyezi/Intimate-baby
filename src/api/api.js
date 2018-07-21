@@ -752,18 +752,18 @@ export function userLoginP (id, pw, cb) {
     pw: jsencrypt.encrypt(pw)
   }
   axios.post(url, options, {}).then(res => {
-    cb(res.data);
+    cb(res.data)
   }).catch(err => {
-    console.log(err);
+    console.log(err)
   })
 }
 // 用户退出
 export function userLogout (cb) {
   const url = `http://${window.location.hostname}:3001/logout`;
   axios.post(url, {}, {}).then(res => {
-    cb(res.data);
+    cb(res.data)
   }).catch(err => {
-    console.log(err);
+    console.log(err)
   })
 }
 
@@ -771,9 +771,9 @@ export function userLogout (cb) {
 export function userRegisterG (cb) {
   const url = `http://${window.location.hostname}:3001/register`;
   axios.get(url, {}, {}).then(res => {
-    cb(res.data);
+    cb(res.data)
   }).catch(err => {
-    console.log(err);
+    console.log(err)
   })
 }
 export function userRegisterP (id, pw, email, cb) {
@@ -784,9 +784,9 @@ export function userRegisterP (id, pw, email, cb) {
     email: jsencrypt.encrypt(email),
   }
   axios.post(url, options, {}).then(res => {
-    cb(res.data);
+    cb(res.data)
   }).catch(err => {
-    console.log(err);
+    console.log(err)
   })
 }
 

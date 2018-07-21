@@ -193,6 +193,9 @@ export default {
       if (com.text) {
         sendComments(com, data => {
           console.log(data);
+          if (!data.err) {
+            document.getElementById('uCom').value = '';
+          }
           this.$toast(data.data);
         })
       } else {

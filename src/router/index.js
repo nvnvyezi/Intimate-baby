@@ -47,6 +47,7 @@ const musicMv = () => import ( /*webpackChunkName: "musicMv"*/'@/components/musi
 const musicMvPlay = () => import ( /*webpackChunkName: "musicMvPlay"*/'@/components/musicMvPlay');
 const swipe = () => import ( /*webpackChunkName: "swipe"*/'@/components/template/swipe/swipe');
 const nav = () => import ( /*webpackChunkName: "nav"*/'@/components/template/leftNav/nav');
+const NotFound = () =>import ( /*webpackChunkName: "nav"*/'@/components/NotFound/NotFound')
 
 export default new Router({
   base: '/intimateBaby/',
@@ -277,6 +278,15 @@ export default new Router({
           ]
         }
       ]
+    },
+    {
+      path: '/404',
+      name: 'NotFound',
+      component: NotFound
+    },
+    {
+      path: '*',
+      redirect: '/404'
     }
   ]
 })
