@@ -790,6 +790,16 @@ export function userRegisterP (id, pw, email, cb) {
   })
 }
 
+// 用户验证
+export function userActivate (cb) {
+  const url = `http://${window.location.hostname}:3001/activate`;
+  axios.get(url, {}, {}).then(res => {
+    cb(res.data)
+  }).catch(err => {
+    console.log(err)
+  })
+}
+
 // 加书架
 export function userBookShelfG (id, cb) {
   const url = `http://${window.location.hostname}:3001/shelf`;

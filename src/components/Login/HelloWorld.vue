@@ -4,7 +4,7 @@
     <div class="shade"></div>
     <div class="form__box">
       <div class="img__box">
-        <img class="img__box--img" src="../assets/logo.png" alt="">
+        <img class="img__box--img" src="../../assets/logo.png" alt="">
       </div>
       <div class="input__box">
         <span class="input__box--span">{{ formTitle }}</span>
@@ -33,8 +33,8 @@
 </template>
 
 <script>
-import loading from '../components/loading';
-import { userLoginG, userLoginP, userRegisterG, userRegisterP, userBookShelfG} from "../api/api";
+import loading from '../../components/loading';
+import { userLoginG, userLoginP, userRegisterG, userRegisterP, userBookShelfG} from "../../api/api";
 export default {
   name: 'HelloWorld',
   components: {
@@ -84,7 +84,7 @@ export default {
       if (!this.email.show) {    
         userRegisterG(data => {
           if (data.err) {
-            console.log(data.data)
+            // console.log(data.data)
             this.$toast('服务器出了点小问题');
           } else {
             this.$toast(data.data);
@@ -113,7 +113,7 @@ export default {
           userRegisterP(id, pw, email, data => {
             if (data.err) {
               this.LRstatus = true;
-              console.log(data.data)
+              // console.log(data.data)
               this.$toast(data.data);
             } else {
               setTimeout(() => {
@@ -135,7 +135,7 @@ export default {
           userLoginP(id, pw, data => {
             if (data.err) {
               this.LRstatus = true;
-              console.log(data.data)
+              // console.log(data.data)
               this.$toast(data.data);
             } else {
               this.$toast(data.data);
@@ -233,18 +233,18 @@ export default {
   }
   .iconErr {
     &::after {
-      background: url('../assets/错号.svg') no-repeat center;
+      background: url('../../assets/错号.svg') no-repeat center;
     }
   }
   .iconCorrect {
     &::after {
-      background: url('../assets/对号.svg') no-repeat center;
+      background: url('../../assets/对号.svg') no-repeat center;
     }
   }
   .login {
     width: 100vw;
     height: 100vh;
-    background: url('../assets/login1.jpg');
+    background: url('../../assets/login1.jpg');
     background-size: 100% 100%;
     background-repeat: no-repeat;
     display: flex;
@@ -257,7 +257,7 @@ export default {
       position: fixed;
       top: 2rem;
       right: 2rem;
-      background: url('../assets/主页.svg') no-repeat center;
+      background: url('../../assets/主页.svg') no-repeat center;
       background-size: 2.5rem 2.5rem;
       z-index: 1100;
     }
@@ -354,15 +354,15 @@ export default {
           background-position: 6vw center;
         }
         #username {
-          background-image: url('../assets/user.png');
+          background-image: url('../../assets/user.png');
           .imggong;
         }
         #password {
-          background-image: url('../assets/pw.png');
+          background-image: url('../../assets/pw.png');
           .imggong;
         }
         #email {
-          background-image: url('../assets/邮箱.svg');
+          background-image: url('../../assets/邮箱.svg');
           .imggong;
         }
         .input__box--span {

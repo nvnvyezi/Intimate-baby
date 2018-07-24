@@ -7,7 +7,7 @@ Vue.use(Router)
 Vue.use(lazyLoad)
 
 // import HelloWorld from '@/login/HelloWorld'
-const HelloWorld = () => import ( /*webpackChunkName: "HelloWorld"*/'@/login/HelloWorld');
+const HelloWorld = () => import ( /*webpackChunkName: "HelloWorld"*/'@/components/Login/HelloWorld');
 // import loading from '@/components/loading'
 const home = () => import ( /*webpackChunkName: "footNav"*/'@/components/footNav');
 const book = () => import ( /*webpackChunkName: "book"*/'@/components/book');
@@ -48,6 +48,7 @@ const musicMvPlay = () => import ( /*webpackChunkName: "musicMvPlay"*/'@/compone
 const swipe = () => import ( /*webpackChunkName: "swipe"*/'@/components/template/swipe/swipe');
 const nav = () => import ( /*webpackChunkName: "nav"*/'@/components/template/leftNav/nav');
 const NotFound = () =>import ( /*webpackChunkName: "nav"*/'@/components/NotFound/NotFound')
+const Activate = () =>import ( /*webpackChunkName: "nav"*/'@/components/Activate/index')
 
 export default new Router({
   base: '/intimateBaby/',
@@ -256,7 +257,7 @@ export default new Router({
               component: bookInformation,
             },
             {
-              path:'/bookinformatecatelog',
+              path: '/bookinformatecatelog',
               name: 'bookinformationcatelog',
               component: bookInformationCatelog,
             }
@@ -283,6 +284,11 @@ export default new Router({
       path: '/404',
       name: 'NotFound',
       component: NotFound
+    },
+    {
+      path: '/activate',
+      name: 'Activate',
+      component: Activate
     },
     {
       path: '*',
