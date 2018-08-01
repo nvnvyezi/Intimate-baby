@@ -10,13 +10,25 @@
 
 视频完成了分类，播放．
 
+**登录注册模块**
+
+采用邮箱验证方式，用用户名和字符串生成token，用cookie和session当做载体，在每次操作后都替换上一次的token。
+
+**小说阅读**
+
+翻页效果，动态创建div，根据小说每章的字数。
+
+**上传头像**
+
+将图片转为blob发送到后台
+
 ## 预览地址：
 
 [在线预览](http://www.nvnvyezi.cn/intimateBaby/#/)
 
 ## Build Setup
 
-``` bash
+```
 # install dependencies
 npm install
 
@@ -41,16 +53,14 @@ npm test
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
 
-## 部分截图
-
-![1531894200419](/media/nvnvyezi/linux_software/linux-web/Intimate-baby/screenshot/1531894200419.png)
-
-
-
-![1531894313675](/media/nvnvyezi/linux_software/linux-web/Intimate-baby/screenshot/1531894313675.png)
+![](/media/nvnvyezi/linux_software/linux-web/Intimate-baby/screenshot/1531894200419.png)
 
 ![1531894225373](/media/nvnvyezi/linux_software/linux-web/Intimate-baby/screenshot/1531894225373.png)
 
 ![1531894252374](/media/nvnvyezi/linux_software/linux-web/Intimate-baby/screenshot/1531894252374.png)
 
 ![1531894269304](/media/nvnvyezi/linux_software/linux-web/Intimate-baby/screenshot/1531894269304.png)
+
+![1531894294249](/media/nvnvyezi/linux_software/linux-web/Intimate-baby/screenshot/1531894294249.png)
+
+![1531894313675](/media/nvnvyezi/linux_software/linux-web/Intimate-baby/screenshot/1531894313675.png)
