@@ -1,6 +1,7 @@
 import fetchGet from '../wheel/fetchGet'
 import axios from '../wheel/axios'
 const qs = require('qs');
+import JSEncrypt from 'jsencrypt'
 
 const jsencrypt = new JSEncrypt();
 const publicKey = `-----BEGIN PUBLIC KEY-----
@@ -20,7 +21,7 @@ export function categoryHome (cb) {
     sign: '2ee179009ad107ada1d7db1f01646587',
     cid: 1
   }
-  if (window.fetch) {  
+  if (window.fetch) {
     fetch('http://walden1.shuqireader.com/qswebapi/rank/classrelation?_=1526884403617', {
       method: 'post',
       mode: 'cors',
@@ -178,7 +179,7 @@ export function seniorityHome(cb) {
     _: 1526986624449
   }
   const url = 'http://novelapi.sm.cn/eva_bookstore/v1/stencil/query';
-  if (window.fetch) {   
+  if (window.fetch) {
     fetchGet(url, options, 'get', (data) => {
       cb(data.data.module);
     })
@@ -269,11 +270,11 @@ export function bookComments (authorId, bookId, cb) {
     source: 'store',
     size: 3,
     page: 1,
-    shuqi_h5: '', 
+    shuqi_h5: '',
     _: 1526543880837
   }
   const url = 'http://read.xiaoshuo1-sm.com/novel/i.php';
-  if (window.fetch) {   
+  if (window.fetch) {
     fetchGet(url, options, 'get', (data) => {
       cb(data.data);
     })
@@ -331,7 +332,7 @@ export function otherBooks (authorId, cb) {
   if (window.fetch) {
     fetchGet(url, options, 'get', (data) => {
       cb(data.data);
-    }) 
+    })
   } else {
     axios.get(url, options, {}).then(res => {
       // console.log(res.data.data)
@@ -388,19 +389,19 @@ export function getBookData (cb) {
     channelId: '',
     versionId: '',
     ver: '',
-    shuqi_h5: '', 
+    shuqi_h5: '',
     md5key: '',
     userId: '8000000',
     timestamp: '1525940277',
     type: '2',
-    resetcache: '', 
+    resetcache: '',
     func_id: '20,24,11,19,33',
     orderid: '1,2,3,4,5',
     sign: '9B93AB56366DAE9AED3D183070247587',
     key: 'shuqiapi',
     _: '1525940277318'
   }
-  if (window.fetch) {    
+  if (window.fetch) {
     fetchGet('http://novelapi.sm.cn/eva_bookstore/v1/module/query', options, 'get', (data) => {
       cb(data.data);
     })
@@ -423,12 +424,12 @@ export function getBookRecom (cb) {
     channelId: '',
     versionId: '',
     ver: '',
-    shuqi_h5: '', 
+    shuqi_h5: '',
     md5key: '',
     userId: '8000000',
     timestamp: '1525944067',
     type: '2',
-    resetcache: '', 
+    resetcache: '',
     func_id: '19',
     orderid: '4',
     mid: '1388',
@@ -459,12 +460,12 @@ export function getBookBoyGirl (cb) {
     channelId: '',
     versionId: '',
     ver: '',
-    shuqi_h5: '', 
+    shuqi_h5: '',
     md5key: '',
     userId: '8000000',
     timestamp: '1525953643',
     type: '2',
-    resetcache: '', 
+    resetcache: '',
     func_id: '11,33,11,19,33,11,19,33,11,19',
     orderid: '6,7,8,9,12,14,15,18,21,22',
     sign: '37A3933CC42B68590B8E534EBF7B2283',
@@ -472,7 +473,7 @@ export function getBookBoyGirl (cb) {
     _: '1525953643514'
   }
   const url = 'http://novelapi.sm.cn/eva_bookstore/v1/module/query';
-  if (window.fetch) {        
+  if (window.fetch) {
     fetchGet(url, options, 'get', (data) => {
       cb(data.data);
     })
@@ -493,12 +494,12 @@ export function getBookDone (cb) {
     channelId: '',
     versionId: '',
     ver: '',
-    shuqi_h5: '', 
+    shuqi_h5: '',
     md5key: '',
     userId: '8000000',
     timestamp: '1526044743',
     type: '2',
-    resetcache: '', 
+    resetcache: '',
     func_id: '19',
     orderid: '22',
     mid: '4188',
@@ -508,7 +509,7 @@ export function getBookDone (cb) {
     _: '1526044743832'
   }
   const url ='http://novelapi.sm.cn/eva_bookstore/v1/module/query';
-  if (window.fetch) {        
+  if (window.fetch) {
     fetchGet(url, options, 'get', (data) => {
       cb(data.data.module[0].content);
     })
@@ -529,12 +530,12 @@ export function getBookBestSell (cb) {
     channelId: '',
     versionId: '',
     ver: '',
-    shuqi_h5: '', 
+    shuqi_h5: '',
     md5key: '',
     userId: '8000000',
     timestamp: '1526043109',
     type: '2',
-    resetcache: '', 
+    resetcache: '',
     func_id: '33,11,33,11,19,12,33,11,19,12',
     orderid: '23,24,25,26,27,28,29,30,31,32',
     sign: '5C251E0B84037646C22B8CCE2FEEE6B0',
@@ -542,7 +543,7 @@ export function getBookBestSell (cb) {
     _: '1526043109522'
   }
   const url = 'http://novelapi.sm.cn/eva_bookstore/v1/module/query';
-  if (window.fetch) {        
+  if (window.fetch) {
     fetchGet(url, options, 'get', (data) => {
       cb(data.data);
     })
@@ -563,12 +564,12 @@ export function getBookInterest (cb) {
     channelId: '',
     versionId: '',
     ver: '',
-    shuqi_h5: '', 
+    shuqi_h5: '',
     md5key: '',
     userId: '8000000',
     timestamp: '1526290238',
     type: '2',
-    resetcache: '', 
+    resetcache: '',
     func_id: '33,11,28,33,12,33,11,19,33',
     orderid: '35,36,37,38,39,40,41,42,43',
     sign: '3E26701E27A6ABD551FAE9A643AF4906',
@@ -644,7 +645,7 @@ export function getBookSearchData (searchData, page, cb) {
     q: searchData || '元尊',
     filterMigu: 1,
     p: 3,
-    shuqi_h5: '', 
+    shuqi_h5: '',
     _: '1526385291046'
   }
   const url = 'http://read.xiaoshuo1-sm.com/novel/i.php';
@@ -669,7 +670,7 @@ export function getBookChapter (bookName, author, page, cb) {
     page
   }
   // const url = `http://127.0.0.1:3000/chapter`;
-  const url = `http://${ window.location.hostname}:3001/chapter`;
+  const url = `http://${ window.location.hostname}:3003/chapter`;
   if (window.fetch) {
     fetchGet(url, options, 'get', (data) => {
       cb(data);
@@ -685,8 +686,8 @@ export function getBookChapter (bookName, author, page, cb) {
 
 // 音乐榜单
 export function musiclist (cb) {
-  const url = `http://${window.location.hostname}:3001/music`;
-  // const url = `http://193.112.4.143:3001/music`;
+  const url = `http://${window.location.hostname}:3003/music`;
+  // const url = `http://193.112.4.143:3003/music`;
   if (window.fetch) {
     fetchGet(url, {}, 'get', (data) => {
       cb(data);
@@ -702,8 +703,8 @@ export function musiclist (cb) {
 
 // 获取歌曲
 export function song (mid, cb) {
-  const url = `http://${window.location.hostname}:3001/song`;
-  // const url = `http://193.112.4.143:3001/song`;
+  const url = `http://${window.location.hostname}:3003/song`;
+  // const url = `http://193.112.4.143:3003/song`;
   if (window.fetch) {
     fetchGet(url, {mid: mid}, 'get', (data) => {
       cb(data);
@@ -719,8 +720,8 @@ export function song (mid, cb) {
 
 // 获取歌词
 export function musicLyric (mid, cb) {
-  const url = `http://${window.location.hostname}:3001/lyric`;
-  // const url = `http://193.112.4.143:3001/lyric`;
+  const url = `http://${window.location.hostname}:3003/lyric`;
+  // const url = `http://193.112.4.143:3003/lyric`;
   if (window.fetch) {
     fetchGet(url, {mid: mid}, 'get', (data) => {
       cb(data);
@@ -736,8 +737,8 @@ export function musicLyric (mid, cb) {
 
 // 用户登录
 export function userLoginG (cb) {
-  const url = `http://${window.location.hostname}:3001/login`;
-  // const url = `http://127.0.0.1:3001/login`;
+  const url = `http://${window.location.hostname}:3003/login`;
+  // const url = `http://127.0.0.1:3003/login`;
   axios.get(url, {}, {}).then(res => {
     cb(res.data);
   }).catch(err => {
@@ -745,8 +746,8 @@ export function userLoginG (cb) {
   })
 }
 export function userLoginP (id, pw, cb) {
-  const url = `http://${window.location.hostname}:3001/login`;
-  // const url = `http://127.0.0.1:3001/login`;
+  const url = `http://${window.location.hostname}:3003/login`;
+  // const url = `http://127.0.0.1:3003/login`;
   const options = {
     id: jsencrypt.encrypt(id),
     pw: jsencrypt.encrypt(pw)
@@ -759,7 +760,7 @@ export function userLoginP (id, pw, cb) {
 }
 // 用户退出
 export function userLogout (cb) {
-  const url = `http://${window.location.hostname}:3001/logout`;
+  const url = `http://${window.location.hostname}:3003/logout`;
   axios.post(url, {}, {}).then(res => {
     cb(res.data)
   }).catch(err => {
@@ -769,7 +770,7 @@ export function userLogout (cb) {
 
 // 用户注册
 export function userRegisterG (cb) {
-  const url = `http://${window.location.hostname}:3001/register`;
+  const url = `http://${window.location.hostname}:3003/register`;
   axios.get(url, {}, {}).then(res => {
     cb(res.data)
   }).catch(err => {
@@ -777,7 +778,7 @@ export function userRegisterG (cb) {
   })
 }
 export function userRegisterP (id, pw, email, cb) {
-  const url = `http://${window.location.hostname}:3001/register`;
+  const url = `http://${window.location.hostname}:3003/register`;
   const options = {
     id: jsencrypt.encrypt(id),
     pw: jsencrypt.encrypt(pw),
@@ -792,7 +793,7 @@ export function userRegisterP (id, pw, email, cb) {
 
 // 用户验证
 export function userActivate (cb) {
-  const url = `http://${window.location.hostname}:3001/activate`;
+  const url = `http://${window.location.hostname}:3003/activate`
   axios.get(url, {}, {}).then(res => {
     cb(res.data)
   }).catch(err => {
@@ -802,7 +803,7 @@ export function userActivate (cb) {
 
 // 加书架
 export function userBookShelfG (id, cb) {
-  const url = `http://${window.location.hostname}:3001/shelf`;
+  const url = `http://${window.location.hostname}:3003/shelf`
   axios.get(url, {id}, {}).then(res => {
     cb(res.data);
   }).catch(err => {
@@ -810,30 +811,30 @@ export function userBookShelfG (id, cb) {
   })
 }
 export function userBookShelfP (id, bookShelf, cb) {
-  const url = `http://${window.location.hostname}:3001/shelf`;
+  const url = `http://${window.location.hostname}:3003/shelf`
   const options = {
     id,
     bookShelf: bookShelf.join(',')
   }
   axios.post(url, options, {}).then(res => {
-    cb(res.data);
-  }).catch(err => {
+    cb(res.data)
+  }).catch(() => {
     cb('失败');
   })
 }
 
 // 音乐ｍｖ
 export function musicMvList (list, tags, cb) {
-  const url = `http://${window.location.hostname}:3001/mv`;
+  const url = `http://${window.location.hostname}:3003/mv`
   axios.get(url, {list, tags}, {}).then(res => {
     cb(res.data)
-  }).catch((err) => {
+  }).catch(() => {
     cb({err: true, data: 'axios请求失败'})
   })
 }
 
 export function musicMList (cb) {
-  const url = `http://${window.location.hostname}:3001/mvList`;
+  const url = `http://${window.location.hostname}:3003/mvList`;
   axios.get(url, {}, {}).then(res => {
     cb(res.data)
   }).catch((err) => {
@@ -842,7 +843,7 @@ export function musicMList (cb) {
 }
 
 export function musicMvPlay (uri, cb) {
-  let url = `http://${window.location.hostname}:3001/mvPlay`;
+  let url = `http://${window.location.hostname}:3003/mvPlay`;
   axios.get(url, {uri}, {}).then(res => {
     cb(res.data)
   }).catch((err) => {
@@ -852,10 +853,10 @@ export function musicMvPlay (uri, cb) {
 
 //发表评论
 export function sendComments (data, cb) {
-  let url = `http://${window.location.hostname}:3001/comments`;
+  let url = `http://${window.location.hostname}:3003/comments`;
   axios.post(url, data, {}).then(res => {
     cb(res.data)
-  }).catch((err) => {
+  }).catch(() => {
     cb({err: true, data: 'axios请求失败'})
   })
 }

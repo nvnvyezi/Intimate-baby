@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import loading from '../../components/loading';
+import loading from '../Common/Loading/loading';
 import { userLoginG, userLoginP, userRegisterG, userRegisterP, userBookShelfG} from "../../api/api";
 export default {
   name: 'HelloWorld',
@@ -69,7 +69,7 @@ export default {
       return this.email.show ? 'REGISTER' : 'LOGIN';
     }
   },
-  mounted () {    
+  mounted () {
     userLoginG(data => {
       if (data.err) {
         console.log(data.data)
@@ -81,7 +81,7 @@ export default {
   },
   methods: {
     showRegister () {
-      if (!this.email.show) {    
+      if (!this.email.show) {
         userRegisterG(data => {
           if (data.err) {
             // console.log(data.data)

@@ -11,40 +11,39 @@ const HelloWorld = () => import ( /*webpackChunkName: "HelloWorld"*/'@/component
 // import loading from '@/components/loading'
 const home = () => import ( /*webpackChunkName: "footNav"*/'@/components/footNav');
 const book = () => import ( /*webpackChunkName: "book"*/'@/components/book');
-const recom = () => import ( /*webpackChunkName: "bookRecom"*/'@/components/bookRecom');
-const moreBook = () => import ( /*webpackChunkName: "moreBook"*/'@/components/templateMoreBook');
+const recom = () => import ( /*webpackChunkName: "bookRecom"*/'@/components/BookRecom/Info/index');
+const moreBook = () => import ( /*webpackChunkName: "moreBook"*/'@/components/Common/MoreBook/index');
 
-const cate = () => import ( /*webpackChunkName: "cate"*/'@/components/cate');
-const category = () => import ( /*webpackChunkName: "bookCategory"*/'@/components/bookCategory');
-const list = () => import ( /*webpackChunkName: "bookList"*/'@/category/bookList');
-const cateHome = () => import ( /*webpackChunkName: "bookHome"*/'@/category/bookHome');
+const cate = () => import ( /*webpackChunkName: "cate"*/'@/components/BookRecom/Route/index');
+const category = () => import ( /*webpackChunkName: "bookCategory"*/'@/components/BookCategory/Router/index');
+const list = () => import ( /*webpackChunkName: "bookList"*/'@/components/BookCategory/List/index');
+const cateHome = () => import ( /*webpackChunkName: "bookHome"*/'@/components/BookCategory/Home/index');
 
-const seniority = () => import ( /*webpackChunkName: "seniority"*/'@/components/seniority');
-const bookSeniorityRouter = () => import ( /*webpackChunkName: "bookSeniorityRouter"*/'@/components/bookSeniorityRouter');
-const bookSeniorityHome = () => import ( /*webpackChunkName: "bookSeniorityHome"*/'@/components/bookSeniorityHome');
+const bookSeniorityRouter = () => import ( /*webpackChunkName: "bookSeniorityRouter"*/'@/components/BookSeniority/Router/index');
+const bookSeniorityHome = () => import ( /*webpackChunkName: "bookSeniorityHome"*/'@/components/BookSeniority/Home/index');
 // const bookSeniorityList = () => import ( /*webpackChunkName: "bookSeniorityList"*/'@/components/bookSeniorityList');
 
-const bookSearchRouter = () => import ( /*webpackChunkName: "bookSearchRouter"*/'@/components/bookSearchRouter');
-const bookSearch = () => import ( /*webpackChunkName: "bookSearch"*/'@/components/bookSearch');
-const bookSearchData = () => import ( /*webpackChunkName: "bookSearchData"*/'@/components/bookSearchData');
+const bookSearchRouter = () => import ( /*webpackChunkName: "bookSearchRouter"*/'@/components/BookSearch/Route/index');
+const bookSearch = () => import ( /*webpackChunkName: "bookSearch"*/'@/components/BookSearch/Home/index');
+const bookSearchData = () => import ( /*webpackChunkName: "bookSearchData"*/'@/components/BookSearch/List/index');
 
-const bookInformationRouter = () => import ( /*webpackChunkName: "bookInformationRouter"*/'@/components/bookInformationRouter');
-const bookInformation = () => import ( /*webpackChunkName: "bookInformation"*/'@/components/bookInformation');
-const bookInformationCatelog = () => import ( /*webpackChunkName: "bookInformationCatelog"*/'@/components/bookInformationCatelog');
+const bookInformationRouter = () => import ( /*webpackChunkName: "bookInformationRouter"*/'@/components/BookInformation/Route/index');
+const bookInformation = () => import ( /*webpackChunkName: "bookInformation"*/'@/components/BookInformation/Info/index');
+const bookInformationCatelog = () => import ( /*webpackChunkName: "bookInformationCatelog"*/'@/components/BookInformation/Catelog/index');
 
-const bookChapterRouter = () => import ( /*webpackChunkName: "bookChapterRouter"*/'@/components/bookChapterRouter');
-const bookChapter = () => import ( /*webpackChunkName: "bookChapter"*/'@/components/bookChapter');
+const bookChapterRouter = () => import ( /*webpackChunkName: "bookChapterRouter"*/'@/components/BookChapter/Route/index');
+const bookChapter = () => import ( /*webpackChunkName: "bookChapter"*/'@/components/BookChapter/Info/index');
 // const musicPlayer = () => import ( /*webpackChunkName: "musicPlayer"*/'@/components/musicPlayer');
 
-const userRouter = () => import ( /*webpackChunkName: "userRouter"*/'@/components/userRouter');
-const user = () => import ( /*webpackChunkName: "user"*/'@/components/user');
-const userChange = () => import ( /*webpackChunkName: "userChange"*/'@/components/userChange');
+const userRouter = () => import ( /*webpackChunkName: "userRouter"*/'@/components/User/Route/index');
+const user = () => import ( /*webpackChunkName: "user"*/'@/components/User/Home/index');
+const userChange = () => import ( /*webpackChunkName: "userChange"*/'@/components/User/ChangeInfo/index');
 
 const takePicture = () => import ( /*webpackChunkName: "takePicture"*/'@/components/template/takePicture/takePicture');
 
-const musicMvRouter = () => import ( /*webpackChunkName: "musicMvRouter"*/'@/components/musicMvRouter');
-const musicMv = () => import ( /*webpackChunkName: "musicMv"*/'@/components/musicMv');
-const musicMvPlay = () => import ( /*webpackChunkName: "musicMvPlay"*/'@/components/musicMvPlay');
+const musicMvRouter = () => import ( /*webpackChunkName: "musicMvRouter"*/'@/components/Music/Route/index');
+const musicMv = () => import ( /*webpackChunkName: "musicMv"*/'@/components/Music/Home/index');
+const musicMvPlay = () => import ( /*webpackChunkName: "musicMvPlay"*/'@/components/Music/MvPlay/index');
 const swipe = () => import ( /*webpackChunkName: "swipe"*/'@/components/template/swipe/swipe');
 const nav = () => import ( /*webpackChunkName: "nav"*/'@/components/template/leftNav/nav');
 const NotFound = () =>import ( /*webpackChunkName: "nav"*/'@/components/NotFound/NotFound')
@@ -80,7 +79,7 @@ export default new Router({
           path: '/',
           component: user,
           name: 'user'
-        }, 
+        },
         {
           path: '/user/change',
           component: userChange,
@@ -185,15 +184,7 @@ export default new Router({
           ]
         },
         {
-          path: '/seniority',
-          name: 'seniority',
-          component: seniority,
-          meta: {
-            keepAlive: true
-          },
-          children: [
-            {
-              path: '/',
+              path: '/seniority',
               name: 'bookSeniorityRouter',
               component: bookSeniorityRouter,
               meta: {
@@ -217,8 +208,6 @@ export default new Router({
                   }
                 },
               ]
-            },
-          ]
         },
         {
           path: '/booksearch',
