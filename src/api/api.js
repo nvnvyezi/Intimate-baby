@@ -772,6 +772,7 @@ export function userLogout (cb) {
 export function userRegisterG (cb) {
   const url = `http://${window.location.hostname}:3003/register`;
   axios.get(url, {}, {}).then(res => {
+    console.log(res)
     cb(res.data)
   }).catch(err => {
     console.log(err)

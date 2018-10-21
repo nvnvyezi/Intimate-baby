@@ -88,7 +88,7 @@ export default {
         url,
         params,
         // headers,
-        // withCredentials: true,          //    表示跨域请求时是否需要使用凭证
+        withCredentials: true,          //    表示跨域请求时是否需要使用凭证
         responseType: 'json',           //    服务器相应的数据类型
         method: 'get',
         cancelToken: new CancelToken(c => {
@@ -113,7 +113,7 @@ export default {
         data: qs.stringify(data),
         headers,
         method: 'post',
-        // withCredentials: true,
+        withCredentials: true,
         responseType: 'json',           //    服务器相应的数据类型
         cancelToken: new CancelToken(c => {
           cancel = c;
